@@ -30,7 +30,7 @@ export function ExecutiveBoard() {
           <span className="text-xs font-medium uppercase tracking-wide-label text-muted">
             Departmental Heads
           </span>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center gap-6">
             {departmentalHeads.map((name) => (
               <div key={name} className="flex items-center gap-2">
                 <Avatar name={name} size="xs" />
