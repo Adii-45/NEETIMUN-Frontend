@@ -25,6 +25,7 @@ export default function Home() {
         subtitle="Registration for the 2026 Summit is now open. Seats are limited and allocated on a rolling basis."
         primaryCta={{ label: "Begin Registration", href: "/registration" }}
         secondaryCta={{ label: "Download Prospectus (PDF)", href: "/registration" }}
+        magneticPrimary
       />
     </>
   );

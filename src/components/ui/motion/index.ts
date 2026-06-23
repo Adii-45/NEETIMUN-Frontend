@@ -5,3 +5,5 @@ export { RevealSection } from "./RevealSection";
 export { CardGrid } from "./CardGrid";
 export { CardReveal } from "./CardReveal";
 export { Parallax } from "./Parallax";
+export { Magnetic } from "./Magnetic";
+export { Counter } from "./Counter";

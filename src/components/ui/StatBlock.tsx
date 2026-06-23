@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Counter } from "@/components/ui/motion/Counter";
 
 const valueSizeClasses = {
   default: "text-4xl sm:text-5xl",
@@ -11,13 +12,19 @@ export function StatBlock({
   tone = "dark",
   size = "default",
   className,
+  animate = false,
 }: {
   value: string;
   label: string;
   tone?: "dark" | "light";
   size?: keyof typeof valueSizeClasses;
   className?: string;
+  /** Animate the value counting up from 0 when it scrolls into view. Only applies when `value` is a plain integer. */
+  animate?: boolean;
 }) {
+  const numericValue = Number(value);
+  const canAnimate = animate && Number.isFinite(numericValue);
+
   return (
     <div className={cn("flex flex-col items-center gap-2 text-center", className)}>
       <span
@@ -27,7 +34,7 @@ export function StatBlock({
           tone === "dark" ? "text-cream-50" : "text-navy-900",
         )}
       >
-        {value}
+        {canAnimate ? <Counter value={numericValue} /> : value}
       </span>
       <span
         className={cn(

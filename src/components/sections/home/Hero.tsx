@@ -1,11 +1,11 @@
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { Parallax } from "@/components/ui/motion";
+import { Parallax, Magnetic } from "@/components/ui/motion";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-cream-100">
+    <section id="hero" className="relative overflow-hidden bg-cream-100">
       <Parallax range={14} className="pointer-events-none absolute inset-0">
         <div
           aria-hidden
@@ -40,7 +40,9 @@ export function Hero() {
           debate, and resolve.
         </p>
         <div className="animate-fade-up mt-2 flex flex-col items-center gap-4 [animation-delay:400ms] sm:flex-row">
-          <Button href="/registration">Register Now</Button>
+          <Magnetic range={4}>
+            <Button href="/registration">Register Now</Button>
+          </Magnetic>
           <Button href="/committees" variant="outline">
             Explore Committees
           </Button>

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { NavLinks } from "@/components/layout/NavLinks";
+import { Magnetic } from "@/components/ui/motion";
 import { navLinks } from "@/lib/data/nav-links";
 
 export function Header() {
@@ -23,20 +25,12 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-navy-900/80 transition-colors hover:text-navy-900"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <NavLinks links={navLinks} />
 
         <div className="hidden lg:block">
-          <Button href="/registration">Apply Now</Button>
+          <Magnetic range={3}>
+            <Button href="/registration">Apply Now</Button>
+          </Magnetic>
         </div>
 
         <MobileNav links={navLinks} />

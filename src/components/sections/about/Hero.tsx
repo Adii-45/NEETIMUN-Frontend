@@ -1,6 +1,6 @@
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { Parallax } from "@/components/ui/motion";
+import { Parallax, Magnetic } from "@/components/ui/motion";
 
 export function Hero() {
   return (
@@ -30,7 +30,9 @@ export function Hero() {
           most pressing geopolitical challenges.
         </p>
         <div className="animate-fade-up mt-2 flex flex-col gap-4 [animation-delay:300ms] sm:flex-row">
-          <Button href="/registration">Register Now</Button>
+          <Magnetic range={4}>
+            <Button href="/registration">Register Now</Button>
+          </Magnetic>
           <Button href="/about" variant="outline">
             Explore Archive
           </Button>

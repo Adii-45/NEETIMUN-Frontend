@@ -9,7 +9,7 @@ const steps = ["Portfolio", "Information", "Payment"];
 
 export function OnboardingTeaser() {
   return (
-    <section className="py-24">
+    <section id="registration-teaser" className="py-24">
       <Container className="flex flex-col items-center gap-10">
         <SectionHeading eyebrow="Onboarding" title="Secure Your Seat" />
         <Badge variant="default">Average completion time: Under 2 minutes</Badge>

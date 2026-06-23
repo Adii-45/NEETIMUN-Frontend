@@ -7,7 +7,7 @@ import { testimonials } from "@/lib/data/testimonials";
 
 export function Testimonials() {
   return (
-    <section className="bg-cream-200/60 py-24">
+    <section id="testimonials" className="bg-cream-200/60 py-24">
       <Container className="flex flex-col gap-14">
         <SectionHeading
           eyebrow="Feedback"

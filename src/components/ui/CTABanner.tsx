@@ -1,6 +1,6 @@
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { RevealSection, StaggerContainer, FadeUp } from "@/components/ui/motion";
+import { RevealSection, StaggerContainer, FadeUp, Magnetic } from "@/components/ui/motion";
 
 type CTALink = {
   label: string;
@@ -13,12 +13,15 @@ export function CTABanner({
   subtitle,
   primaryCta,
   secondaryCta,
+  magneticPrimary = false,
 }: {
   eyebrow?: string;
   title: React.ReactNode;
   subtitle?: React.ReactNode;
   primaryCta: CTALink;
   secondaryCta?: CTALink;
+  /** Apply the subtle cursor-proximity magnetic effect to the primary button. */
+  magneticPrimary?: boolean;
 }) {
   return (
     <section className="bg-navy-950">
@@ -45,9 +48,17 @@ export function CTABanner({
           delayChildren={0.1}
         >
           <FadeUp viewportTrigger={false} scale={0.92}>
-            <Button href={primaryCta.href} variant="light">
-              {primaryCta.label}
-            </Button>
+            {magneticPrimary ? (
+              <Magnetic range={4}>
+                <Button href={primaryCta.href} variant="light">
+                  {primaryCta.label}
+                </Button>
+              </Magnetic>
+            ) : (
+              <Button href={primaryCta.href} variant="light">
+                {primaryCta.label}
+              </Button>
+            )}
           </FadeUp>
           {secondaryCta ? (
             <FadeUp viewportTrigger={false} scale={0.92}>

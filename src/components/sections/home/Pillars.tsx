@@ -6,7 +6,7 @@ import { pillars } from "@/lib/data/pillars";
 
 export function Pillars() {
   return (
-    <section className="bg-cream-200/60 py-24">
+    <section id="pillars" className="bg-cream-200/60 py-24">
       <Container className="flex flex-col gap-14">
         <SectionHeading
           eyebrow="Excellence"

@@ -24,7 +24,7 @@ export function ProfileCard({
         name={name}
         size={size}
         shape="tile"
-        className="transition-transform duration-300 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.02]"
+        className="transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.025] group-hover:shadow-xl group-hover:shadow-navy-900/20"
       />
       <div className="flex flex-col gap-1">
         <span className="text-xs font-medium uppercase tracking-wide-label text-gold-600">
@@ -45,7 +45,7 @@ export function ProfileCard({
           View Profile
           <ArrowRight
             size={14}
-            className="transition-transform duration-200 group-hover:translate-x-1"
+            className="transition-transform duration-200 ease-out group-hover:translate-x-1.5"
           />
         </Link>
       ) : null}

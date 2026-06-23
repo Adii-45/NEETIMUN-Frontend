@@ -7,7 +7,7 @@ export function StatsBar() {
     <section className="bg-navy-900">
       <Container className="grid grid-cols-2 gap-8 py-12 sm:grid-cols-4">
         {stats.map((stat) => (
-          <StatBlock key={stat.label} value={stat.value} label={stat.label} />
+          <StatBlock key={stat.label} value={stat.value} label={stat.label} animate />
         ))}
       </Container>
     </section>

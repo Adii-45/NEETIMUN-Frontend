@@ -9,7 +9,7 @@ import { committees } from "@/lib/data/committees";
 
 export function PortfoliosPreview() {
   return (
-    <section className="py-24">
+    <section id="portfolios" className="py-24">
       <Container className="flex flex-col gap-10">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <SectionHeading
@@ -45,7 +45,7 @@ export function PortfoliosPreview() {
                   Guide
                   <ArrowRight
                     size={14}
-                    className="transition-transform duration-200 group-hover:translate-x-1"
+                    className="transition-transform duration-200 ease-out group-hover:translate-x-1.5"
                   />
                 </Link>
               </Card>
