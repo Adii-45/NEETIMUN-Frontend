@@ -1,15 +1,18 @@
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { Parallax } from "@/components/ui/motion";
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-cream-100">
-      <span
-        aria-hidden
-        className="font-display pointer-events-none absolute top-1/2 right-0 -translate-y-1/2 text-[16rem] leading-none text-navy-900/5 select-none sm:text-[22rem]"
-      >
-        2026
-      </span>
+      <Parallax range={10} className="pointer-events-none absolute inset-0 select-none">
+        <span
+          aria-hidden
+          className="font-display pointer-events-none absolute top-1/2 right-0 -translate-y-1/2 text-[16rem] leading-none text-navy-900/5 select-none sm:text-[22rem]"
+        >
+          2026
+        </span>
+      </Parallax>
 
       <Container className="relative flex flex-col gap-6 py-28 sm:py-36">
         <span className="animate-fade-up flex items-center gap-3 text-xs font-medium uppercase tracking-wide-label text-gold-600 [animation-delay:0ms]">

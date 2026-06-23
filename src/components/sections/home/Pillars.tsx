@@ -1,7 +1,7 @@
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FeatureCard } from "@/components/ui/FeatureCard";
-import { StaggerContainer, FadeUp } from "@/components/ui/motion";
+import { CardGrid, CardReveal } from "@/components/ui/motion";
 import { pillars } from "@/lib/data/pillars";
 
 export function Pillars() {
@@ -13,9 +13,9 @@ export function Pillars() {
           title="The Pillars of Neeti"
           align="left"
         />
-        <StaggerContainer className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <CardGrid className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {pillars.map((pillar) => (
-            <FadeUp key={pillar.title} viewportTrigger={false}>
+            <CardReveal key={pillar.title}>
               <FeatureCard
                 icon={pillar.icon}
                 title={pillar.title}
@@ -23,9 +23,9 @@ export function Pillars() {
                 featured={pillar.featured}
                 className="h-full"
               />
-            </FadeUp>
+            </CardReveal>
           ))}
-        </StaggerContainer>
+        </CardGrid>
       </Container>
     </section>
   );

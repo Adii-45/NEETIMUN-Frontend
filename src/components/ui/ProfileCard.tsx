@@ -24,7 +24,7 @@ export function ProfileCard({
         name={name}
         size={size}
         shape="tile"
-        className="transition-transform duration-300 ease-out group-hover:-translate-y-1.5"
+        className="transition-transform duration-300 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.02]"
       />
       <div className="flex flex-col gap-1">
         <span className="text-xs font-medium uppercase tracking-wide-label text-gold-600">

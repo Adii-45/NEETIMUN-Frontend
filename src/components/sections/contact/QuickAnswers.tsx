@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { IconCircle } from "@/components/ui/IconCircle";
-import { StaggerContainer, FadeUp } from "@/components/ui/motion";
+import { CardGrid, CardReveal } from "@/components/ui/motion";
 import { quickAnswers } from "@/lib/data/contact";
 
 export function QuickAnswers() {
@@ -26,9 +26,9 @@ export function QuickAnswers() {
           </Link>
         </div>
 
-        <StaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <CardGrid className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           {quickAnswers.map((item) => (
-            <FadeUp key={item.title} viewportTrigger={false}>
+            <CardReveal key={item.title}>
               <Card className="flex h-full flex-col gap-4">
                 <IconCircle>
                   <item.icon size={20} />
@@ -50,9 +50,9 @@ export function QuickAnswers() {
                   />
                 </Link>
               </Card>
-            </FadeUp>
+            </CardReveal>
           ))}
-        </StaggerContainer>
+        </CardGrid>
       </Container>
     </section>
   );

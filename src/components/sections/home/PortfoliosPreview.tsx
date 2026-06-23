@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { StaggerContainer, FadeUp } from "@/components/ui/motion";
+import { CardGrid, CardReveal } from "@/components/ui/motion";
 import { committees } from "@/lib/data/committees";
 
 export function PortfoliosPreview() {
@@ -27,9 +27,9 @@ export function PortfoliosPreview() {
           </Link>
         </div>
 
-        <StaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <CardGrid className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {committees.map((committee) => (
-            <FadeUp key={committee.tag} viewportTrigger={false}>
+            <CardReveal key={committee.tag}>
               <Card className="flex h-full flex-col gap-4">
                 <Badge variant="outline">{committee.tag}</Badge>
                 <h3 className="font-display text-lg text-navy-900">
@@ -49,9 +49,9 @@ export function PortfoliosPreview() {
                   />
                 </Link>
               </Card>
-            </FadeUp>
+            </CardReveal>
           ))}
-        </StaggerContainer>
+        </CardGrid>
       </Container>
     </section>
   );

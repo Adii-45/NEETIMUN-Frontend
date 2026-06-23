@@ -25,7 +25,7 @@ export function CommitteeCard({
   return (
     <div
       className={cn(
-        "group flex flex-col overflow-hidden rounded-2xl border transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl",
+        "group flex flex-col overflow-hidden rounded-2xl border transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.012] hover:shadow-xl",
         dark
           ? "border-navy-900 bg-navy-900 text-cream-50 hover:border-gold-400/40 hover:shadow-navy-900/40"
           : "border-border bg-cream-50 text-navy-900 hover:border-gold-400/40 hover:shadow-navy-900/10",

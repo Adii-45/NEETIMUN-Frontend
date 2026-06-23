@@ -1,14 +1,18 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { staggerVariants, VIEWPORT } from "./variants";
+import { staggerVariants, STAGGER, DELAY_CHILDREN, VIEWPORT } from "./variants";
 
 export function StaggerContainer({
   children,
   className,
+  stagger = STAGGER,
+  delayChildren = DELAY_CHILDREN,
 }: {
   children: React.ReactNode;
   className?: string;
+  stagger?: number;
+  delayChildren?: number;
 }) {
   const reduced = useReducedMotion();
 
@@ -18,7 +22,7 @@ export function StaggerContainer({
       initial="hidden"
       whileInView="visible"
       viewport={VIEWPORT}
-      variants={staggerVariants(!!reduced)}
+      variants={staggerVariants(!!reduced, stagger, delayChildren)}
     >
       {children}
     </motion.div>

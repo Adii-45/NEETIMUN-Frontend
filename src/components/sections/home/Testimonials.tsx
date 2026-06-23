@@ -2,7 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
-import { StaggerContainer, FadeUp } from "@/components/ui/motion";
+import { CardGrid, CardReveal } from "@/components/ui/motion";
 import { testimonials } from "@/lib/data/testimonials";
 
 export function Testimonials() {
@@ -13,9 +13,9 @@ export function Testimonials() {
           eyebrow="Feedback"
           title="Why Delegates Love NEETI MUN"
         />
-        <StaggerContainer className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <CardGrid className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {testimonials.map((testimonial) => (
-            <FadeUp key={testimonial.name} viewportTrigger={false}>
+            <CardReveal key={testimonial.name}>
               <Card className="flex h-full flex-col gap-4">
                 <p className="text-sm leading-relaxed text-navy-900/80 italic">
                   &ldquo;{testimonial.quote}&rdquo;
@@ -36,9 +36,9 @@ export function Testimonials() {
                   </div>
                 </div>
               </Card>
-            </FadeUp>
+            </CardReveal>
           ))}
-        </StaggerContainer>
+        </CardGrid>
       </Container>
     </section>
   );

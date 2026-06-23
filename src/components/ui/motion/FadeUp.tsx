@@ -7,16 +7,19 @@ export function FadeUp({
   children,
   className,
   delay = 0,
+  scale = 1,
   viewportTrigger = true,
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  /** Starting scale before settling to 1 (e.g. 0.96). Defaults to 1 (no scale change). */
+  scale?: number;
   /** Set false when nesting inside StaggerContainer / RevealSection so timing is inherited from the parent. */
   viewportTrigger?: boolean;
 }) {
   const reduced = useReducedMotion();
-  const variants = fadeUpVariants(!!reduced, delay);
+  const variants = fadeUpVariants(!!reduced, delay, scale);
 
   if (!viewportTrigger) {
     return (

@@ -39,14 +39,18 @@ export function CTABanner({
             </p>
           ) : null}
         </RevealSection>
-        <StaggerContainer className="mt-2 flex flex-col items-center gap-4 sm:flex-row">
-          <FadeUp viewportTrigger={false}>
+        <StaggerContainer
+          className="mt-2 flex flex-col items-center gap-4 sm:flex-row"
+          stagger={0.15}
+          delayChildren={0.1}
+        >
+          <FadeUp viewportTrigger={false} scale={0.92}>
             <Button href={primaryCta.href} variant="light">
               {primaryCta.label}
             </Button>
           </FadeUp>
           {secondaryCta ? (
-            <FadeUp viewportTrigger={false}>
+            <FadeUp viewportTrigger={false} scale={0.92}>
               <Button href={secondaryCta.href} variant="outline-light">
                 {secondaryCta.label}
               </Button>

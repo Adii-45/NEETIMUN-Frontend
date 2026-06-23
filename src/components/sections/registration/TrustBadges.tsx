@@ -2,7 +2,7 @@ import { Calendar, Headphones, ShieldCheck } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
 import { IconCircle } from "@/components/ui/IconCircle";
-import { StaggerContainer, FadeUp } from "@/components/ui/motion";
+import { CardGrid, CardReveal } from "@/components/ui/motion";
 
 const badges = [
   {
@@ -25,9 +25,9 @@ const badges = [
 export function TrustBadges() {
   return (
     <section className="pb-24">
-      <Container as={StaggerContainer} className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+      <Container as={CardGrid} className="grid grid-cols-1 gap-6 sm:grid-cols-3">
         {badges.map((badge) => (
-          <FadeUp key={badge.title} viewportTrigger={false}>
+          <CardReveal key={badge.title}>
             <Card className="flex h-full flex-col items-center gap-3 text-center">
               <IconCircle>
                 <badge.icon size={20} />
@@ -39,7 +39,7 @@ export function TrustBadges() {
                 {badge.description}
               </p>
             </Card>
-          </FadeUp>
+          </CardReveal>
         ))}
       </Container>
     </section>
