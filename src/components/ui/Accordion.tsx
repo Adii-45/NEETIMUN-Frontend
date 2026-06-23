@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { StaggerContainer } from "@/components/ui/motion/StaggerContainer";
+import { FadeUp } from "@/components/ui/motion/FadeUp";
+import { EASE } from "@/components/ui/motion/variants";
 
 export type AccordionItem = {
   question: string;
@@ -11,13 +14,15 @@ export type AccordionItem = {
 
 export function Accordion({ items }: { items: AccordionItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const reduced = useReducedMotion();
+  const transition = { duration: reduced ? 0 : 0.3, ease: EASE };
 
   return (
-    <div className="flex flex-col divide-y divide-border overflow-hidden rounded-2xl border border-border bg-cream-50">
+    <StaggerContainer className="flex flex-col divide-y divide-border overflow-hidden rounded-2xl border border-border bg-cream-50">
       {items.map((item, index) => {
         const isOpen = openIndex === index;
         return (
-          <div key={item.question}>
+          <FadeUp key={item.question} viewportTrigger={false}>
             <button
               type="button"
               aria-expanded={isOpen}
@@ -27,22 +32,33 @@ export function Accordion({ items }: { items: AccordionItem[] }) {
               <span className="text-sm font-medium text-navy-900">
                 {item.question}
               </span>
-              <Plus
-                size={18}
-                className={cn(
-                  "shrink-0 text-gold-600 transition-transform duration-200",
-                  isOpen && "rotate-45",
-                )}
-              />
+              <motion.span
+                className="shrink-0 text-gold-600"
+                animate={{ rotate: isOpen ? 45 : 0 }}
+                transition={transition}
+              >
+                <Plus size={18} />
+              </motion.span>
             </button>
-            {isOpen ? (
-              <p className="px-6 pb-5 text-sm leading-relaxed text-muted">
-                {item.answer}
-              </p>
-            ) : null}
-          </div>
+            <AnimatePresence initial={false}>
+              {isOpen ? (
+                <motion.div
+                  key="content"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={transition}
+                  className="overflow-hidden"
+                >
+                  <p className="px-6 pb-5 text-sm leading-relaxed text-muted">
+                    {item.answer}
+                  </p>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </FadeUp>
         );
       })}
-    </div>
+    </StaggerContainer>
   );
 }

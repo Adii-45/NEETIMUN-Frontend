@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { RevealSection } from "@/components/ui/motion";
 
 export function SectionHeading({
   eyebrow,
@@ -16,7 +17,7 @@ export function SectionHeading({
   className?: string;
 }) {
   return (
-    <div
+    <RevealSection
       className={cn(
         "flex flex-col gap-4",
         align === "center" ? "items-center text-center" : "items-start text-left",
@@ -51,6 +52,6 @@ export function SectionHeading({
           {subtitle}
         </p>
       ) : null}
-    </div>
+    </RevealSection>
   );
 }

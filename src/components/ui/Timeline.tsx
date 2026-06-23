@@ -1,4 +1,10 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { StaggerContainer } from "@/components/ui/motion/StaggerContainer";
+import { FadeUp } from "@/components/ui/motion/FadeUp";
+import { DURATION, EASE } from "@/components/ui/motion/variants";
 
 export type TimelineItem = {
   date: string;
@@ -13,14 +19,26 @@ export function Timeline({
   items: TimelineItem[];
   className?: string;
 }) {
+  const reduced = useReducedMotion();
+
   return (
-    <div className={cn("relative flex flex-col gap-12", className)}>
-      <div className="absolute top-2 bottom-2 left-2 w-px bg-border sm:left-1/2 sm:-translate-x-1/2" />
+    <StaggerContainer className={cn("relative flex flex-col gap-12", className)}>
+      <motion.div
+        className="absolute top-2 bottom-2 left-2 w-px origin-top bg-border sm:left-1/2 sm:-translate-x-1/2"
+        variants={{
+          hidden: { scaleY: reduced ? 1 : 0 },
+          visible: {
+            scaleY: 1,
+            transition: { duration: reduced ? 0 : DURATION * 1.3, ease: EASE },
+          },
+        }}
+      />
       {items.map((item, index) => {
         const alignEnd = index % 2 === 1;
         return (
-          <div
+          <FadeUp
             key={item.title}
+            viewportTrigger={false}
             className={cn(
               "relative flex flex-col gap-2 pl-10 sm:w-1/2 sm:pl-0",
               alignEnd
@@ -41,9 +59,9 @@ export function Timeline({
             <p className="max-w-sm text-sm leading-relaxed text-muted">
               {item.description}
             </p>
-          </div>
+          </FadeUp>
         );
       })}
-    </div>
+    </StaggerContainer>
   );
 }

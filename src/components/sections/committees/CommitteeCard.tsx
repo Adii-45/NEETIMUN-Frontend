@@ -11,6 +11,7 @@ export function CommitteeCard({
   briefing,
   href,
   dark = false,
+  className,
 }: {
   tag: string;
   difficulty: string;
@@ -19,6 +20,7 @@ export function CommitteeCard({
   briefing: string;
   href: string;
   dark?: boolean;
+  className?: string;
 }) {
   return (
     <div
@@ -27,6 +29,7 @@ export function CommitteeCard({
         dark
           ? "border-navy-900 bg-navy-900 text-cream-50 hover:border-gold-400/40 hover:shadow-navy-900/40"
           : "border-border bg-cream-50 text-navy-900 hover:border-gold-400/40 hover:shadow-navy-900/10",
+        className,
       )}
     >
       <div

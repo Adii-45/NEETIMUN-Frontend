@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { IconCircle } from "@/components/ui/IconCircle";
+import { StaggerContainer, FadeUp } from "@/components/ui/motion";
 import { quickAnswers } from "@/lib/data/contact";
 
 export function QuickAnswers() {
@@ -25,31 +26,33 @@ export function QuickAnswers() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <StaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           {quickAnswers.map((item) => (
-            <Card key={item.title} className="flex flex-col gap-4">
-              <IconCircle>
-                <item.icon size={20} />
-              </IconCircle>
-              <h3 className="font-display text-lg text-navy-900">
-                {item.title}
-              </h3>
-              <p className="text-sm leading-relaxed text-muted">
-                {item.description}
-              </p>
-              <Link
-                href={item.href}
-                className="mt-auto flex items-center gap-2 text-sm font-medium text-gold-600"
-              >
-                {item.linkLabel}
-                <ArrowRight
-                  size={14}
-                  className="transition-transform duration-200 group-hover:translate-x-1"
-                />
-              </Link>
-            </Card>
+            <FadeUp key={item.title} viewportTrigger={false}>
+              <Card className="flex h-full flex-col gap-4">
+                <IconCircle>
+                  <item.icon size={20} />
+                </IconCircle>
+                <h3 className="font-display text-lg text-navy-900">
+                  {item.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-muted">
+                  {item.description}
+                </p>
+                <Link
+                  href={item.href}
+                  className="mt-auto flex items-center gap-2 text-sm font-medium text-gold-600"
+                >
+                  {item.linkLabel}
+                  <ArrowRight
+                    size={14}
+                    className="transition-transform duration-200 group-hover:translate-x-1"
+                  />
+                </Link>
+              </Card>
+            </FadeUp>
           ))}
-        </div>
+        </StaggerContainer>
       </Container>
     </section>
   );

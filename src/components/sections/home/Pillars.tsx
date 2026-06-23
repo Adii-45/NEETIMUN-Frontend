@@ -1,6 +1,7 @@
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FeatureCard } from "@/components/ui/FeatureCard";
+import { StaggerContainer, FadeUp } from "@/components/ui/motion";
 import { pillars } from "@/lib/data/pillars";
 
 export function Pillars() {
@@ -12,17 +13,19 @@ export function Pillars() {
           title="The Pillars of Neeti"
           align="left"
         />
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <StaggerContainer className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {pillars.map((pillar) => (
-            <FeatureCard
-              key={pillar.title}
-              icon={pillar.icon}
-              title={pillar.title}
-              description={pillar.description}
-              featured={pillar.featured}
-            />
+            <FadeUp key={pillar.title} viewportTrigger={false}>
+              <FeatureCard
+                icon={pillar.icon}
+                title={pillar.title}
+                description={pillar.description}
+                featured={pillar.featured}
+                className="h-full"
+              />
+            </FadeUp>
           ))}
-        </div>
+        </StaggerContainer>
       </Container>
     </section>
   );

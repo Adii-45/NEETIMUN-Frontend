@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { StaggerContainer, FadeUp } from "@/components/ui/motion";
 import { committees } from "@/lib/data/committees";
 
 export function PortfoliosPreview() {
@@ -26,29 +27,31 @@ export function PortfoliosPreview() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {committees.map((committee) => (
-            <Card key={committee.tag} className="flex flex-col gap-4">
-              <Badge variant="outline">{committee.tag}</Badge>
-              <h3 className="font-display text-lg text-navy-900">
-                {committee.title}
-              </h3>
-              <p className="text-sm leading-relaxed text-muted">
-                {committee.description}
-              </p>
-              <Link
-                href={committee.href}
-                className="mt-auto flex items-center gap-2 text-sm font-medium text-gold-600"
-              >
-                Guide
-                <ArrowRight
-                  size={14}
-                  className="transition-transform duration-200 group-hover:translate-x-1"
-                />
-              </Link>
-            </Card>
+            <FadeUp key={committee.tag} viewportTrigger={false}>
+              <Card className="flex h-full flex-col gap-4">
+                <Badge variant="outline">{committee.tag}</Badge>
+                <h3 className="font-display text-lg text-navy-900">
+                  {committee.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-muted">
+                  {committee.description}
+                </p>
+                <Link
+                  href={committee.href}
+                  className="mt-auto flex items-center gap-2 text-sm font-medium text-gold-600"
+                >
+                  Guide
+                  <ArrowRight
+                    size={14}
+                    className="transition-transform duration-200 group-hover:translate-x-1"
+                  />
+                </Link>
+              </Card>
+            </FadeUp>
           ))}
-        </div>
+        </StaggerContainer>
       </Container>
     </section>
   );

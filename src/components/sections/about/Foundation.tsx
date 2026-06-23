@@ -1,6 +1,7 @@
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FeatureCard } from "@/components/ui/FeatureCard";
+import { StaggerContainer, FadeUp } from "@/components/ui/motion";
 import { foundation } from "@/lib/data/foundation";
 
 export function Foundation() {
@@ -12,17 +13,19 @@ export function Foundation() {
           title="Commitment to Global Citizenship"
           tone="dark"
         />
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <StaggerContainer className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {foundation.map((item) => (
-            <FeatureCard
-              key={item.title}
-              icon={item.icon}
-              title={item.title}
-              description={item.description}
-              tone="dark"
-            />
+            <FadeUp key={item.title} viewportTrigger={false}>
+              <FeatureCard
+                icon={item.icon}
+                title={item.title}
+                description={item.description}
+                tone="dark"
+                className="h-full"
+              />
+            </FadeUp>
           ))}
-        </div>
+        </StaggerContainer>
       </Container>
     </section>
   );

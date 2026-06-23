@@ -3,6 +3,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProfileCard } from "@/components/ui/ProfileCard";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
+import { StaggerContainer, FadeUp } from "@/components/ui/motion";
 import { executiveBoard, departmentalHeads } from "@/lib/data/executive-board";
 
 export function ExecutiveBoard() {
@@ -20,11 +21,13 @@ export function ExecutiveBoard() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerContainer className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {executiveBoard.map((member) => (
-            <ProfileCard key={member.name} {...member} size="md" />
+            <FadeUp key={member.name} viewportTrigger={false}>
+              <ProfileCard {...member} size="md" />
+            </FadeUp>
           ))}
-        </div>
+        </StaggerContainer>
 
         <div className="flex flex-wrap items-center gap-6 border-t border-border pt-8">
           <span className="text-xs font-medium uppercase tracking-wide-label text-muted">

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ViewTransition } from "react";
 import { fraunces, inter } from "@/config/fonts";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -31,7 +32,9 @@ export default function RootLayout({
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="font-sans antialiased">
         <Header />
-        <main>{children}</main>
+        <ViewTransition enter="page-enter" exit="page-exit">
+          <main>{children}</main>
+        </ViewTransition>
         <Footer />
       </body>
     </html>
