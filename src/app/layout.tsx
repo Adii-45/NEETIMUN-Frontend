@@ -3,6 +3,7 @@ import { ViewTransition } from "react";
 import { fraunces, inter } from "@/config/fonts";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -31,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="font-sans antialiased">
+        <ScrollProgress />
         <Header />
         <ViewTransition enter="page-enter" exit="page-exit">
           <main>{children}</main>

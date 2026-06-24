@@ -3,11 +3,13 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { CardGrid, CardReveal, StaggerContainer, FadeUp } from "@/components/ui/motion";
+import { SectionBackdrop } from "@/components/ui/SectionBackdrop";
 import { testimonials } from "@/lib/data/testimonials";
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="bg-cream-200/60 py-24">
+    <section id="testimonials" className="relative bg-cream-200/60 py-24">
+      <SectionBackdrop variant="gold-tr" range={14} />
       <Container className="flex flex-col gap-14">
         <SectionHeading
           eyebrow="Feedback"

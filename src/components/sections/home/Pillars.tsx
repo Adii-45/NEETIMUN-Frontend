@@ -2,11 +2,13 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FeatureCard } from "@/components/ui/FeatureCard";
 import { CardGrid, CardReveal } from "@/components/ui/motion";
+import { SectionBackdrop } from "@/components/ui/SectionBackdrop";
 import { pillars } from "@/lib/data/pillars";
 
 export function Pillars() {
   return (
-    <section id="pillars" className="bg-cream-200/60 py-24">
+    <section id="pillars" className="relative bg-cream-200/60 py-24">
+      <SectionBackdrop variant="gold-tr" range={16} />
       <Container className="flex flex-col gap-14">
         <SectionHeading
           eyebrow="Excellence"

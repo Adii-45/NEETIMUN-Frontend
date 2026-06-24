@@ -73,11 +73,11 @@ body {
 }
 
 ::view-transition-old(page-exit) {
-  animation: 150ms ease-out both page-fade-out;
+  animation: 260ms cubic-bezier(0.16, 1, 0.3, 1) both page-fade-out;
 }
 
 ::view-transition-new(page-enter) {
-  animation: 220ms ease-out 80ms both page-fade-in;
+  animation: 340ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both page-fade-in;
 }
 
 @keyframes page-fade-out {
@@ -87,14 +87,14 @@ body {
   }
   to {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-14px);
   }
 }
 
 @keyframes page-fade-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;

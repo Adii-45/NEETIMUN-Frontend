@@ -24,14 +24,15 @@ function TimelineNode({
   alignEnd,
   reduced,
   date,
+  glowOpacity,
 }: {
   scrollYProgress: MotionValue<number>;
   threshold: number;
   alignEnd: boolean;
   reduced: boolean;
   date: string;
+  glowOpacity: MotionValue<number>;
 }) {
-  // Future -> current -> completed, driven by how far the line has grown past this node.
   const fill = useTransform(
     scrollYProgress,
     [threshold - 0.06, threshold],
@@ -47,7 +48,6 @@ function TimelineNode({
     [threshold - 0.18, threshold - 0.06],
     ["var(--color-border)", "var(--color-navy-900)"],
   );
-  // Gentle, momentary emphasis as a milestone becomes "current".
   const nodeScale = useTransform(
     scrollYProgress,
     [threshold - 0.07, threshold, threshold + 0.07],
@@ -59,15 +59,20 @@ function TimelineNode({
     [0.45, 1],
   );
 
+  const nodePositionClass = cn(
+    "absolute top-1.5 left-2 h-3 w-3 -translate-x-1/2 rounded-full border-2 sm:left-auto",
+    alignEnd ? "sm:-left-1.5" : "sm:-right-1.5 sm:translate-x-1/2",
+  );
+
+  const glowPositionClass = cn(
+    "absolute top-0.5 left-2 h-5 w-5 -translate-x-1/2 rounded-full bg-gold-400 blur-md sm:left-auto",
+    alignEnd ? "sm:-left-2.5" : "sm:-right-2.5 sm:translate-x-1/2",
+  );
+
   if (reduced) {
     return (
       <>
-        <span
-          className={cn(
-            "absolute top-1.5 left-2 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-navy-900 bg-cream-50 sm:left-auto",
-            alignEnd ? "sm:-left-1.5" : "sm:-right-1.5 sm:translate-x-1/2",
-          )}
-        />
+        <span className={cn(nodePositionClass, "border-navy-900 bg-cream-50")} />
         <span className="text-xs font-medium uppercase tracking-wide-label text-gold-600">
           {date}
         </span>
@@ -77,11 +82,14 @@ function TimelineNode({
 
   return (
     <>
+      {/* Glow halo — behind the node dot in paint order */}
       <motion.span
-        className={cn(
-          "absolute top-1.5 left-2 h-3 w-3 -translate-x-1/2 rounded-full border-2 sm:left-auto",
-          alignEnd ? "sm:-left-1.5" : "sm:-right-1.5 sm:translate-x-1/2",
-        )}
+        aria-hidden
+        className={glowPositionClass}
+        style={{ opacity: glowOpacity }}
+      />
+      <motion.span
+        className={nodePositionClass}
         style={{ backgroundColor, borderColor, scale: nodeScale }}
       />
       <motion.span
@@ -91,6 +99,72 @@ function TimelineNode({
         {date}
       </motion.span>
     </>
+  );
+}
+
+function TimelineEntry({
+  item,
+  index,
+  total,
+  scrollYProgress,
+  reduced,
+}: {
+  item: TimelineItem;
+  index: number;
+  total: number;
+  scrollYProgress: MotionValue<number>;
+  reduced: boolean;
+}) {
+  const alignEnd = index % 2 === 1;
+  const threshold = total > 1 ? 0.1 + (index / (total - 1)) * 0.8 : 0.5;
+
+  const titleOpacity = useTransform(
+    scrollYProgress,
+    [threshold - 0.2, threshold],
+    [0.5, 1],
+  );
+  const descOpacity = useTransform(
+    scrollYProgress,
+    [threshold - 0.25, threshold],
+    [0.35, 0.85],
+  );
+  const glowOpacity = useTransform(
+    scrollYProgress,
+    [threshold - 0.07, threshold, threshold + 0.07],
+    [0, 0.3, 0],
+  );
+
+  return (
+    <CardReveal
+      direction={alignEnd ? "right" : "left"}
+      className={cn(
+        "relative flex flex-col gap-2 pl-10 sm:w-1/2 sm:pl-0",
+        alignEnd
+          ? "sm:ml-auto sm:items-start sm:pl-10 sm:text-left"
+          : "sm:items-end sm:pr-10 sm:text-right",
+      )}
+    >
+      <TimelineNode
+        scrollYProgress={scrollYProgress}
+        threshold={threshold}
+        alignEnd={alignEnd}
+        reduced={reduced}
+        date={item.date}
+        glowOpacity={glowOpacity}
+      />
+      <motion.h3
+        className="font-display text-xl text-navy-900"
+        style={{ opacity: reduced ? 1 : titleOpacity }}
+      >
+        {item.title}
+      </motion.h3>
+      <motion.p
+        className="max-w-sm text-sm leading-relaxed text-muted"
+        style={{ opacity: reduced ? 1 : descOpacity }}
+      >
+        {item.description}
+      </motion.p>
+    </CardReveal>
   );
 }
 
@@ -117,37 +191,16 @@ export function Timeline({
         style={{ scaleY: reduced ? 1 : lineScale }}
       />
       <CardGrid className="flex flex-col gap-12">
-        {items.map((item, index) => {
-          const alignEnd = index % 2 === 1;
-          // Keep thresholds away from the [0, 1] edges so each node's fill/pulse
-          // window (±0.07-0.18) fully resolves within scrollYProgress's bounds.
-          const threshold =
-            items.length > 1 ? 0.1 + (index / (items.length - 1)) * 0.8 : 0.5;
-          return (
-            <CardReveal
-              key={item.title}
-              direction={alignEnd ? "right" : "left"}
-              className={cn(
-                "relative flex flex-col gap-2 pl-10 sm:w-1/2 sm:pl-0",
-                alignEnd
-                  ? "sm:ml-auto sm:items-start sm:pl-10 sm:text-left"
-                  : "sm:items-end sm:pr-10 sm:text-right",
-              )}
-            >
-              <TimelineNode
-                scrollYProgress={scrollYProgress}
-                threshold={threshold}
-                alignEnd={alignEnd}
-                reduced={!!reduced}
-                date={item.date}
-              />
-              <h3 className="font-display text-xl text-navy-900">{item.title}</h3>
-              <p className="max-w-sm text-sm leading-relaxed text-muted">
-                {item.description}
-              </p>
-            </CardReveal>
-          );
-        })}
+        {items.map((item, index) => (
+          <TimelineEntry
+            key={item.title}
+            item={item}
+            index={index}
+            total={items.length}
+            scrollYProgress={scrollYProgress}
+            reduced={!!reduced}
+          />
+        ))}
       </CardGrid>
     </div>
   );

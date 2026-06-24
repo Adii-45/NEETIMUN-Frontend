@@ -7,3 +7,4 @@ export { CardReveal } from "./CardReveal";
 export { Parallax } from "./Parallax";
 export { Magnetic } from "./Magnetic";
 export { Counter } from "./Counter";
+export { ScaleIn } from "./ScaleIn";

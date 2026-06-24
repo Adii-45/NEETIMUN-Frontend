@@ -2,11 +2,13 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { StatBlock } from "@/components/ui/StatBlock";
 import { FadeUp } from "@/components/ui/motion";
+import { SectionBackdrop } from "@/components/ui/SectionBackdrop";
 import { heritageStats } from "@/lib/data/heritage";
 
 export function Heritage() {
   return (
-    <section className="bg-cream-200/60 py-24">
+    <section className="relative bg-cream-200/60 py-24">
+      <SectionBackdrop variant="gold-tr" range={16} />
       <Container className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
         <FadeUp direction="left">
           <div className="flex flex-col gap-10">

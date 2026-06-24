@@ -2,11 +2,13 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FeatureCard } from "@/components/ui/FeatureCard";
 import { CardGrid, CardReveal } from "@/components/ui/motion";
+import { SectionBackdrop } from "@/components/ui/SectionBackdrop";
 import { foundation } from "@/lib/data/foundation";
 
 export function Foundation() {
   return (
-    <section className="bg-navy-950 py-24">
+    <section className="relative overflow-hidden bg-navy-950 py-24">
+      <SectionBackdrop variant="navy-tr" range={12} />
       <Container className="flex flex-col items-center gap-14">
         <SectionHeading
           eyebrow="Our Foundation"

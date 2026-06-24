@@ -1,6 +1,7 @@
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { RevealSection, StaggerContainer, FadeUp, Magnetic } from "@/components/ui/motion";
+import { RevealSection, StaggerContainer, FadeUp, Magnetic, ScaleIn } from "@/components/ui/motion";
+import { SectionBackdrop } from "@/components/ui/SectionBackdrop";
 
 type CTALink = {
   label: string;
@@ -24,7 +25,9 @@ export function CTABanner({
   magneticPrimary?: boolean;
 }) {
   return (
-    <section className="bg-navy-950">
+    <section className="relative overflow-hidden bg-navy-950">
+      <SectionBackdrop variant="navy-tr" range={14} />
+      <ScaleIn>
       <Container className="flex flex-col items-center gap-6 py-20 text-center">
         <RevealSection className="flex flex-col items-center gap-6">
           {eyebrow ? (
@@ -69,6 +72,7 @@ export function CTABanner({
           ) : null}
         </StaggerContainer>
       </Container>
+      </ScaleIn>
     </section>
   );
 }
