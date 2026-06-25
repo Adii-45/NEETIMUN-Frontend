@@ -1,11 +1,13 @@
 import { Container } from "@/components/ui/Container";
 import { CommitteeCard } from "@/components/sections/committees/CommitteeCard";
 import { CardGrid, CardReveal, Parallax, Magnetic } from "@/components/ui/motion";
+import { CommitteeSpotlight } from "@/components/sections/committees/CommitteeSpotlight";
 import { committees } from "@/lib/data/committees";
 
 export function CommitteeGrid() {
   return (
     <section className="pb-24">
+      <CommitteeSpotlight>
       <Container as={CardGrid} className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {committees.map((committee) => (
           <CardReveal key={committee.tag}>
@@ -26,6 +28,7 @@ export function CommitteeGrid() {
           </CardReveal>
         ))}
       </Container>
+      </CommitteeSpotlight>
     </section>
   );
 }

@@ -35,15 +35,16 @@ export function PortfoliosPreview() {
               <Magnetic range={2}>
                 <Card className="flex h-full flex-col gap-4">
                   <Badge variant="outline">{committee.tag}</Badge>
-                  <h3 className="font-display text-lg text-navy-900">
+                  {/* Each element shifts independently on hover — creates Z-depth within the card */}
+                  <h3 className="font-display text-lg text-navy-900 transition-transform duration-300 ease-out group-hover:-translate-y-1">
                     {committee.title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-muted">
+                  <p className="text-sm leading-relaxed text-muted transition-transform duration-300 ease-out group-hover:-translate-y-2">
                     {committee.description}
                   </p>
                   <Link
                     href={committee.href}
-                    className="mt-auto flex items-center gap-2 text-sm font-medium text-gold-600"
+                    className="mt-auto flex items-center gap-2 text-sm font-medium text-gold-600 transition-transform duration-300 ease-out group-hover:-translate-y-3"
                   >
                     Guide
                     <ArrowRight

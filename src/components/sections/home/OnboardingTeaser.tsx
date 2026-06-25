@@ -3,7 +3,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Stepper } from "@/components/ui/Stepper";
+import { AnimatedStepper } from "@/components/ui/AnimatedStepper";
 import { StaggerContainer, FadeUp } from "@/components/ui/motion";
 
 const steps = ["Portfolio", "Information", "Payment"];
@@ -18,9 +18,8 @@ export function OnboardingTeaser() {
             <Badge variant="default">Average completion time: Under 2 minutes</Badge>
           </FadeUp>
 
-          <FadeUp viewportTrigger={false} className="mx-auto w-full max-w-lg">
-            <Stepper steps={steps} activeStep={0} />
-          </FadeUp>
+          {/* AnimatedStepper handles its own entrance sequence — no FadeUp wrapper */}
+          <AnimatedStepper steps={steps} activeStep={0} className="mx-auto w-full max-w-lg" />
 
           <FadeUp viewportTrigger={false} className="w-full max-w-xl">
             <Card>

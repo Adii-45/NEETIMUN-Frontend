@@ -64,9 +64,10 @@ function TimelineNode({
     alignEnd ? "sm:-left-1.5" : "sm:-right-1.5 sm:translate-x-1/2",
   );
 
+  // h-8 w-8 (32px) centered at same Y as the 12px node (top-1.5 + 6px = 12px, so top = 12-16 = -4px = -top-1)
   const glowPositionClass = cn(
-    "absolute top-0.5 left-2 h-5 w-5 -translate-x-1/2 rounded-full bg-gold-400 blur-md sm:left-auto",
-    alignEnd ? "sm:-left-2.5" : "sm:-right-2.5 sm:translate-x-1/2",
+    "absolute -top-1 left-2 h-8 w-8 -translate-x-1/2 rounded-full bg-gold-400 blur-lg sm:left-auto",
+    alignEnd ? "sm:-left-4" : "sm:-right-4 sm:translate-x-1/2",
   );
 
   if (reduced) {
@@ -131,7 +132,7 @@ function TimelineEntry({
   const glowOpacity = useTransform(
     scrollYProgress,
     [threshold - 0.07, threshold, threshold + 0.07],
-    [0, 0.3, 0],
+    [0, 0.6, 0],
   );
 
   return (
@@ -186,8 +187,11 @@ export function Timeline({
 
   return (
     <div ref={containerRef} className={cn("relative", className)}>
+      {/* Static base line — shows the full timeline path before scroll fills it */}
+      <div className="absolute top-2 bottom-2 left-2 w-px bg-border/50 sm:left-1/2 sm:-translate-x-1/2" />
+      {/* Gold fill — grows from top as user scrolls, the visual "pen writing the story" */}
       <motion.div
-        className="absolute top-2 bottom-2 left-2 w-px origin-top bg-border sm:left-1/2 sm:-translate-x-1/2"
+        className="absolute top-2 bottom-2 left-2 w-px origin-top bg-gold-500 sm:left-1/2 sm:-translate-x-1/2"
         style={{ scaleY: reduced ? 1 : lineScale }}
       />
       <CardGrid className="flex flex-col gap-12">
