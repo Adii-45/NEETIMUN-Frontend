@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import type { LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { SidebarIdentity } from "@/components/sections/committees/SidebarIdentity";
@@ -14,7 +13,7 @@ export function CommitteeCard({
   tag,
   title,
   description,
-  icon: Icon,
+  lines,
   badges,
   agenda,
   portfolioTypes,
@@ -24,7 +23,7 @@ export function CommitteeCard({
   tag: string;
   title: string;
   description: string[];
-  icon: LucideIcon;
+  lines: string[];
   badges: string[];
   agenda: string | null;
   portfolioTypes: string[];
@@ -55,8 +54,8 @@ export function CommitteeCard({
     >
       {/* Identity sidebar — encapsulates all sidebar composition and hover effects */}
       <SidebarIdentity
-        icon={Icon}
         abbreviation={tag}
+        lines={lines}
       />
 
       {/* Content panel */}

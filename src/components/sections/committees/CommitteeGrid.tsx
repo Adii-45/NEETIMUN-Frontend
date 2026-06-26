@@ -19,7 +19,7 @@ export function CommitteeGrid() {
                     tag={committee.tag}
                     title={committee.title}
                     description={committee.description}
-                    icon={committee.icon}
+                    lines={committee.sidebarLines}
                     badges={committee.badges}
                     agenda={committee.agenda}
                     portfolioTypes={committee.portfolioTypes}
