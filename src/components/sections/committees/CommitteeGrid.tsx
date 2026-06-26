@@ -1,3 +1,5 @@
+"use client";
+
 import { CommitteeCard } from "@/components/sections/committees/CommitteeCard";
 import { Container } from "@/components/ui/Container";
 import { CardGrid, CardReveal, Parallax, Magnetic } from "@/components/ui/motion";
@@ -6,9 +8,9 @@ import { committees } from "@/lib/data/committees";
 
 export function CommitteeGrid() {
   return (
-    <section className="pb-24">
+    <section className="pb-28">
       <CommitteeSpotlight>
-        <Container as={CardGrid} className="flex flex-col gap-16">
+        <Container as={CardGrid} className="flex flex-col gap-20">
           {committees.map((committee) => (
             <CardReveal key={committee.id} className="w-full">
               <Parallax range={2} className="w-full">
