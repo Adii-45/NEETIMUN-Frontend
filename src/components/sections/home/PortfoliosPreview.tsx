@@ -17,7 +17,7 @@ export function PortfoliosPreview() {
           <SectionHeading
             eyebrow="Portfolios"
             title="Council Portfolios"
-            subtitle="Selected committees for the 2026 iteration."
+            subtitle="Six committees for the 2026 iteration."
             align="left"
           />
           <Link
@@ -29,24 +29,44 @@ export function PortfoliosPreview() {
           </Link>
         </div>
 
-        <CardGrid className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4" delayChildren={0.35}>
+        <CardGrid
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          delayChildren={0.35}
+        >
           {committees.map((committee) => (
-            <CardReveal key={committee.tag}>
+            <CardReveal key={committee.id}>
               <Magnetic range={2}>
                 <Card className="flex h-full flex-col gap-4">
-                  <Badge variant="outline">{committee.tag}</Badge>
-                  {/* Each element shifts independently on hover — creates Z-depth within the card */}
+                  <div className="flex items-center justify-between gap-2">
+                    <Badge variant="outline">{committee.tag}</Badge>
+                    <div className="flex flex-wrap justify-end gap-1.5">
+                      {committee.badges.map((badge) => (
+                        <Badge
+                          key={badge}
+                          variant="gold"
+                          className="px-2.5 py-1 text-[10px]"
+                        >
+                          {badge}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
                   <h3 className="font-display text-lg text-navy-900 transition-transform duration-300 ease-out group-hover:-translate-y-1">
                     {committee.title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-muted transition-transform duration-300 ease-out group-hover:-translate-y-2">
-                    {committee.description}
+                  <p className="text-sm leading-relaxed text-muted transition-transform duration-300 ease-out group-hover:-translate-y-1.5">
+                    {committee.shortDescription}
                   </p>
+                  {committee.agenda && (
+                    <p className="line-clamp-2 text-xs leading-snug text-muted/70 transition-transform duration-300 ease-out group-hover:-translate-y-2">
+                      {committee.agenda}
+                    </p>
+                  )}
                   <Link
                     href={committee.href}
-                    className="mt-auto flex items-center gap-2 text-sm font-medium text-gold-600 transition-transform duration-300 ease-out group-hover:-translate-y-3"
+                    className="mt-auto flex items-center gap-2 text-sm font-medium text-gold-600 transition-transform duration-300 ease-out group-hover:-translate-y-2.5"
                   >
-                    Guide
+                    Explore Committee
                     <ArrowRight
                       size={14}
                       className="transition-transform duration-200 ease-out group-hover:translate-x-1.5"

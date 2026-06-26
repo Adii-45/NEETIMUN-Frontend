@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/committees/Hero";
 import { CommitteeGrid } from "@/components/sections/committees/CommitteeGrid";
+import { BeyondDebate } from "@/components/sections/committees/BeyondDebate";
 import { CTABanner } from "@/components/ui/CTABanner";
 
 export const metadata: Metadata = {
   title: "Committees | NEETI MUN 2026",
   description:
-    "Explore the 2026 committee portfolios — UNODC, AIPPM, Black Budget Council, and the 2040 Global Summit.",
+    "Explore the 2026 committee portfolios — Black Budget Council, World Summit 2040, UNODC, AIPPM, India and the Mic, and International Press.",
 };
 
 export default function CommitteesPage() {
@@ -14,6 +15,7 @@ export default function CommitteesPage() {
     <>
       <Hero />
       <CommitteeGrid />
+      <BeyondDebate />
       <CTABanner
         title="Ready to Represent?"
         subtitle="Join the ranks of global strategists and diplomats. Selection for premium committees is highly competitive."

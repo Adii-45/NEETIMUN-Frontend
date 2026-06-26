@@ -32,7 +32,7 @@ export function RegistrationForm() {
                 <label
                   key={committee.tag}
                   className={cn(
-                    "flex cursor-pointer flex-col gap-1 rounded-2xl border p-5 text-left transition-all duration-200 ease-out focus-within:ring-2 focus-within:ring-gold-500 focus-within:ring-offset-2 focus-within:ring-offset-cream-50",
+                    "flex cursor-pointer flex-col gap-1.5 rounded-2xl border p-5 text-left transition-all duration-200 ease-out focus-within:ring-2 focus-within:ring-gold-500 focus-within:ring-offset-2 focus-within:ring-offset-cream-50",
                     isSelected
                       ? "border-navy-900 bg-cream-200/70 shadow-md shadow-navy-900/5"
                       : "border-border bg-cream-50 hover:border-gold-400/40",
@@ -46,10 +46,12 @@ export function RegistrationForm() {
                     onChange={() => setSelected(committee.tag)}
                     className="sr-only"
                   />
-                  <span className="font-display text-lg text-navy-900">
+                  <span className="text-xs font-medium uppercase tracking-wide-label text-gold-600">
                     {committee.tag}
                   </span>
-                  <span className="text-sm text-muted">{committee.title}</span>
+                  <span className="font-display text-base leading-snug text-navy-900">
+                    {committee.title}
+                  </span>
                 </label>
               );
             })}
