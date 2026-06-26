@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { IconCircle } from "@/components/ui/IconCircle";
+import { SidebarIdentity } from "@/components/sections/committees/SidebarIdentity";
 import { cn } from "@/lib/utils";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -47,62 +47,21 @@ export function CommitteeCard({
   return (
     <div
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-3xl border border-navy-900/10 bg-cream-50 transition-all duration-300 ease-out hover:-translate-y-2 hover:border-gold-400/30 hover:shadow-[0_28px_64px_-12px_rgba(10,27,63,0.15)] lg:flex-row",
+        "group relative flex flex-col overflow-hidden rounded-3xl border border-navy-900/10 bg-cream-50 transition-all duration-300 ease-out",
+        "hover:-translate-y-2 hover:border-gold-400/30 hover:shadow-[0_28px_64px_-12px_rgba(10,27,63,0.15)]",
+        "lg:flex-row",
         className,
       )}
     >
-      {/* Icon sidebar */}
-      <div className="relative z-10 flex h-44 shrink-0 flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-navy-800 to-navy-950 lg:h-auto lg:w-64">
-        {/* Watermark icon */}
-        <Icon
-          size={128}
-          aria-hidden
-          className="absolute text-cream-50 opacity-[0.05]"
-        />
-
-        {/* Gold radial bloom */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(circle at 50% 50%, rgba(201,162,39,0.20) 0%, transparent 58%)",
-          }}
-        />
-
-        {/* Pulsing glow ring */}
-        {!reduced && (
-          <motion.div
-            aria-hidden
-            className="pointer-events-none absolute rounded-full"
-            style={{
-              width: 100,
-              height: 100,
-              background:
-                "radial-gradient(circle, rgba(201,162,39,0.22) 0%, transparent 68%)",
-            }}
-            animate={{ opacity: [0.35, 0.75, 0.35], scale: [0.9, 1.1, 0.9] }}
-            transition={{
-              duration: 3.6,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        )}
-
-        {/* Icon + tag */}
-        <div className="relative z-10 flex flex-col items-center gap-3">
-          <IconCircle tone="dark" className="h-14 w-14">
-            <Icon size={22} />
-          </IconCircle>
-          <span className="text-[11px] font-semibold uppercase tracking-wide-label text-gold-400">
-            {tag}
-          </span>
-        </div>
-      </div>
+      {/* Identity sidebar — encapsulates all sidebar composition and hover effects */}
+      <SidebarIdentity
+        icon={Icon}
+        abbreviation={tag}
+      />
 
       {/* Content panel */}
       <div className="relative z-10 flex flex-1 flex-col gap-6 p-8 lg:p-10">
+
         {/* ① Category badges */}
         <motion.div {...sec(0)} className="flex flex-wrap gap-2.5">
           {badges.map((badge) => (
