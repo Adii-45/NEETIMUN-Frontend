@@ -16,6 +16,8 @@ type PortfolioSelectProps = {
   disabledPlaceholder?: string;
   /** Shown on the trigger once a committee is selected but no portfolio picked. */
   placeholder?: string;
+  /** Placeholder text inside the search input. */
+  searchPlaceholder?: string;
   /** Marks the field as invalid for styling + aria. */
   invalid?: boolean;
   id?: string;
@@ -29,6 +31,7 @@ export function PortfolioSelect({
   disabled = false,
   disabledPlaceholder = "Select a committee first",
   placeholder = "Select your preferred portfolio",
+  searchPlaceholder = "Search portfolios",
   invalid = false,
   id,
   "aria-describedby": describedBy,
@@ -201,13 +204,13 @@ export function PortfolioSelect({
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               onKeyDown={handleSearchKeyDown}
-              placeholder="Search portfolios"
+              placeholder={searchPlaceholder}
               role="combobox"
               aria-expanded="true"
               aria-controls={listboxId}
               aria-activedescendant={activeOptionId}
               aria-autocomplete="list"
-              aria-label="Search portfolios"
+              aria-label={searchPlaceholder}
               className="w-full bg-transparent text-sm text-navy-900 placeholder:text-navy-900/40 focus:outline-none"
             />
           </div>

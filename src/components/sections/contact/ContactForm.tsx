@@ -1,14 +1,19 @@
-import { ChevronDown, Send, ShieldCheck } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { Send, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
-import { Select } from "@/components/ui/Select";
 import { Label } from "@/components/ui/Label";
+import { PortfolioSelect } from "@/components/ui/PortfolioSelect";
 import { inquiryCategories } from "@/lib/data/contact";
 
 const fieldPolish = "hover:border-gold-400/50 transition-colors duration-200";
 
 export function ContactForm() {
+  const [category, setCategory] = useState("");
+
   return (
     <div className="h-full rounded-2xl border border-border bg-cream-50 p-7 shadow-sm sm:rounded-3xl sm:p-9">
       {/* Card header */}
@@ -49,31 +54,19 @@ export function ContactForm() {
           </div>
         </div>
 
-        {/* Inquiry Category */}
+        {/* Inquiry Category — searchable combobox */}
         <div className="flex flex-col gap-2">
           <Label htmlFor="category">Inquiry Category</Label>
-          <div className="relative">
-            <Select
-              id="category"
-              name="category"
-              defaultValue=""
-              className={`cursor-pointer appearance-none rounded-xl py-3 pr-10 ${fieldPolish}`}
-            >
-              <option value="" disabled>
-                Select Protocol Tier
-              </option>
-              {inquiryCategories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </Select>
-            <ChevronDown
-              size={15}
-              aria-hidden="true"
-              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-navy-900/40"
-            />
-          </div>
+          <PortfolioSelect
+            id="category"
+            options={[...inquiryCategories]}
+            value={category}
+            onChange={setCategory}
+            placeholder="Select Protocol Tier"
+            searchPlaceholder="Search inquiry categories..."
+          />
+          {/* Hidden input carries the value for native form submission */}
+          <input type="hidden" name="category" value={category} />
         </div>
 
         {/* Message */}
