@@ -11,9 +11,9 @@ import { committees } from "@/lib/data/committees";
 import { DelegateDetailsStep } from "./DelegateDetailsStep";
 import { ReviewStep } from "./ReviewStep";
 import { SuccessState } from "./SuccessState";
+import { submitRegistration } from "./submitRegistration";
 import {
   emptyDelegateDetails,
-  generateReferenceId,
   validateDelegateDetails,
   type DelegateDetails,
   type DetailErrors,
@@ -37,7 +37,7 @@ export function RegistrationForm({
 
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
-  const [referenceId, setReferenceId] = useState("");
+  const [registrationId, setRegistrationId] = useState("");
 
   // Step 1 — committee & portfolio. The URL is the source of truth for the
   // selected committee, keyed by slug.
@@ -54,6 +54,8 @@ export function RegistrationForm({
   // Step 3 — final confirmation
   const [confirmChecked, setConfirmChecked] = useState(false);
   const [confirmError, setConfirmError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const selectedCommittee = committees.find(
     (committee) => committee.slug === selected,
@@ -117,13 +119,31 @@ export function RegistrationForm({
     if (checked) setConfirmError(false);
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!confirmChecked) {
       setConfirmError(true);
       return;
     }
-    setReferenceId(generateReferenceId());
-    setSubmitted(true);
+
+    setSubmitError("");
+    setIsSubmitting(true);
+    try {
+      const result = await submitRegistration({
+        committee: selectedCommittee,
+        portfolio,
+        details,
+      });
+      setRegistrationId(result.registrationId);
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -132,7 +152,7 @@ export function RegistrationForm({
 
       {submitted ? (
         <div className="mt-10">
-          <SuccessState referenceId={referenceId} />
+          <SuccessState registrationId={registrationId} />
         </div>
       ) : (
         <div className="mt-10 flex flex-col gap-8">
@@ -259,17 +279,34 @@ export function RegistrationForm({
                 onEdit={setStep}
               />
 
-              <div className="flex flex-col-reverse gap-3 border-t border-border pt-6 sm:flex-row sm:justify-between">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setStep(1)}
-                >
-                  &larr; Back to Edit
-                </Button>
-                <Button type="button" onClick={handleSubmit}>
-                  Submit Application
-                </Button>
+              <div className="flex flex-col gap-4 border-t border-border pt-6">
+                {submitError ? (
+                  <p
+                    role="alert"
+                    className="text-sm text-red-500"
+                  >
+                    {submitError}
+                  </p>
+                ) : null}
+                <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setStep(1)}
+                    disabled={isSubmitting}
+                    className="disabled:pointer-events-none disabled:opacity-60"
+                  >
+                    &larr; Back to Edit
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    className="disabled:pointer-events-none disabled:opacity-70"
+                  >
+                    {isSubmitting ? "Submitting…" : "Submit Application"}
+                  </Button>
+                </div>
               </div>
             </>
           )}

@@ -96,8 +96,3 @@ export function validateDelegateDetails(details: DelegateDetails): DetailErrors 
 
   return errors;
 }
-
-export function generateReferenceId() {
-  const random = Math.random().toString(36).slice(2, 8).toUpperCase();
-  return `NM26-${random}`;
-}
