@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { Stepper } from "@/components/ui/Stepper";
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
@@ -26,14 +27,24 @@ const stepHeadings = [
   "Review & Confirm",
 ];
 
-export function RegistrationForm() {
+export function RegistrationForm({
+  initialCommitteeSlug,
+}: {
+  initialCommitteeSlug: string;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [referenceId, setReferenceId] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Step 1 — committee & portfolio
-  const [selected, setSelected] = useState(committees[0]?.tag ?? "");
+  // Step 1 — committee & portfolio. The URL is the source of truth for the
+  // selected committee, keyed by slug.
+  const [selected, setSelected] = useState(
+    () => initialCommitteeSlug || committees[0]?.slug || "",
+  );
   const [portfolio, setPortfolio] = useState("");
   const [portfolioError, setPortfolioError] = useState(false);
 
@@ -46,7 +57,7 @@ export function RegistrationForm() {
   const [confirmError, setConfirmError] = useState(false);
 
   const selectedCommittee = committees.find(
-    (committee) => committee.tag === selected,
+    (committee) => committee.slug === selected,
   );
   const portfolioOptions = selectedCommittee?.portfolioTypes ?? [];
   const hasPortfolios = portfolioOptions.length > 0;
@@ -56,11 +67,13 @@ export function RegistrationForm() {
     containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [step, submitted]);
 
-  function handleCommitteeChange(tag: string) {
-    setSelected(tag);
+  function handleCommitteeChange(slug: string) {
+    setSelected(slug);
     // Never keep a portfolio that belongs to a different committee.
     setPortfolio("");
     setPortfolioError(false);
+    // Keep the URL shareable and in sync — no scroll reset, no reload.
+    router.replace(`${pathname}?committee=${slug}`, { scroll: false });
   }
 
   function handlePortfolioChange(value: string) {
@@ -134,10 +147,10 @@ export function RegistrationForm() {
                 <legend className="sr-only">Choose Committee Preference</legend>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {committees.map((committee) => {
-                    const isSelected = selected === committee.tag;
+                    const isSelected = selected === committee.slug;
                     return (
                       <label
-                        key={committee.tag}
+                        key={committee.slug}
                         className={cn(
                           "flex cursor-pointer flex-col gap-1.5 rounded-2xl border p-5 text-left transition-all duration-200 ease-out focus-within:ring-2 focus-within:ring-gold-500 focus-within:ring-offset-2 focus-within:ring-offset-cream-50",
                           isSelected
@@ -148,9 +161,9 @@ export function RegistrationForm() {
                         <input
                           type="radio"
                           name="committee-preference"
-                          value={committee.tag}
+                          value={committee.slug}
                           checked={isSelected}
-                          onChange={() => handleCommitteeChange(committee.tag)}
+                          onChange={() => handleCommitteeChange(committee.slug)}
                           className="sr-only"
                         />
                         <span className="text-xs font-medium uppercase tracking-wide-label text-gold-600">

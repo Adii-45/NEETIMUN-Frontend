@@ -17,6 +17,14 @@ export type Committee = {
   href: string;
 };
 
+/**
+ * Resolve a committee by its URL slug. Returns `undefined` for missing or
+ * unknown slugs so callers can fall back gracefully.
+ */
+export function getCommitteeBySlug(slug?: string | null): Committee | undefined {
+  return slug ? committees.find((committee) => committee.slug === slug) : undefined;
+}
+
 export const committees: Committee[] = [
   {
     id: "black-budget-council",
