@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Stepper } from "@/components/ui/Stepper";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
+import { PortfolioSelect } from "@/components/ui/PortfolioSelect";
 import { cn } from "@/lib/utils";
 import { committees } from "@/lib/data/committees";
 
@@ -12,7 +12,35 @@ const steps = ["Committees", "Details", "Confirm"];
 
 export function RegistrationForm() {
   const [selected, setSelected] = useState(committees[0]?.tag ?? "");
-  const [country, setCountry] = useState("");
+  const [portfolio, setPortfolio] = useState("");
+  const [portfolioError, setPortfolioError] = useState(false);
+
+  const selectedCommittee = committees.find(
+    (committee) => committee.tag === selected,
+  );
+  const portfolioOptions = selectedCommittee?.portfolioTypes ?? [];
+  const hasPortfolios = portfolioOptions.length > 0;
+
+  function handleCommitteeChange(tag: string) {
+    setSelected(tag);
+    // Never keep a portfolio that belongs to a different committee.
+    setPortfolio("");
+    setPortfolioError(false);
+  }
+
+  function handlePortfolioChange(value: string) {
+    setPortfolio(value);
+    if (value) setPortfolioError(false);
+  }
+
+  function handleNext() {
+    if (hasPortfolios && !portfolio) {
+      setPortfolioError(true);
+      return;
+    }
+    setPortfolioError(false);
+    // Proceed to the next step.
+  }
 
   return (
     <div className="mx-auto w-full max-w-3xl rounded-3xl border border-border bg-cream-50/60 p-6 sm:p-10">
@@ -43,7 +71,7 @@ export function RegistrationForm() {
                     name="committee-preference"
                     value={committee.tag}
                     checked={isSelected}
-                    onChange={() => setSelected(committee.tag)}
+                    onChange={() => handleCommitteeChange(committee.tag)}
                     className="sr-only"
                   />
                   <span className="text-xs font-medium uppercase tracking-wide-label text-gold-600">
@@ -59,21 +87,38 @@ export function RegistrationForm() {
         </fieldset>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="country-preference">Country Preference</Label>
-          <Input
-            id="country-preference"
-            type="text"
-            value={country}
-            onChange={(event) => setCountry(event.target.value)}
-            placeholder="e.g. United Kingdom, India, France"
+          <Label htmlFor="portfolio-preference">Portfolio Preference</Label>
+          <PortfolioSelect
+            id="portfolio-preference"
+            options={portfolioOptions}
+            value={portfolio}
+            onChange={handlePortfolioChange}
+            disabled={!selectedCommittee || !hasPortfolios}
+            disabledPlaceholder={
+              selectedCommittee && !hasPortfolios
+                ? "No portfolios for this committee"
+                : "Select a committee first"
+            }
+            invalid={portfolioError}
+            aria-describedby={
+              portfolioError ? "portfolio-error" : "portfolio-help"
+            }
           />
-          <p className="text-xs text-muted">
-            Mention up to three countries separated by commas.
-          </p>
+          {portfolioError ? (
+            <p id="portfolio-error" role="alert" className="text-xs text-red-500">
+              Please select your preferred portfolio.
+            </p>
+          ) : (
+            <p id="portfolio-help" className="text-xs text-muted">
+              Portfolio availability depends on committee allocation.
+            </p>
+          )}
         </div>
 
         <div className="flex justify-end border-t border-border pt-6">
-          <Button type="button">Next Step &rarr;</Button>
+          <Button type="button" onClick={handleNext}>
+            Next Step &rarr;
+          </Button>
         </div>
       </div>
     </div>
