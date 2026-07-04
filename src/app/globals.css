@@ -33,6 +33,8 @@
   --animate-float-slow: float 9s ease-in-out infinite;
   --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
   --animate-dropdown-in: dropdown-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-select-in: select-in 0.18s ease-out both;
+  --animate-select-out: select-out 0.12s ease-in both;
 }
 
 @keyframes dropdown-in {
@@ -43,6 +45,28 @@
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes select-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes select-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
   }
 }
 
