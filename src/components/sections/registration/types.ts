@@ -97,7 +97,7 @@ export function validateDelegateDetails(details: DelegateDetails): DetailErrors 
   return errors;
 }
 
-export function generateReferenceId() {
-  const random = Math.random().toString(36).slice(2, 8).toUpperCase();
-  return `NM26-${random}`;
+/** Derives the delegate-facing reference code from the backend's persisted id. */
+export function referenceIdFromId(id: string) {
+  return `NM26-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 }

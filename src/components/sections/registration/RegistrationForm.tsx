@@ -8,16 +8,30 @@ import { Label } from "@/components/ui/Label";
 import { PortfolioSelect } from "@/components/ui/PortfolioSelect";
 import { cn } from "@/lib/utils";
 import { committees } from "@/lib/data/committees";
+import { ApiError } from "@/lib/api/client";
+import { submitRegistration } from "@/lib/api/registrations";
 import { DelegateDetailsStep } from "./DelegateDetailsStep";
 import { ReviewStep } from "./ReviewStep";
 import { SuccessState } from "./SuccessState";
 import {
   emptyDelegateDetails,
-  generateReferenceId,
+  experienceLabel,
+  referenceIdFromId,
   validateDelegateDetails,
   type DelegateDetails,
   type DetailErrors,
 } from "./types";
+
+/** Backend validation-error field names that map onto a DelegateDetails key. */
+const backendFieldToDetailField: Partial<Record<string, keyof DelegateDetails>> = {
+  fullName: "fullName",
+  email: "email",
+  phone: "phone",
+  institution: "institution",
+  motivation: "motivation",
+  emergencyContactPhone: "emergencyPhone",
+  declarationAccepted: "declaration",
+};
 
 const steps = ["Committees", "Details", "Confirm"];
 
@@ -54,6 +68,8 @@ export function RegistrationForm({
   // Step 3 — final confirmation
   const [confirmChecked, setConfirmChecked] = useState(false);
   const [confirmError, setConfirmError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const selectedCommittee = committees.find(
     (committee) => committee.slug === selected,
@@ -117,13 +133,69 @@ export function RegistrationForm({
     if (checked) setConfirmError(false);
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!confirmChecked) {
       setConfirmError(true);
       return;
     }
-    setReferenceId(generateReferenceId());
-    setSubmitted(true);
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      const munExperience = details.munExperience;
+      const registration = await submitRegistration({
+        fullName: details.fullName,
+        email: details.email,
+        phone: details.phone,
+        institution: details.institution,
+        gradeOrYear: details.yearGrade,
+        committeePreference1: selectedCommittee?.tag ?? "",
+        portfolio,
+        city: details.city,
+        country: details.country,
+        courseStream: details.courseStream,
+        motivation: details.motivation,
+        priorMunExperience: munExperience !== "" && munExperience !== "first",
+        experienceDetails: experienceLabel(munExperience),
+        dietaryRestrictions: details.dietary,
+        emergencyContactName: details.emergencyName,
+        emergencyContactPhone: details.emergencyPhone,
+        emergencyContactRelationship: details.emergencyRelationship,
+        accessibilityNeeds: details.accessibility,
+        declarationAccepted: details.declaration && confirmChecked,
+      });
+      setReferenceId(referenceIdFromId(registration.id));
+      setSubmitted(true);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.code === "duplicate_email") {
+          setDetailErrors((prev) => ({
+            ...prev,
+            email: "This email address is already registered.",
+          }));
+          setStep(1);
+          setSubmitError(
+            "This email address is already registered. Please review your details.",
+          );
+        } else if (error.code === "validation_failed" && error.fields) {
+          const mapped: DetailErrors = {};
+          for (const [field, message] of Object.entries(error.fields)) {
+            const detailField = backendFieldToDetailField[field];
+            if (detailField) mapped[detailField] = message;
+          }
+          if (Object.keys(mapped).length > 0) {
+            setDetailErrors((prev) => ({ ...prev, ...mapped }));
+            setStep(1);
+          }
+          setSubmitError(error.message);
+        } else {
+          setSubmitError(error.message);
+        }
+      } else {
+        setSubmitError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -259,16 +331,27 @@ export function RegistrationForm({
                 onEdit={setStep}
               />
 
+              {submitError ? (
+                <p role="alert" className="text-xs text-red-500">
+                  {submitError}
+                </p>
+              ) : null}
+
               <div className="flex flex-col-reverse gap-3 border-t border-border pt-6 sm:flex-row sm:justify-between">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setStep(1)}
+                  disabled={submitting}
                 >
                   &larr; Back to Edit
                 </Button>
-                <Button type="button" onClick={handleSubmit}>
-                  Submit Application
+                <Button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={submitting}
+                >
+                  {submitting ? "Submitting..." : "Submit Application"}
                 </Button>
               </div>
             </>
