@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/Label";
 import { PortfolioSelect } from "@/components/ui/PortfolioSelect";
 import { cn } from "@/lib/utils";
 import { committees } from "@/lib/data/committees";
+import { ApiError } from "@/lib/api/client";
+import { submitRegistration } from "@/lib/api/registrations";
 import { DelegateDetailsStep } from "./DelegateDetailsStep";
 import { ReviewStep } from "./ReviewStep";
 import { SuccessState } from "./SuccessState";
@@ -18,6 +20,17 @@ import {
   type DelegateDetails,
   type DetailErrors,
 } from "./types";
+
+/** Backend validation-error field names that map onto a DelegateDetails key. */
+const backendFieldToDetailField: Partial<Record<string, keyof DelegateDetails>> = {
+  fullName: "fullName",
+  email: "email",
+  phone: "phone",
+  institution: "institution",
+  motivation: "motivation",
+  emergencyContactPhone: "emergencyPhone",
+  declarationAccepted: "declaration",
+};
 
 const steps = ["Committees", "Details", "Confirm"];
 
