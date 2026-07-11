@@ -12,12 +12,12 @@ import { ApiError } from "@/lib/api/client";
 import {
   getStats,
   listRegistrations,
-  logout,
   updateRegistrationStatus,
   type RegistrationStatus,
   type Stats,
 } from "@/lib/api/admin";
 import type { Registration } from "@/lib/api/registrations";
+import { AdminNav } from "./AdminNav";
 
 const PAGE_SIZE = 25;
 
@@ -87,15 +87,6 @@ export function AdminDashboard() {
     loadData();
   }, [loadData]);
 
-  async function handleLogout() {
-    try {
-      await logout();
-    } catch {
-      // Even if the request fails, send the admin back to the login screen.
-    }
-    router.replace("/admin/login");
-  }
-
   async function handleStatusChange(id: string, status: RegistrationStatus) {
     setUpdatingId(id);
     try {
@@ -130,12 +121,8 @@ export function AdminDashboard() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-display text-2xl text-navy-900">Registrations</h1>
-        <Button type="button" variant="outline" onClick={handleLogout}>
-          Log Out
-        </Button>
-      </div>
+      <AdminNav />
+      <h1 className="font-display text-2xl text-navy-900">Registrations</h1>
 
       {stats ? (
         <div className="grid grid-cols-2 gap-6 rounded-3xl border border-border bg-cream-50/60 p-6 sm:grid-cols-4">
