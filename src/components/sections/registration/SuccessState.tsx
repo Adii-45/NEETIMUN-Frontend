@@ -1,7 +1,11 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
-export function SuccessState({ referenceId }: { referenceId: string }) {
+export function SuccessState({
+  registrationId,
+}: {
+  registrationId: string;
+}) {
   return (
     <div className="flex flex-col items-center gap-6 py-8 text-center">
       <span className="flex size-16 items-center justify-center rounded-full bg-navy-900 text-cream-50 shadow-md shadow-navy-900/10">
@@ -23,7 +27,7 @@ export function SuccessState({ referenceId }: { referenceId: string }) {
           Application Reference ID
         </span>
         <span className="font-display text-xl tracking-wide text-navy-900">
-          {referenceId}
+          {registrationId}
         </span>
       </div>
 

@@ -13,10 +13,9 @@ import { submitRegistration } from "@/lib/api/registrations";
 import { DelegateDetailsStep } from "./DelegateDetailsStep";
 import { ReviewStep } from "./ReviewStep";
 import { SuccessState } from "./SuccessState";
+import { submitRegistration } from "./submitRegistration";
 import {
   emptyDelegateDetails,
-  experienceLabel,
-  referenceIdFromId,
   validateDelegateDetails,
   type DelegateDetails,
   type DetailErrors,
@@ -51,7 +50,7 @@ export function RegistrationForm({
 
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
-  const [referenceId, setReferenceId] = useState("");
+  const [registrationId, setRegistrationId] = useState("");
 
   // Step 1 — committee & portfolio. The URL is the source of truth for the
   // selected committee, keyed by slug.
@@ -68,8 +67,8 @@ export function RegistrationForm({
   // Step 3 — final confirmation
   const [confirmChecked, setConfirmChecked] = useState(false);
   const [confirmError, setConfirmError] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const selectedCommittee = committees.find(
     (committee) => committee.slug === selected,
@@ -138,63 +137,25 @@ export function RegistrationForm({
       setConfirmError(true);
       return;
     }
-    setSubmitError(null);
-    setSubmitting(true);
+
+    setSubmitError("");
+    setIsSubmitting(true);
     try {
-      const munExperience = details.munExperience;
-      const registration = await submitRegistration({
-        fullName: details.fullName,
-        email: details.email,
-        phone: details.phone,
-        institution: details.institution,
-        gradeOrYear: details.yearGrade,
-        committeePreference1: selectedCommittee?.tag ?? "",
+      const result = await submitRegistration({
+        committee: selectedCommittee,
         portfolio,
-        city: details.city,
-        country: details.country,
-        courseStream: details.courseStream,
-        motivation: details.motivation,
-        priorMunExperience: munExperience !== "" && munExperience !== "first",
-        experienceDetails: experienceLabel(munExperience),
-        dietaryRestrictions: details.dietary,
-        emergencyContactName: details.emergencyName,
-        emergencyContactPhone: details.emergencyPhone,
-        emergencyContactRelationship: details.emergencyRelationship,
-        accessibilityNeeds: details.accessibility,
-        declarationAccepted: details.declaration && confirmChecked,
+        details,
       });
-      setReferenceId(referenceIdFromId(registration.id));
+      setRegistrationId(result.registrationId);
       setSubmitted(true);
     } catch (error) {
-      if (error instanceof ApiError) {
-        if (error.code === "duplicate_email") {
-          setDetailErrors((prev) => ({
-            ...prev,
-            email: "This email address is already registered.",
-          }));
-          setStep(1);
-          setSubmitError(
-            "This email address is already registered. Please review your details.",
-          );
-        } else if (error.code === "validation_failed" && error.fields) {
-          const mapped: DetailErrors = {};
-          for (const [field, message] of Object.entries(error.fields)) {
-            const detailField = backendFieldToDetailField[field];
-            if (detailField) mapped[detailField] = message;
-          }
-          if (Object.keys(mapped).length > 0) {
-            setDetailErrors((prev) => ({ ...prev, ...mapped }));
-            setStep(1);
-          }
-          setSubmitError(error.message);
-        } else {
-          setSubmitError(error.message);
-        }
-      } else {
-        setSubmitError("Something went wrong. Please try again.");
-      }
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again.",
+      );
     } finally {
-      setSubmitting(false);
+      setIsSubmitting(false);
     }
   }
 
@@ -204,7 +165,7 @@ export function RegistrationForm({
 
       {submitted ? (
         <div className="mt-10">
-          <SuccessState referenceId={referenceId} />
+          <SuccessState registrationId={registrationId} />
         </div>
       ) : (
         <div className="mt-10 flex flex-col gap-8">
@@ -331,28 +292,34 @@ export function RegistrationForm({
                 onEdit={setStep}
               />
 
-              {submitError ? (
-                <p role="alert" className="text-xs text-red-500">
-                  {submitError}
-                </p>
-              ) : null}
-
-              <div className="flex flex-col-reverse gap-3 border-t border-border pt-6 sm:flex-row sm:justify-between">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setStep(1)}
-                  disabled={submitting}
-                >
-                  &larr; Back to Edit
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={submitting}
-                >
-                  {submitting ? "Submitting..." : "Submit Application"}
-                </Button>
+              <div className="flex flex-col gap-4 border-t border-border pt-6">
+                {submitError ? (
+                  <p
+                    role="alert"
+                    className="text-sm text-red-500"
+                  >
+                    {submitError}
+                  </p>
+                ) : null}
+                <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setStep(1)}
+                    disabled={isSubmitting}
+                    className="disabled:pointer-events-none disabled:opacity-60"
+                  >
+                    &larr; Back to Edit
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    className="disabled:pointer-events-none disabled:opacity-70"
+                  >
+                    {isSubmitting ? "Submitting…" : "Submit Application"}
+                  </Button>
+                </div>
               </div>
             </>
           )}

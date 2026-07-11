@@ -96,8 +96,3 @@ export function validateDelegateDetails(details: DelegateDetails): DetailErrors 
 
   return errors;
 }
-
-/** Derives the delegate-facing reference code from the backend's persisted id. */
-export function referenceIdFromId(id: string) {
-  return `NM26-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
-}
