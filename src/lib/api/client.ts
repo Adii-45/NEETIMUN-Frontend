@@ -41,6 +41,8 @@ export async function apiRequest<T>(
   try {
     res = await fetch(`${API_URL}${path}`, {
       ...init,
+      // Send/receive the admin session cookie on cross-origin requests.
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         ...init?.headers,
