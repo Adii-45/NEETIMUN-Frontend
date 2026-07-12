@@ -12,6 +12,31 @@ export type AdminProfile = {
   role: AdminRole;
 };
 
+export type Admin = {
+  id: string;
+  name: string;
+  email: string;
+  role: AdminRole;
+  isActive: boolean;
+  lastLogin: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateAdminInput = {
+  name: string;
+  email: string;
+  password: string;
+  role: AdminRole;
+};
+
+export type UpdateAdminInput = {
+  name?: string;
+  role?: AdminRole;
+  isActive?: boolean;
+  password?: string;
+};
+
 export type RegistrationListParams = {
   status?: RegistrationStatus | "";
   committee?: string;
@@ -94,4 +119,34 @@ export async function updateRegistrationStatus(
     },
   );
   return data;
+}
+
+// --- Admin management (SUPER_ADMIN only) ---
+
+export async function listAdmins(): Promise<Admin[]> {
+  const { data } = await apiRequest<Admin[]>("/api/admins");
+  return data;
+}
+
+export async function createAdmin(input: CreateAdminInput): Promise<Admin> {
+  const { data } = await apiRequest<Admin>("/api/admins", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+  return data;
+}
+
+export async function updateAdmin(
+  id: string,
+  input: UpdateAdminInput,
+): Promise<Admin> {
+  const { data } = await apiRequest<Admin>(`/api/admins/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(input),
+  });
+  return data;
+}
+
+export async function deleteAdmin(id: string): Promise<void> {
+  await apiRequest<unknown>(`/api/admins/${id}`, { method: "DELETE" });
 }
