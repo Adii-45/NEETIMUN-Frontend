@@ -2,7 +2,6 @@ import { Hero } from "@/components/sections/home/Hero";
 import { StatsBar } from "@/components/sections/home/StatsBar";
 import { Pillars } from "@/components/sections/home/Pillars";
 import { PortfoliosPreview } from "@/components/sections/home/PortfoliosPreview";
-import { OnboardingTeaser } from "@/components/sections/home/OnboardingTeaser";
 import { Roadmap } from "@/components/sections/home/Roadmap";
 import { Testimonials } from "@/components/sections/home/Testimonials";
 import { FAQSection } from "@/components/sections/home/FAQSection";
@@ -15,7 +14,6 @@ export default function Home() {
       <StatsBar />
       <Pillars />
       <PortfoliosPreview />
-      <OnboardingTeaser />
       <Roadmap />
       <Testimonials />
       <FAQSection />

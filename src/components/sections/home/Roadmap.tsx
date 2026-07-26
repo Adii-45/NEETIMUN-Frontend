@@ -6,7 +6,7 @@ import { roadmap } from "@/lib/data/roadmap";
 export function Roadmap() {
   return (
     <section id="roadmap" className="py-20">
-      <Container className="flex flex-col gap-16">
+      <Container className="flex flex-col gap-14">
         <SectionHeading eyebrow="Schedule" title="Event Roadmap" />
         <Timeline items={roadmap} className="mx-auto max-w-3xl" />
       </Container>
