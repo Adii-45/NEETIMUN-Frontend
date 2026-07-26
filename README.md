@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Admin dashboard has moved
+
+Admin functionality (`/admin/*`) previously lived in this app. It's now a
+fully independent Next.js app in its own repo,
+[NEETIMUN-Admin](https://github.com/Adii-45/NEETIMUN-Admin), deployed
+separately and consuming the same Go backend. This repo no longer contains
+any admin code.
+
 ## Getting Started
 
 First, run the development server:
