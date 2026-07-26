@@ -60,14 +60,14 @@ function TimelineNode({
   );
 
   const nodePositionClass = cn(
-    "absolute top-1.5 left-2 h-3 w-3 -translate-x-1/2 rounded-full border-2 sm:left-auto",
-    alignEnd ? "sm:-left-1.5" : "sm:-right-1.5 sm:translate-x-1/2",
+    "absolute top-1.5 left-2 h-3 w-3 -translate-x-1/2 rounded-full border-2 sm:left-auto sm:translate-x-0",
+    alignEnd ? "sm:-left-1.5" : "sm:-right-1.5",
   );
 
   // h-8 w-8 (32px) centered at same Y as the 12px node (top-1.5 + 6px = 12px, so top = 12-16 = -4px = -top-1)
   const glowPositionClass = cn(
-    "absolute -top-1 left-2 h-8 w-8 -translate-x-1/2 rounded-full bg-gold-400 blur-lg sm:left-auto",
-    alignEnd ? "sm:-left-4" : "sm:-right-4 sm:translate-x-1/2",
+    "absolute -top-1 left-2 h-8 w-8 -translate-x-1/2 rounded-full bg-gold-400 blur-lg sm:left-auto sm:translate-x-0",
+    alignEnd ? "sm:-left-4" : "sm:-right-4",
   );
 
   if (reduced) {
