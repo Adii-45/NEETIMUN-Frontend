@@ -7,7 +7,7 @@ import { heritageStats } from "@/lib/data/heritage";
 
 export function Heritage() {
   return (
-    <section className="relative bg-cream-200/60 py-24">
+    <section className="relative overflow-hidden bg-cream-200/60 py-24">
       <SectionBackdrop variant="gold-tr" range={16} />
       <Container className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
         <FadeUp direction="left">
