@@ -161,7 +161,7 @@ function CommitteePreviewCard({
 
 export function PortfoliosPreview() {
   return (
-    <section id="portfolios" className="relative py-20">
+    <section id="portfolios" className="relative overflow-hidden py-20">
       <SectionBackdrop variant="gold-bl" range={12} />
       <Container className="flex flex-col gap-12">
 
