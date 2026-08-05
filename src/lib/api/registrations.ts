@@ -1,4 +1,9 @@
-import { apiRequest } from "./client";
+// This module only holds shapes shared across the registration flow: the
+// payload embedded in a verify-payment request (RegistrationPayload) and the
+// stored record shape (Registration). There's no direct-create call here —
+// a registration is only ever created as a side effect of a verified
+// payment (see src/lib/api/payments.ts's verifyPayment), never posted on its
+// own.
 
 export type RegistrationPayload = {
   fullName: string;
@@ -52,14 +57,12 @@ export type Registration = {
   status: "pending" | "confirmed" | "waitlisted" | "cancelled";
   createdAt: string;
   updatedAt: string;
+  // Payment (set once, at creation, from the verified Razorpay payment that
+  // authorized this registration).
+  paymentId: string | null;
+  paymentOrderId: string | null;
+  paymentAmount: number | null;
+  paymentCurrency: string | null;
+  paymentStatus: string | null;
+  paidAt: string | null;
 };
-
-export async function submitRegistration(
-  payload: RegistrationPayload,
-): Promise<Registration> {
-  const { data } = await apiRequest<Registration>("/api/registrations", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-  return data;
-}
