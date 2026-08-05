@@ -13,8 +13,10 @@ import {
   User,
 } from "lucide-react";
 import type { Committee } from "@/lib/data/committees";
+import type { PaymentConfig } from "@/lib/api/payments";
 import { cn } from "@/lib/utils";
 import { CheckField } from "./FormControls";
+import { PaymentSummaryCard } from "./PaymentSummaryCard";
 import { experienceLabel, type DelegateDetails } from "./types";
 
 type Props = {
@@ -26,6 +28,9 @@ type Props = {
   onConfirmChange: (checked: boolean) => void;
   /** Jump back to a specific step to edit (0 = committee, 1 = details). */
   onEdit: (step: number) => void;
+  paymentConfig: PaymentConfig | null;
+  paymentConfigLoading: boolean;
+  paymentConfigError?: string;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -191,6 +196,9 @@ export function ReviewStep({
   confirmError,
   onConfirmChange,
   onEdit,
+  paymentConfig,
+  paymentConfigLoading,
+  paymentConfigError,
 }: Props) {
   const CommitteeIcon = committee?.icon;
   const requiresPortfolio = (committee?.portfolioTypes.length ?? 0) > 0;
@@ -400,6 +408,13 @@ export function ReviewStep({
           </p>
         </div>
       </div>
+
+      {/* Payment summary */}
+      <PaymentSummaryCard
+        config={paymentConfig}
+        loading={paymentConfigLoading}
+        error={paymentConfigError}
+      />
 
       {/* Required confirmation */}
       <div className="rounded-2xl border border-border bg-cream-50 p-5">
