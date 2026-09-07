@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand colors, derived from the NEETI MUN crest */
+  --color-navy-950: #050e24;
+  --color-navy-900: #0a1b3f;
+  --color-navy-800: #122a57;
+  --color-navy-700: #1c3566;
+  --color-navy-600: #2c4a83;
+
+  --color-gold-600: #ab8a2f;
+  --color-gold-500: #c9a227;
+  --color-gold-400: #d7c293;
+  --color-gold-300: #e8dcb8;
+
+  --color-cream-50: #fdfaf5;
+  --color-cream-100: #fbf5ec;
+  --color-cream-200: #f5ecdc;
+
+  --color-ink: #1a2238;
+  --color-muted: #5b6478;
+  --color-border: #e6dcc9;
+
+  /* Typography */
+  --font-display: var(--font-fraunces), serif;
+  --font-sans: var(--font-inter), sans-serif;
+
+  --tracking-wide-label: 0.14em;
+
+  /* Animation */
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
+  --animate-dropdown-in: dropdown-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-select-in: select-in 0.18s ease-out both;
+  --animate-select-out: select-out 0.12s ease-in both;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes select-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes select-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-14px);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.5);
+  }
+}
+
+body {
+  background-color: var(--color-cream-100);
+  color: var(--color-ink);
+}
+
+::view-transition-old(page-exit) {
+  animation: 260ms cubic-bezier(0.16, 1, 0.3, 1) both page-fade-out;
+}
+
+::view-transition-new(page-enter) {
+  animation: 340ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both page-fade-in;
+}
+
+@keyframes page-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
