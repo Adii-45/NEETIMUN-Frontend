@@ -6,9 +6,6 @@ export type DelegateDetails = {
   institution: string;
   city: string;
   country: string;
-  // Academic Information
-  yearGrade: string;
-  courseStream: string;
   // MUN Experience
   munExperience: string;
   // Committee Motivation
@@ -19,7 +16,9 @@ export type DelegateDetails = {
   emergencyPhone: string;
   // Preferences
   dietary: string;
-  accessibility: string;
+  // Accommodation — "yes" | "no" | "" (not yet chosen; there is no default).
+  accommodationRequired: string;
+  accommodationDetails: string;
   // Declaration
   declaration: boolean;
 };
@@ -33,15 +32,14 @@ export const emptyDelegateDetails: DelegateDetails = {
   institution: "",
   city: "",
   country: "",
-  yearGrade: "",
-  courseStream: "",
   munExperience: "",
   motivation: "",
   emergencyName: "",
   emergencyRelationship: "",
   emergencyPhone: "",
   dietary: "",
-  accessibility: "",
+  accommodationRequired: "",
+  accommodationDetails: "",
   declaration: false,
 };
 
@@ -62,6 +60,11 @@ export const dietaryOptions = [
   "Halal",
   "Gluten-Free",
   "Other",
+] as const;
+
+export const accommodationOptions = [
+  { value: "yes", label: "Yes" },
+  { value: "no", label: "No" },
 ] as const;
 
 export function experienceLabel(value: string) {
@@ -89,6 +92,26 @@ export function validateDelegateDetails(details: DelegateDetails): DetailErrors 
   }
   if (!details.institution.trim()) {
     errors.institution = "Please enter your institution.";
+  }
+  if (!details.city.trim()) {
+    errors.city = "Please enter your city.";
+  }
+  if (!details.country.trim()) {
+    errors.country = "Please enter your country.";
+  }
+  if (!details.emergencyName.trim()) {
+    errors.emergencyName = "Please enter an emergency contact name.";
+  }
+  if (!details.emergencyPhone.trim()) {
+    errors.emergencyPhone = "Please enter an emergency contact phone number.";
+  } else if (!phonePattern.test(details.emergencyPhone.trim())) {
+    errors.emergencyPhone = "Please enter a valid phone number.";
+  }
+  if (!details.dietary.trim()) {
+    errors.dietary = "Please select a dietary preference.";
+  }
+  if (details.accommodationRequired !== "yes" && details.accommodationRequired !== "no") {
+    errors.accommodationRequired = "Please select whether accommodation is required.";
   }
   if (!details.declaration) {
     errors.declaration = "Please confirm that the information provided is accurate.";

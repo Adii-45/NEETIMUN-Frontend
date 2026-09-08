@@ -5,7 +5,6 @@ import {
   BadgeCheck,
   CheckCircle2,
   Circle,
-  GraduationCap,
   Mail,
   Pencil,
   Phone,
@@ -17,7 +16,7 @@ import type { Committee } from "@/lib/data/committees";
 import type { PaymentConfig } from "@/lib/api/payments";
 import { cn } from "@/lib/utils";
 import { CheckField } from "./FormControls";
-import { PaymentSummaryCard } from "./PaymentSummaryCard";
+import { amountForAccommodation, PaymentSummaryCard } from "./PaymentSummaryCard";
 import { experienceLabel, type DelegateDetails } from "./types";
 
 type Props = {
@@ -211,7 +210,9 @@ export function ReviewStep({
       details.fullName.trim() &&
         details.email.trim() &&
         details.phone.trim() &&
-        details.institution.trim(),
+        details.institution.trim() &&
+        details.city.trim() &&
+        details.country.trim(),
     ),
     declaration: details.declaration,
   };
@@ -317,16 +318,6 @@ export function ReviewStep({
       </SummaryCard>
 
       <SummaryCard
-        icon={GraduationCap}
-        title="Academic Information"
-        section="academic information"
-        onEdit={() => onEdit(1)}
-      >
-        <Row label="Current Year / Grade" value={details.yearGrade} />
-        <Row label="Course / Stream" value={details.courseStream} />
-      </SummaryCard>
-
-      <SummaryCard
         icon={Award}
         title="Experience & Preferences"
         section="experience and preferences"
@@ -337,7 +328,17 @@ export function ReviewStep({
           value={experienceLabel(details.munExperience)}
         />
         <Row label="Dietary Preference" value={details.dietary} />
-        <Row label="Accessibility Requirements" value={details.accessibility} />
+        <Row
+          label="Accommodation Required"
+          value={
+            details.accommodationRequired === "yes"
+              ? "Yes"
+              : details.accommodationRequired === "no"
+                ? "No"
+                : ""
+          }
+        />
+        <Row label="Accommodation Details" value={details.accommodationDetails} />
       </SummaryCard>
 
       <SummaryCard
@@ -412,7 +413,7 @@ export function ReviewStep({
 
       {/* Payment summary */}
       <PaymentSummaryCard
-        config={paymentConfig}
+        amount={amountForAccommodation(paymentConfig, details.accommodationRequired)}
         loading={paymentConfigLoading}
         error={paymentConfigError}
       />

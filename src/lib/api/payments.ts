@@ -2,8 +2,10 @@ import { apiRequest } from "./client";
 import type { Registration, RegistrationPayload } from "./registrations";
 
 export type PaymentConfig = {
-  /** Registration fee in paise — the amount actually charged, set by the backend. */
-  amount: number;
+  /** Registration fee in paise when accommodation is not required — set by the backend. */
+  noAccommodationAmount: number;
+  /** Registration fee in paise when accommodation is required — set by the backend. */
+  accommodationAmount: number;
   currency: string;
 };
 
@@ -27,11 +29,18 @@ export async function getPaymentConfig(): Promise<PaymentConfig> {
   return data;
 }
 
-/** Creates a Razorpay order for the fixed registration fee. No registration exists yet. */
-export async function createOrder(): Promise<CreateOrderResult> {
+/**
+ * Creates a Razorpay order for the registration fee. The backend derives the
+ * authoritative amount from accommodationRequired alone — this call never
+ * sends an amount, so there is nothing here for a client to tamper with. No
+ * registration exists yet.
+ */
+export async function createOrder(
+  accommodationRequired: boolean,
+): Promise<CreateOrderResult> {
   const { data } = await apiRequest<CreateOrderResult>("/api/create-order", {
     method: "POST",
-    body: JSON.stringify({}),
+    body: JSON.stringify({ accommodationRequired }),
   });
   return data;
 }

@@ -17,7 +17,7 @@ import {
   type CreateOrderResult,
   type PaymentConfig,
 } from "@/lib/api/payments";
-import { formatPaise } from "./PaymentSummaryCard";
+import { amountForAccommodation, formatPaise } from "./PaymentSummaryCard";
 import {
   loadRazorpayCheckout,
   openRazorpayCheckout,
@@ -43,7 +43,7 @@ type PaymentPhase =
   | "verifying"
   | "failed";
 
-function paymentPhaseLabel(phase: PaymentPhase, config: PaymentConfig | null) {
+function paymentPhaseLabel(phase: PaymentPhase, amount: number | null) {
   switch (phase) {
     case "creating_order":
       return "Preparing Payment…";
@@ -54,7 +54,7 @@ function paymentPhaseLabel(phase: PaymentPhase, config: PaymentConfig | null) {
     case "failed":
       return "Retry Payment";
     case "idle":
-      return config ? `Proceed to Payment · ${formatPaise(config.amount)}` : "Proceed to Payment";
+      return amount != null ? `Proceed to Payment · ${formatPaise(amount)}` : "Proceed to Payment";
   }
 }
 
@@ -64,8 +64,13 @@ const backendFieldToDetailField: Partial<Record<string, keyof DelegateDetails>> 
   email: "email",
   phone: "phone",
   institution: "institution",
+  city: "city",
+  country: "country",
   motivation: "motivation",
+  emergencyContactName: "emergencyName",
   emergencyContactPhone: "emergencyPhone",
+  dietaryRestrictions: "dietary",
+  accommodationRequired: "accommodationRequired",
   declarationAccepted: "declaration",
 };
 
@@ -274,31 +279,34 @@ export function RegistrationForm({
     setPaymentPhase("creating_order");
 
     const munExperience = details.munExperience;
+    const accommodationRequired = details.accommodationRequired === "yes";
     const registrationPayload: RegistrationPayload = {
       fullName: details.fullName,
       email: details.email,
       phone: details.phone,
       institution: details.institution,
-      gradeOrYear: details.yearGrade,
       committeePreference1: selectedCommittee?.tag ?? "",
       portfolio,
       city: details.city,
       country: details.country,
-      courseStream: details.courseStream,
       motivation: details.motivation,
       priorMunExperience: munExperience !== "" && munExperience !== "first",
       experienceDetails: experienceLabel(munExperience),
+      accommodationRequired,
+      accommodationDetails: details.accommodationDetails,
       dietaryRestrictions: details.dietary,
       emergencyContactName: details.emergencyName,
       emergencyContactPhone: details.emergencyPhone,
       emergencyContactRelationship: details.emergencyRelationship,
-      accessibilityNeeds: details.accessibility,
       declarationAccepted: details.declaration && confirmChecked,
     };
 
     let order: CreateOrderResult;
     try {
-      [, order] = await Promise.all([loadRazorpayCheckout(), createOrder()]);
+      [, order] = await Promise.all([
+        loadRazorpayCheckout(),
+        createOrder(accommodationRequired),
+      ]);
     } catch (error) {
       setPaymentPhase("failed");
       setPaymentError(
@@ -527,7 +535,10 @@ export function RegistrationForm({
                     disabled={paymentInFlight || paymentConfigLoading}
                     className="disabled:pointer-events-none disabled:opacity-70"
                   >
-                    {paymentPhaseLabel(paymentPhase, paymentConfig)}
+                    {paymentPhaseLabel(
+                      paymentPhase,
+                      amountForAccommodation(paymentConfig, details.accommodationRequired),
+                    )}
                   </Button>
                 </div>
               </div>

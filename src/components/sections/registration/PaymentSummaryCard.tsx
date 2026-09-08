@@ -2,13 +2,28 @@ import { CreditCard, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PaymentConfig } from "@/lib/api/payments";
 
-/** Formats a paise amount as an Indian Rupee currency string, e.g. 50000 -> "₹500.00". */
+/** Formats a paise amount as an Indian Rupee currency string, e.g. 210000 -> "₹2,100.00". */
 export function formatPaise(paise: number) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 2,
   }).format(paise / 100);
+}
+
+/**
+ * Resolves the registration fee to display for the delegate's accommodation
+ * choice ("yes" | "no" | not yet chosen). This is display-only — the backend
+ * independently computes and enforces the authoritative amount.
+ */
+export function amountForAccommodation(
+  config: PaymentConfig | null,
+  accommodationRequired: string,
+): number | null {
+  if (!config) return null;
+  if (accommodationRequired === "yes") return config.accommodationAmount;
+  if (accommodationRequired === "no") return config.noAccommodationAmount;
+  return null;
 }
 
 function Row({
@@ -43,11 +58,12 @@ function Row({
 }
 
 export function PaymentSummaryCard({
-  config,
+  amount,
   loading,
   error,
 }: {
-  config: PaymentConfig | null;
+  /** Registration fee in paise for the delegate's chosen accommodation option — null while that choice hasn't been made yet. */
+  amount: number | null;
   loading: boolean;
   error?: string;
 }) {
@@ -66,16 +82,20 @@ export function PaymentSummaryCard({
           <div className="h-4 w-full rounded bg-cream-200" />
           <div className="h-6 w-full rounded bg-cream-200" />
         </div>
-      ) : error || !config ? (
+      ) : error ? (
         <p role="alert" className="mt-4 text-sm text-red-500">
-          {error ?? "Could not load payment details."}
+          {error}
+        </p>
+      ) : amount == null ? (
+        <p className="mt-4 text-sm text-muted">
+          Select accommodation requirement to see the registration fee.
         </p>
       ) : (
         <div className="mt-5 flex flex-col gap-3">
-          <Row label="Registration Fee" value={formatPaise(config.amount)} />
+          <Row label="Registration Fee" value={formatPaise(amount)} />
           <Row label="Platform Fee" value="₹0.00" />
           <div className="border-t border-border pt-3">
-            <Row label="Total" value={formatPaise(config.amount)} accent />
+            <Row label="Total" value={formatPaise(amount)} accent />
           </div>
           <div className="mt-1 flex items-start gap-2 border-t border-border pt-3">
             <ShieldCheck

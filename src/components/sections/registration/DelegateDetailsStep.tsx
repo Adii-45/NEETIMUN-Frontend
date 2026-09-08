@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/Textarea";
 import { cn } from "@/lib/utils";
 import { CheckField, Field, invalidControlClass } from "./FormControls";
 import {
+  accommodationOptions,
   dietaryOptions,
   experienceOptions,
   MOTIVATION_MAX,
@@ -122,51 +123,34 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
             </Field>
           </div>
 
-          <Field label="City" htmlFor="city">
+          <Field label="City" htmlFor="city" required error={errors.city}>
             <Input
               id="city"
               value={details.city}
               onChange={(event) => onChange("city", event.target.value)}
+              aria-invalid={errors.city ? true : undefined}
+              aria-describedby={errors.city ? "city-error" : undefined}
               placeholder="City"
+              className={cn(errors.city && invalidControlClass)}
             />
           </Field>
 
-          <Field label="Country" htmlFor="country">
+          <Field label="Country" htmlFor="country" required error={errors.country}>
             <Input
               id="country"
               value={details.country}
               onChange={(event) => onChange("country", event.target.value)}
+              aria-invalid={errors.country ? true : undefined}
+              aria-describedby={errors.country ? "country-error" : undefined}
               placeholder="Country"
+              className={cn(errors.country && invalidControlClass)}
             />
           </Field>
         </div>
       </Section>
 
-      {/* 02 — Academic Information */}
-      <Section index="02" title="Academic Information">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <Field label="Current Year / Grade" htmlFor="yearGrade">
-            <Input
-              id="yearGrade"
-              value={details.yearGrade}
-              onChange={(event) => onChange("yearGrade", event.target.value)}
-              placeholder="e.g. Second Year, Grade 12"
-            />
-          </Field>
-
-          <Field label="Course / Stream" htmlFor="courseStream">
-            <Input
-              id="courseStream"
-              value={details.courseStream}
-              onChange={(event) => onChange("courseStream", event.target.value)}
-              placeholder="e.g. Law, Commerce, Science"
-            />
-          </Field>
-        </div>
-      </Section>
-
-      {/* 03 — MUN Experience */}
-      <Section index="03" title="MUN Experience">
+      {/* 02 — MUN Experience */}
+      <Section index="02" title="MUN Experience">
         <Field label="Previous MUN Experience" htmlFor="munExperience">
           <PremiumSelect
             id="munExperience"
@@ -178,8 +162,8 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
         </Field>
       </Section>
 
-      {/* 04 — Committee Motivation */}
-      <Section index="04" title="Committee Motivation">
+      {/* 03 — Committee Motivation */}
+      <Section index="03" title="Committee Motivation">
         <Field
           label="Why are you interested in this committee?"
           htmlFor="motivation"
@@ -196,17 +180,20 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
         </Field>
       </Section>
 
-      {/* 05 — Emergency Contact */}
-      <Section index="05" title="Emergency Contact">
+      {/* 04 — Emergency Contact */}
+      <Section index="04" title="Emergency Contact">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <Field label="Name" htmlFor="emergencyName">
+          <Field label="Name" htmlFor="emergencyName" required error={errors.emergencyName}>
             <Input
               id="emergencyName"
               value={details.emergencyName}
               onChange={(event) =>
                 onChange("emergencyName", event.target.value)
               }
+              aria-invalid={errors.emergencyName ? true : undefined}
+              aria-describedby={errors.emergencyName ? "emergencyName-error" : undefined}
               placeholder="Contact name"
+              className={cn(errors.emergencyName && invalidControlClass)}
             />
           </Field>
 
@@ -222,7 +209,7 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
           </Field>
 
           <div className="sm:col-span-2">
-            <Field label="Phone Number" htmlFor="emergencyPhone">
+            <Field label="Phone Number" htmlFor="emergencyPhone" required error={errors.emergencyPhone}>
               <Input
                 id="emergencyPhone"
                 type="tel"
@@ -230,16 +217,19 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
                 onChange={(event) =>
                   onChange("emergencyPhone", event.target.value)
                 }
+                aria-invalid={errors.emergencyPhone ? true : undefined}
+                aria-describedby={errors.emergencyPhone ? "emergencyPhone-error" : undefined}
                 placeholder="+91 00000 00000"
+                className={cn(errors.emergencyPhone && invalidControlClass)}
               />
             </Field>
           </div>
         </div>
       </Section>
 
-      {/* 06 — Dietary Preferences */}
-      <Section index="06" title="Dietary Preferences">
-        <Field label="Dietary Preference" htmlFor="dietary">
+      {/* 05 — Dietary & Accommodation */}
+      <Section index="05" title="Dietary & Accommodation">
+        <Field label="Dietary Preference" htmlFor="dietary" required error={errors.dietary}>
           <PremiumSelect
             id="dietary"
             value={details.dietary}
@@ -249,29 +239,47 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
               value: option,
               label: option,
             }))}
+            aria-invalid={errors.dietary ? true : undefined}
+            aria-describedby={errors.dietary ? "dietary-error" : undefined}
           />
         </Field>
-      </Section>
 
-      {/* 07 — Accessibility Requirements */}
-      <Section index="07" title="Accessibility Requirements">
         <Field
-          label="Accessibility Requirements"
-          htmlFor="accessibility"
-          hint="Optional — let us know how we can support you."
+          label="Accommodation Required?"
+          htmlFor="accommodationRequired"
+          required
+          error={errors.accommodationRequired}
+        >
+          <PremiumSelect
+            id="accommodationRequired"
+            value={details.accommodationRequired}
+            onValueChange={(value) => onChange("accommodationRequired", value)}
+            placeholder="Select Yes or No"
+            options={accommodationOptions}
+            aria-invalid={errors.accommodationRequired ? true : undefined}
+            aria-describedby={
+              errors.accommodationRequired ? "accommodationRequired-error" : undefined
+            }
+          />
+        </Field>
+
+        <Field
+          label="Accommodation Details"
+          htmlFor="accommodationDetails"
+          hint="Optional — please mention any accommodation details we should be aware of."
         >
           <Textarea
-            id="accessibility"
+            id="accommodationDetails"
             rows={3}
-            value={details.accessibility}
-            onChange={(event) => onChange("accessibility", event.target.value)}
-            placeholder="Any accommodations you may require."
+            value={details.accommodationDetails}
+            onChange={(event) => onChange("accommodationDetails", event.target.value)}
+            placeholder="Please mention any accommodation details we should be aware of."
           />
         </Field>
       </Section>
 
-      {/* 08 — Declaration */}
-      <Section index="08" title="Declaration">
+      {/* 06 — Declaration */}
+      <Section index="06" title="Declaration">
         <CheckField
           id="declaration"
           checked={details.declaration}

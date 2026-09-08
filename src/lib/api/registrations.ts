@@ -10,20 +10,19 @@ export type RegistrationPayload = {
   email: string;
   phone: string;
   institution: string;
-  gradeOrYear?: string;
   committeePreference1: string;
   portfolio?: string;
-  city?: string;
-  country?: string;
-  courseStream?: string;
+  city: string;
+  country: string;
   motivation?: string;
   priorMunExperience: boolean;
   experienceDetails?: string;
-  dietaryRestrictions?: string;
-  emergencyContactName?: string;
-  emergencyContactPhone?: string;
+  accommodationRequired: boolean;
+  accommodationDetails?: string;
+  dietaryRestrictions: string;
+  emergencyContactName: string;
+  emergencyContactPhone: string;
   emergencyContactRelationship?: string;
-  accessibilityNeeds?: string;
   declarationAccepted: boolean;
 };
 
@@ -46,6 +45,7 @@ export type Registration = {
   priorMunExperience: boolean;
   experienceDetails: string | null;
   accommodationRequired: boolean;
+  accommodationDetails: string | null;
   dietaryRestrictions: string | null;
   emergencyContactName: string | null;
   emergencyContactPhone: string | null;
