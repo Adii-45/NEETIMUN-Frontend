@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { EventStatusBadge } from "./EventStatusBadge";
 import { formatEventDate, formatEventDateRange } from "./formatEventDate";
@@ -48,7 +49,7 @@ export function EventCard({ event, className }: { event: Event; className?: stri
         (className ?? "")
       }
     >
-      <a
+      <Link
         href={`/events/${event.slug}`}
         className="relative block aspect-[16/9] w-full overflow-hidden bg-navy-900"
         aria-label={`View details for ${event.title}`}
@@ -66,17 +67,17 @@ export function EventCard({ event, className }: { event: Event; className?: stri
             <span className="font-display text-lg text-cream-50/70">{event.title}</span>
           </div>
         )}
-      </a>
+      </Link>
 
       <div className="flex flex-1 flex-col gap-4 p-6">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <EventStatusBadge status={event.status} />
         </div>
-        <a href={`/events/${event.slug}`} className="focus-visible:outline-none">
+        <Link href={`/events/${event.slug}`} className="focus-visible:outline-none">
           <h3 className="font-display text-xl leading-snug text-navy-900 transition-colors group-hover:text-navy-700">
             {event.title}
           </h3>
-        </a>
+        </Link>
         <p className="text-sm text-muted">{formatEventDateRange(event.startAt, event.endAt)}</p>
         {event.description ? (
           <p className="line-clamp-2 text-sm leading-relaxed text-muted">{event.description}</p>
