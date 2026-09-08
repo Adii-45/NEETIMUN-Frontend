@@ -11,11 +11,11 @@ import {
 export const contactInfo = {
   address:
     "Polaris School of Technology\nDivyaSree Technopolis\nA3, EPIP Zone, Brookefield\nBengaluru, Karnataka 560066",
-  email: "secretariat@neetimun.org",
-  phone: "+91 11 4059 9000",
+  email: "adi.nayak45@gmail.com",
+  phone: "+91 86532 27159",
   hours: "Monday – Friday · 9:00 – 18:00 IST",
   responseTime: "Within 24–48 hours",
-  mapsHref: "https://maps.google.com/?q=Vasant+Vihar+New+Delhi",
+  mapsHref: "https://maps.app.goo.gl/A4tWtNDxcypmcUPL8",
 };
 
 /** Secondary quick-contact actions rendered as chips / buttons. */
