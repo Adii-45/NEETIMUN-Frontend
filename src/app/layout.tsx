@@ -19,9 +19,11 @@ export const metadata: Metadata = {
       "Where future policymakers and global thinkers convene in a simulation that mirrors the intensity of real-world international relations.",
     images: ["/logo.png"],
   },
-  icons: {
-    icon: "/logo.png",
-  },
+  // No explicit `icons` entry: Next.js auto-detects app/icon.png and
+  // app/apple-icon.png (see file-convention docs) and serves them through
+  // its cached image route instead of the raw 640x640 source file — the
+  // browser gets a right-sized, cacheable favicon instead of fetching the
+  // full logo.png on every first visit.
 };
 
 export default function RootLayout({
