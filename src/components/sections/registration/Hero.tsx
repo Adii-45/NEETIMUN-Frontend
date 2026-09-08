@@ -2,7 +2,7 @@ import { Clock } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
 
-export function Hero() {
+export function Hero({ eventTitle = "NEETI MUN 2026" }: { eventTitle?: string }) {
   return (
     <section className="bg-cream-100">
       <Container className="flex flex-col items-center gap-6 py-24 text-center sm:py-28">
@@ -10,7 +10,7 @@ export function Hero() {
           Delegate Registration
         </h1>
         <p className="animate-fade-up max-w-xl text-base leading-relaxed text-muted [animation-delay:100ms]">
-          Join the ranks of global leaders at NEETI MUN 2026. Excellence in
+          Join the ranks of global leaders at {eventTitle}. Excellence in
           diplomacy starts here.
         </p>
         <Badge variant="default" className="animate-fade-up [animation-delay:200ms]">

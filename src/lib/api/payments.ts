@@ -30,28 +30,44 @@ export async function getPaymentConfig(): Promise<PaymentConfig> {
 }
 
 /**
- * Creates a Razorpay order for the registration fee. The backend derives the
- * authoritative amount from accommodationRequired alone — this call never
- * sends an amount, so there is nothing here for a client to tamper with. No
- * registration exists yet.
+ * Creates a Razorpay order for the registration fee, scoped to one event.
+ * The backend derives the authoritative amount from accommodationRequired
+ * alone — this call never sends an amount, so there is nothing here for a
+ * client to tamper with — and independently re-checks that event's
+ * registration window before creating the order. No registration exists
+ * yet.
  */
 export async function createOrder(
+  eventId: string,
   accommodationRequired: boolean,
 ): Promise<CreateOrderResult> {
-  const { data } = await apiRequest<CreateOrderResult>("/api/create-order", {
-    method: "POST",
-    body: JSON.stringify({ accommodationRequired }),
-  });
+  const { data } = await apiRequest<CreateOrderResult>(
+    `/api/events/${encodeURIComponent(eventId)}/create-order`,
+    {
+      method: "POST",
+      body: JSON.stringify({ accommodationRequired }),
+    },
+  );
   return data;
 }
 
-/** Verifies a completed payment and, only on success, creates the registration. */
+/**
+ * Verifies a completed payment for one event and, only on success, creates
+ * the registration under that same event. The backend re-checks the
+ * event's registration window again here (defense in depth, mirroring
+ * createOrder) — a client can never register for a different event than the
+ * one it created the order under just by editing this call.
+ */
 export async function verifyPayment(
+  eventId: string,
   payload: VerifyPaymentPayload,
 ): Promise<Registration> {
-  const { data } = await apiRequest<Registration>("/api/verify-payment", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+  const { data } = await apiRequest<Registration>(
+    `/api/events/${encodeURIComponent(eventId)}/verify-payment`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  );
   return data;
 }

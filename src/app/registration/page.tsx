@@ -1,38 +1,21 @@
-import type { Metadata } from "next";
-import { Hero } from "@/components/sections/registration/Hero";
-import { RegistrationForm } from "@/components/sections/registration/RegistrationForm";
-import { TrustBadges } from "@/components/sections/registration/TrustBadges";
-import { Container } from "@/components/ui/Container";
-import { committees, getCommitteeBySlug } from "@/lib/data/committees";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Registration | NEETI MUN 2026",
-  description:
-    "Register as a delegate for NEETI MUN 2026 — choose your committee preference and secure your seat.",
-};
-
-export default async function RegistrationPage({
+// This URL predates the multi-event Events system: every registration is
+// now scoped to a specific event at /events/:eventId/register. Existing
+// links/bookmarks/QR codes pointing here keep working by redirecting to the
+// legacy "NEETI MUN 2026" event's stable slug (seeded by backend migration
+// 0010, present in every environment), preserving any ?committee= query
+// param.
+export default async function LegacyRegistrationRedirect({
   searchParams,
 }: {
-  searchParams: Promise<{ committee?: string | string[] }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { committee } = await searchParams;
-  const requestedSlug = Array.isArray(committee) ? committee[0] : committee;
-
-  // Validate against the single source of truth; fall back to the first
-  // committee for missing or unknown slugs (e.g. ?committee=random).
-  const initialCommitteeSlug =
-    getCommitteeBySlug(requestedSlug)?.slug ?? committees[0]?.slug ?? "";
-
-  return (
-    <>
-      <Hero />
-      <section className="pb-20">
-        <Container>
-          <RegistrationForm initialCommitteeSlug={initialCommitteeSlug} />
-        </Container>
-      </section>
-      <TrustBadges />
-    </>
-  );
+  const params = await searchParams;
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (typeof value === "string") query.set(key, value);
+  }
+  const qs = query.toString();
+  redirect(`/events/neeti-mun-2026/register${qs ? `?${qs}` : ""}`);
 }

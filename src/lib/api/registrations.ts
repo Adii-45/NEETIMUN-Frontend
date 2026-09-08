@@ -28,6 +28,7 @@ export type RegistrationPayload = {
 
 export type Registration = {
   id: string;
+  eventId: string;
   fullName: string;
   email: string;
   phone: string;

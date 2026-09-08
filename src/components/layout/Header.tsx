@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { NavLinks } from "@/components/layout/NavLinks";
 import { Magnetic } from "@/components/ui/motion";
+import { EventsOverlayTrigger } from "@/components/events/EventsOverlayTrigger";
 import { navLinks } from "@/lib/data/nav-links";
 
 export function Header() {
@@ -27,7 +28,8 @@ export function Header() {
 
         <NavLinks links={navLinks} />
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-3 lg:flex">
+          <EventsOverlayTrigger />
           <Magnetic range={3}>
             <Button href="/registration">Apply Now</Button>
           </Magnetic>

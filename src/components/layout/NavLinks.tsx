@@ -26,6 +26,26 @@ const SECTION_TO_HREF: Record<string, string> = {
   faq: "/",
 };
 
+/**
+ * Route-aware match, not a bare string compare — every event has its own
+ * registration URL (/events/<slug>/register), so the static "Registration"
+ * nav link has to recognize the whole family of nested routes, not just the
+ * legacy /registration redirect target. Checked before falling back to an
+ * exact match so it doesn't affect any other link (Home, About,
+ * Committees, Contact, or the homepage's scroll-section synthetic hrefs).
+ */
+function isNavLinkActive(currentHref: string, linkHref: string): boolean {
+  if (linkHref === "/registration") {
+    return currentHref === "/registration" || /^\/events\/[^/]+\/register(\/|$)/.test(currentHref);
+  }
+  if (linkHref === "/events") {
+    // The event detail page (/events/<slug>) is still part of "Events";
+    // its own /register subroute belongs to "Registration" above instead.
+    return currentHref === "/events" || /^\/events\/[^/]+$/.test(currentHref);
+  }
+  return currentHref === linkHref;
+}
+
 export function NavLinks({ links }: { links: NavLink[] }) {
   const pathname = usePathname();
   const reduced = useReducedMotion();
@@ -39,7 +59,7 @@ export function NavLinks({ links }: { links: NavLink[] }) {
   return (
     <nav className="hidden items-center gap-8 lg:flex">
       {links.map((link) => {
-        const isActive = link.href === activeHref;
+        const isActive = isNavLinkActive(activeHref, link.href);
         return (
           <Link
             key={link.href}

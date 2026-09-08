@@ -17,6 +17,7 @@ import {
   type CreateOrderResult,
   type PaymentConfig,
 } from "@/lib/api/payments";
+import { getRegistrationStatus, type RegistrationStatus } from "@/lib/api/events";
 import { amountForAccommodation, formatPaise } from "./PaymentSummaryCard";
 import {
   loadRazorpayCheckout,
@@ -58,6 +59,29 @@ function paymentPhaseLabel(phase: PaymentPhase, amount: number | null) {
   }
 }
 
+/**
+ * The exact status → message mapping the public Events experience uses
+ * everywhere else, applied here as a hard block on the payment step. This is
+ * UX only: the backend's own check (event.IsRegistrationOpen, re-run at both
+ * create-order and verify-payment) is what actually prevents a late/early
+ * registration — this just keeps the button from being clickable in the
+ * first place and explains why.
+ */
+function registrationClosedMessage(status: RegistrationStatus): string {
+  switch (status.status) {
+    case "registration_not_open":
+      return `Registration for this event opens ${new Date(status.registrationStartAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "long", timeStyle: "short" })} (IST).`;
+    case "registration_closed":
+      return "Registration for this event is closed. Please contact the Secretariat if you believe this is an error.";
+    case "ongoing":
+      return "This event is already underway and is no longer accepting registrations online. Please contact the Secretariat.";
+    case "completed":
+      return "This event has concluded and is no longer accepting registrations.";
+    default:
+      return "Registration is not currently open for this event.";
+  }
+}
+
 /** Backend validation-error field names that map onto a DelegateDetails key. */
 const backendFieldToDetailField: Partial<Record<string, keyof DelegateDetails>> = {
   fullName: "fullName",
@@ -83,12 +107,40 @@ const stepHeadings = [
 ];
 
 export function RegistrationForm({
+  eventId,
+  eventTitle,
   initialCommitteeSlug,
 }: {
+  eventId: string;
+  eventTitle: string;
   initialCommitteeSlug: string;
 }) {
   const router = useRouter();
   const pathname = usePathname();
+
+  // Server-authoritative registration status for this event. UX-only — the
+  // backend independently re-derives and enforces the same window at both
+  // create-order and verify-payment, so a stale read here can never itself
+  // let a late registration through (see payments.ts).
+  const [registrationStatus, setRegistrationStatus] = useState<RegistrationStatus | null>(null);
+  const [registrationStatusError, setRegistrationStatusError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    getRegistrationStatus(eventId)
+      .then((status) => {
+        if (!cancelled) setRegistrationStatus(status);
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        setRegistrationStatusError(
+          error instanceof ApiError ? error.message : "Could not load registration status.",
+        );
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [eventId]);
 
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
@@ -305,7 +357,7 @@ export function RegistrationForm({
     try {
       [, order] = await Promise.all([
         loadRazorpayCheckout(),
-        createOrder(accommodationRequired),
+        createOrder(eventId, accommodationRequired),
       ]);
     } catch (error) {
       setPaymentPhase("failed");
@@ -322,7 +374,7 @@ export function RegistrationForm({
     async function onCheckoutSuccess(response: RazorpaySuccessResponse) {
       setPaymentPhase("verifying");
       try {
-        const registration = await verifyPayment({
+        const registration = await verifyPayment(eventId, {
           razorpayOrderId: response.razorpay_order_id,
           razorpayPaymentId: response.razorpay_payment_id,
           razorpaySignature: response.razorpay_signature,
@@ -351,7 +403,7 @@ export function RegistrationForm({
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: order.amount,
         currency: order.currency,
-        name: "NEETI MUN 2026",
+        name: eventTitle,
         description: `Delegate Registration — ${selectedCommittee?.tag ?? ""}`,
         order_id: order.orderId,
         prefill: {
@@ -519,6 +571,20 @@ export function RegistrationForm({
                     {paymentError}
                   </p>
                 ) : null}
+                {registrationStatusError ? (
+                  <p role="alert" className="text-sm text-red-500">
+                    {registrationStatusError}
+                  </p>
+                ) : registrationStatus && !registrationStatus.isRegistrationOpen ? (
+                  <div className="flex flex-col gap-3 rounded-2xl border border-gold-400/40 bg-gold-50/60 p-4">
+                    <p role="status" className="text-sm text-navy-900">
+                      {registrationClosedMessage(registrationStatus)}
+                    </p>
+                    <Button href="/contact" variant="outline" className="self-start">
+                      Contact Us
+                    </Button>
+                  </div>
+                ) : null}
                 <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
                   <Button
                     type="button"
@@ -532,7 +598,11 @@ export function RegistrationForm({
                   <Button
                     type="button"
                     onClick={handleProceedToPayment}
-                    disabled={paymentInFlight || paymentConfigLoading}
+                    disabled={
+                      paymentInFlight ||
+                      paymentConfigLoading ||
+                      !!(registrationStatus && !registrationStatus.isRegistrationOpen)
+                    }
                     className="disabled:pointer-events-none disabled:opacity-70"
                   >
                     {paymentPhaseLabel(
