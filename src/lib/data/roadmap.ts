@@ -1,17 +1,17 @@
 export const roadmap = [
   {
-    date: "October 10, 2025",
-    title: "Applications Open",
-    description: "Priority registration begins for institutional delegations.",
+    date: "Stage 1",
+    title: "Registration",
+    description: "Applications are open for delegates to register and select their preferences.",
   },
   {
-    date: "November 30, 2025",
-    title: "Final Allocations",
-    description: "All portfolios assigned and study guides released to delegates.",
+    date: "Stage 2",
+    title: "Registration Finalization",
+    description: "Registrations are reviewed and delegate participation is finalized.",
   },
   {
-    date: "January 12, 2026",
-    title: "Conference Day 1",
-    description: "Opening ceremony and first general speakers list.",
+    date: "Stage 3",
+    title: "Conference Day",
+    description: "The conference begins with committee sessions and proceedings.",
   },
 ];
