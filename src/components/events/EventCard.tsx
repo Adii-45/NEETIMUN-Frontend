@@ -20,6 +20,12 @@ export function EventCTA({ event }: { event: Event }) {
           Registration Opens {formatEventDate(event.registrationStartAt)}
         </Button>
       );
+    case "registration_paused":
+      return (
+        <Button variant="outline" disabled className="w-full cursor-not-allowed opacity-70 sm:w-auto">
+          Registrations Paused
+        </Button>
+      );
     case "registration_closed":
       return (
         <Button href="/contact" variant="outline" className="w-full sm:w-auto">

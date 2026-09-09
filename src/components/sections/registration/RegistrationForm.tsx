@@ -71,6 +71,8 @@ function registrationClosedMessage(status: RegistrationStatus): string {
   switch (status.status) {
     case "registration_not_open":
       return `Registration for this event opens ${new Date(status.registrationStartAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "long", timeStyle: "short" })} (IST).`;
+    case "registration_paused":
+      return "Registrations are temporarily paused for this event. Please check back shortly.";
     case "registration_closed":
       return "Registration for this event is closed. Please contact the Secretariat if you believe this is an error.";
     case "ongoing":

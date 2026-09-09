@@ -4,6 +4,7 @@ import type { EventStatus } from "@/lib/api/events";
 const STATUS_LABEL: Record<EventStatus, string> = {
   registration_not_open: "Registration Opens Soon",
   registration_open: "Registration Open",
+  registration_paused: "Registration Paused",
   registration_closed: "Registration Closed",
   ongoing: "Happening Now",
   completed: "Completed",
@@ -12,6 +13,7 @@ const STATUS_LABEL: Record<EventStatus, string> = {
 const STATUS_VARIANT: Record<EventStatus, "gold" | "default" | "outline" | "dark"> = {
   registration_not_open: "outline",
   registration_open: "gold",
+  registration_paused: "outline",
   registration_closed: "default",
   ongoing: "gold",
   completed: "dark",

@@ -2,11 +2,14 @@ import { apiRequest } from "./client";
 
 // Exhaustively partitions time with no gaps/overlap — see the backend's
 // event.DeriveStatus for why there's no separate "upcoming" value: any event
-// that hasn't started is always in exactly one of the three
-// registration_* states below.
+// that hasn't started is always in exactly one of the four
+// registration_* states below. registration_paused is a server-authoritative,
+// admin-initiated temporary suspension (see NEETIMUN-Admin's Registration
+// Control) that never touches registrationStartAt/registrationEndAt.
 export type EventStatus =
   | "registration_not_open"
   | "registration_open"
+  | "registration_paused"
   | "registration_closed"
   | "ongoing"
   | "completed";
