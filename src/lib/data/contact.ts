@@ -11,8 +11,8 @@ import {
 export const contactInfo = {
   address:
     "Polaris School of Technology\nDivyaSree Technopolis\nA3, EPIP Zone, Brookefield\nBengaluru, Karnataka 560066",
-  email: "adi.nayak45@gmail.com",
-  phone: "+91 86532 27159",
+  email: "rajazafy3@gmail.com",
+  phone: "+91 8448223378",
   hours: "Monday – Friday · 9:00 – 18:00 IST",
   responseTime: "Within 24–48 hours",
   mapsHref: "https://maps.app.goo.gl/A4tWtNDxcypmcUPL8",

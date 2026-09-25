@@ -201,7 +201,7 @@ export function PortfoliosPreview() {
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
           delayChildren={0.35}
         >
-          {committees.map((committee, i) => (
+          {committees.slice(0, 6).map((committee, i) => (
             <CardReveal key={committee.id}>
               <Magnetic range={2} className="w-full">
                 <CommitteePreviewCard committee={committee} index={i} />

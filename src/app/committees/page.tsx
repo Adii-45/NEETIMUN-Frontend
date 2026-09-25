@@ -7,7 +7,7 @@ import { CTABanner } from "@/components/ui/CTABanner";
 export const metadata: Metadata = {
   title: "Committees | NEETI MUN 2026",
   description:
-    "Explore the 2026 committee portfolios — Black Budget Council, World Summit 2040, UNODC, AIPPM, India and the Mic, and International Press.",
+    "Explore the 2026 committee portfolios — Black Budget Council, World Summit 2040, UNODC, AIPPM, India and the Mic, International Press, UNHRC, ECOSOC, and The Football Tribunal.",
 };
 
 export default function CommitteesPage() {

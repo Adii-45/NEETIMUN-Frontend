@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Eye, EyeOff, Globe2, Landmark, Mic, Newspaper } from "lucide-react";
+import { Banknote, Eye, EyeOff, Gavel, Globe2, Landmark, Mic, Newspaper, Scale } from "lucide-react";
 
 export type Committee = {
   id: string;
@@ -207,7 +207,7 @@ export const committees: Committee[] = [
     shortDescription:
       "In an increasingly interconnected world, criminal networks operate beyond borders.",
     agenda:
-      "Combating the Convergence of Organized Crime, Cybercrime, and Terror Financing",
+      "Combating the Convergence of Organized Crime, Cybercrime and Terror Financing",
     description: [
       "In an increasingly interconnected world, criminal networks operate beyond borders. UNODC will focus on addressing cybercrime, illicit finance, trafficking networks, and transnational organized crime through international cooperation and policy innovation.",
     ],
@@ -315,7 +315,7 @@ export const committees: Committee[] = [
     shortDescription:
       "AIPPM offers delegates the opportunity to step into the shoes of India's most influential political leaders.",
     agenda:
-      "Deliberation on Balancing Economic Growth, Social Justice, and National Security in India",
+      "Deliberation on Balancing Economic Growth (The Right to Work: Addressing Youth Unemployment, Job Creation and the Future of Employment in India), Social Justice and National Security in India",
     description: [
       "AIPPM offers delegates the opportunity to step into the shoes of India's most influential political leaders. Through debate, negotiation, and political strategy, participants will address some of the country's most pressing policy challenges.",
     ],
@@ -553,6 +553,54 @@ export const committees: Committee[] = [
     badges: ["Press", "Journalism", "Media"],
     icon: Newspaper,
     sidebarLines: ["International", "Press"],
+    featured: false,
+    href: "/committees",
+  },
+  {
+    id: "unhrc",
+    slug: "unhrc",
+    tag: "UNHRC",
+    title: "United Nations Human Rights Council",
+    shortDescription: "",
+    agenda:
+      "The Weaponisation of Human Rights in International Relations: Balancing Human Rights Protection, State Sovereignty and Geopolitical Interests",
+    description: [],
+    portfolioTypes: [],
+    badges: [],
+    icon: Scale,
+    sidebarLines: ["United Nations", "Human Rights Council"],
+    featured: false,
+    href: "/committees",
+  },
+  {
+    id: "ecosoc",
+    slug: "ecosoc",
+    tag: "ECOSOC",
+    title: "United Nations Economic and Social Council",
+    shortDescription: "",
+    agenda:
+      "Reforming Global Development Finance: Addressing Debt, Inequality and the Sustainable Development Financing Gap",
+    description: [],
+    portfolioTypes: [],
+    badges: [],
+    icon: Banknote,
+    sidebarLines: ["Economic &", "Social Council"],
+    featured: false,
+    href: "/committees",
+  },
+  {
+    id: "the-football-tribunal",
+    slug: "tft",
+    tag: "TFT",
+    title: "The Football Tribunal",
+    shortDescription: "",
+    agenda:
+      "Football on Trial: Power, Money, Controversy and the Battle for Control of the Global Game",
+    description: [],
+    portfolioTypes: [],
+    badges: [],
+    icon: Gavel,
+    sidebarLines: ["The Football", "Tribunal"],
     featured: false,
     href: "/committees",
   },
