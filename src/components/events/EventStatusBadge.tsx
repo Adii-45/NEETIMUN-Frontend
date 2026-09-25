@@ -21,7 +21,7 @@ const STATUS_VARIANT: Record<EventStatus, "gold" | "default" | "outline" | "dark
 
 /**
  * Status is always communicated through the label text here, never through
- * color alone (Badge's variant only adds a secondary visual cue) — see the
+ * color alone (Badge's variant only adds a secondary visual cue) - see the
  * accessibility requirement that visibility/availability never rely solely
  * on color.
  */

@@ -169,7 +169,7 @@ export function ContactForm() {
           </Field>
         </div>
 
-        {/* Inquiry Category — searchable combobox */}
+        {/* Inquiry Category - searchable combobox */}
         <Field label="Inquiry Category" htmlFor="category" required error={errors.category}>
           <PortfolioSelect
             id="category"

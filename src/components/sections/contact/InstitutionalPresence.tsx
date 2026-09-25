@@ -13,7 +13,7 @@ function InfoItem({
 }) {
   return (
     <div className="py-4 first:pt-0 last:pb-0">
-      {/* Label row — small icon inline with uppercase text */}
+      {/* Label row - small icon inline with uppercase text */}
       <div className="mb-1 flex items-center gap-1.5">
         <Icon size={11} className="text-gold-400/80" aria-hidden="true" />
         <span className="text-[10px] font-semibold uppercase tracking-wide-label text-gold-400/80">
@@ -34,7 +34,7 @@ export function InstitutionalPresence() {
         Institutional Presence
       </h2>
 
-      {/* Info items — tight dividers on dark surface */}
+      {/* Info items - tight dividers on dark surface */}
       <div className="divide-y divide-cream-50/[0.08]">
         <InfoItem icon={MapPin} label="Headquarters"      value={contactInfo.address} />
         <InfoItem icon={Mail}   label="Direct Channel"    value={contactInfo.email} />

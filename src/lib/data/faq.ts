@@ -12,6 +12,6 @@ export const faq = [
   {
     question: "Can high school students participate?",
     answer:
-      "Yes — select committees are open to advanced high school delegates. Portfolio difficulty tags on the Committees page indicate suitable experience levels.",
+      "Yes - select committees are open to advanced high school delegates. Portfolio difficulty tags on the Committees page indicate suitable experience levels.",
   },
 ];

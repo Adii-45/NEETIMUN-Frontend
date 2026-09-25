@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Premium typographic identity panel for each committee card's left sidebar.
- * The committee abbreviation in Fraunces display serif is the hero element —
+ * The committee abbreviation in Fraunces display serif is the hero element -
  * no icon. Decoration is reduced to a single gold hairline and a thin divider.
  * All hover effects are CSS group-hover, driven by the card's outer `group`.
  */
@@ -18,14 +18,14 @@ export function SidebarIdentity({
   return (
     <div
       className={cn(
-        // Dimensions — mobile: full-width banner, desktop: fixed-width column
+        // Dimensions - mobile: full-width banner, desktop: fixed-width column
         "relative flex h-44 shrink-0 flex-col items-center justify-center overflow-hidden lg:h-auto lg:w-64",
-        // Background — top-lit vertical gradient; lighter top evokes soft overhead light
+        // Background - top-lit vertical gradient; lighter top evokes soft overhead light
         "bg-gradient-to-b from-navy-700 to-navy-950",
         className,
       )}
     >
-      {/* Bottom-edge vignette — concentrates depth at the base */}
+      {/* Bottom-edge vignette - concentrates depth at the base */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -36,20 +36,20 @@ export function SidebarIdentity({
       />
 
       {/* ONE decorative detail: gold hairline at the very top.
-          Fades to transparent at both ends — a premium edge highlight. */}
+          Fades to transparent at both ends - a premium edge highlight. */}
       <span
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-500/28 to-transparent"
       />
 
-      {/* Identity stack — lifts as a unit on card hover */}
+      {/* Identity stack - lifts as a unit on card hover */}
       <div
         className={cn(
           "relative z-10 flex flex-col items-center gap-4 px-6 text-center",
           "transition-transform duration-300 ease-out group-hover:-translate-y-0.5",
         )}
       >
-        {/* Monogram — large Fraunces serif, the focal point */}
+        {/* Monogram - large Fraunces serif, the focal point */}
         <span
           className={cn(
             "font-display text-5xl leading-none tracking-tight",
@@ -60,7 +60,7 @@ export function SidebarIdentity({
           {abbreviation}
         </span>
 
-        {/* Thin gold divider — expands on hover */}
+        {/* Thin gold divider - expands on hover */}
         <span
           aria-hidden
           className={cn(
@@ -69,7 +69,7 @@ export function SidebarIdentity({
           )}
         />
 
-        {/* Editorial subtitle — each line stacked */}
+        {/* Editorial subtitle - each line stacked */}
         <div className="flex flex-col items-center gap-0.5">
           {lines.map((line, i) => (
             <span

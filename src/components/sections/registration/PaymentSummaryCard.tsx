@@ -13,7 +13,7 @@ export function formatPaise(paise: number) {
 
 /**
  * Resolves the registration fee to display for the delegate's accommodation
- * choice ("yes" | "no" | not yet chosen). This is display-only — the backend
+ * choice ("yes" | "no" | not yet chosen). This is display-only - the backend
  * independently computes and enforces the authoritative amount.
  */
 export function amountForAccommodation(
@@ -62,7 +62,7 @@ export function PaymentSummaryCard({
   loading,
   error,
 }: {
-  /** Registration fee in paise for the delegate's chosen accommodation option — null while that choice hasn't been made yet. */
+  /** Registration fee in paise for the delegate's chosen accommodation option - null while that choice hasn't been made yet. */
   amount: number | null;
   loading: boolean;
   error?: string;
@@ -104,7 +104,7 @@ export function PaymentSummaryCard({
             />
             <p className="text-xs leading-relaxed text-muted">
               <span className="font-medium text-navy-900">Payment Method:</span>{" "}
-              Razorpay Secure Checkout — UPI, Cards, Netbanking &amp; Wallets.
+              Razorpay Secure Checkout - UPI, Cards, Netbanking &amp; Wallets.
             </p>
           </div>
         </div>

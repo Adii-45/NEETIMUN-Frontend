@@ -24,7 +24,7 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 Delegate registrations are submitted straight from the browser to a **Google
 Apps Script Web App**, which appends a row to a **Google Sheet**. There is no
-custom backend — the app stays fully static/serverless and deployable on Vercel.
+custom backend - the app stays fully static/serverless and deployable on Vercel.
 
 ```
 Next.js frontend  →  Google Apps Script Web App  →  Google Sheet
@@ -32,7 +32,7 @@ Next.js frontend  →  Google Apps Script Web App  →  Google Sheet
 
 Setup takes under 5 minutes:
 
-1. **Create a Google Sheet** (a blank one is fine — headers are generated
+1. **Create a Google Sheet** (a blank one is fine - headers are generated
    automatically on the first submission).
 2. In the sheet, open **Extensions → Apps Script**.
 3. Delete the boilerplate and **paste the contents of
@@ -66,7 +66,7 @@ Setup takes under 5 minutes:
 
 Submit the form once to verify a new formatted row appears in the
 **Registrations** tab. The first submission also styles the header, enables
-filters, adds workflow/status columns, and sets up conditional formatting —
+filters, adds workflow/status columns, and sets up conditional formatting -
 all automatically and only once. For full details see
 [`google-apps-script/SETUP.md`](./google-apps-script/SETUP.md).
 

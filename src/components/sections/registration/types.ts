@@ -16,7 +16,7 @@ export type DelegateDetails = {
   emergencyPhone: string;
   // Preferences
   dietary: string;
-  // Accommodation — "yes" | "no" | "" (not yet chosen; there is no default).
+  // Accommodation - "yes" | "no" | "" (not yet chosen; there is no default).
   accommodationRequired: string;
   accommodationDetails: string;
   // Declaration

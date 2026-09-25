@@ -1,6 +1,6 @@
 // This module only holds shapes shared across the registration flow: the
 // payload embedded in a verify-payment request (RegistrationPayload) and the
-// stored record shape (Registration). There's no direct-create call here —
+// stored record shape (Registration). There's no direct-create call here -
 // a registration is only ever created as a side effect of a verified
 // payment (see src/lib/api/payments.ts's verifyPayment), never posted on its
 // own.

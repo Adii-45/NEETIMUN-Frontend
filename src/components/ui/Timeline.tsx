@@ -83,7 +83,7 @@ function TimelineNode({
 
   return (
     <>
-      {/* Glow halo — behind the node dot in paint order */}
+      {/* Glow halo - behind the node dot in paint order */}
       <motion.span
         aria-hidden
         className={glowPositionClass}
@@ -187,9 +187,9 @@ export function Timeline({
 
   return (
     <div ref={containerRef} className={cn("relative", className)}>
-      {/* Static base line — shows the full timeline path before scroll fills it */}
+      {/* Static base line - shows the full timeline path before scroll fills it */}
       <div className="absolute top-2 bottom-2 left-2 w-px bg-border/50 sm:left-1/2 sm:-translate-x-1/2" />
-      {/* Gold fill — grows from top as user scrolls, the visual "pen writing the story" */}
+      {/* Gold fill - grows from top as user scrolls, the visual "pen writing the story" */}
       <motion.div
         className="absolute top-2 bottom-2 left-2 w-px origin-top bg-gold-500 sm:left-1/2 sm:-translate-x-1/2"
         style={{ scaleY: reduced ? 1 : lineScale }}

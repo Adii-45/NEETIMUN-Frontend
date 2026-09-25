@@ -273,7 +273,7 @@ export function ReviewStep({
           </h4>
         </header>
         <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3">
-          <SummaryStat label="Committee" value={committee?.tag ?? "—"} />
+          <SummaryStat label="Committee" value={committee?.tag ?? "-"} />
           <SummaryStat
             label="Portfolio"
             value={portfolio || "Not required"}
@@ -352,7 +352,7 @@ export function ReviewStep({
         <Row label="Phone Number" value={details.emergencyPhone} />
       </SummaryCard>
 
-      {/* Committee motivation — highlighted */}
+      {/* Committee motivation - highlighted */}
       <section className="rounded-2xl border border-gold-400/40 bg-gold-300/10 p-6 sm:p-7">
         <header className="flex items-center gap-2 text-gold-600">
           <Quote aria-hidden="true" className="size-4" />
@@ -366,7 +366,7 @@ export function ReviewStep({
           </p>
         ) : (
           <p className="mt-3 text-sm italic text-muted">
-            No motivation shared — this field was optional.
+            No motivation shared - this field was optional.
           </p>
         )}
       </section>

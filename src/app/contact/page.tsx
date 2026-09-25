@@ -18,7 +18,7 @@ export default function ContactPage() {
       <Hero />
 
       {/*
-       * Single section — 12-column grid.
+       * Single section - 12-column grid.
        * Left  (7 cols): Contact Form in a light card.
        * Right (5 cols): Institutional Presence (dark) + Globe card (compact), stacked.
        */}

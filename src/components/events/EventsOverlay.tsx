@@ -18,7 +18,7 @@ export function EventsOverlay({ open, onClose }: { open: boolean; onClose: () =>
   const previouslyFocused = useRef<HTMLElement | null>(null);
 
   // Escape to close, focus trap while open, and restore focus/scroll on
-  // close — the same accessible-modal contract used throughout this app's
+  // close - the same accessible-modal contract used throughout this app's
   // admin equivalent (NEETIMUN-Admin's detail drawers).
   useEffect(() => {
     if (!open) return;

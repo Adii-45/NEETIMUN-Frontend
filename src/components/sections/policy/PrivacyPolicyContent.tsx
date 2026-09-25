@@ -28,8 +28,8 @@ export function PrivacyPolicyContent() {
           NEETI MUN (&ldquo;NEETI MUN,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is a
           Model United Nations conference. This Privacy Policy explains what
           personal information we collect through the NEETI MUN website (the
-          &ldquo;Website&rdquo;) — including the registration, contact, and
-          payment processes — why we collect it, how it is used, and the
+          &ldquo;Website&rdquo;) - including the registration, contact, and
+          payment processes - why we collect it, how it is used, and the
           choices available to you.
         </p>
         <p>
@@ -76,9 +76,9 @@ export function PrivacyPolicyContent() {
 
         <h3>Technical information</h3>
         <p>
-          Our servers record standard technical details for each request —
+          Our servers record standard technical details for each request -
           such as IP address, the page or endpoint requested, response
-          status, and timestamp — in operational logs used for security,
+          status, and timestamp - in operational logs used for security,
           diagnostics, and abuse prevention. We do not currently use any
           third-party analytics or advertising service on the Website.
         </p>
@@ -142,15 +142,15 @@ export function PrivacyPolicyContent() {
         </p>
         <ul>
           <li>
-            <strong>Razorpay</strong> — to process and verify registration
+            <strong>Razorpay</strong> - to process and verify registration
             payments.
           </li>
           <li>
-            <strong>Email delivery provider</strong> — where configured, to
+            <strong>Email delivery provider</strong> - where configured, to
             deliver acknowledgement emails for Contact page submissions.
           </li>
           <li>
-            <strong>Hosting and infrastructure providers</strong> — our
+            <strong>Hosting and infrastructure providers</strong> - our
             website is hosted on Vercel, our backend server on Render, and
             registration/inquiry data is stored in a PostgreSQL database
             operated on our behalf. These providers process data as
@@ -158,12 +158,12 @@ export function PrivacyPolicyContent() {
             independent purposes.
           </li>
           <li>
-            <strong>Authorized NEETI MUN Secretariat and administrators</strong> —
+            <strong>Authorized NEETI MUN Secretariat and administrators</strong> -
             for conference administration, committee allocation, and inquiry
             handling, through access-controlled administrative accounts.
           </li>
           <li>
-            <strong>Legal and regulatory authorities</strong> — where required
+            <strong>Legal and regulatory authorities</strong> - where required
             by applicable law or a valid legal process.
           </li>
         </ul>
@@ -192,9 +192,9 @@ export function PrivacyPolicyContent() {
         <p>
           We retain registration, payment, and inquiry information for as
           long as reasonably necessary to fulfil the purposes described in
-          this Policy — including conference administration, record-keeping,
+          this Policy - including conference administration, record-keeping,
           financial reconciliation, and compliance with applicable legal
-          obligations — and not longer than necessary for those purposes.
+          obligations - and not longer than necessary for those purposes.
         </p>
         <PolicyNote>
           NEETI MUN has not established a fixed retention period (e.g., a set
@@ -225,7 +225,7 @@ export function PrivacyPolicyContent() {
           <Link href="#contact">Section 13</Link>. Because committee
           allocation and payment records may need to be retained for
           conference administration and financial record-keeping, some
-          requests — such as deletion before the conference concludes — may be
+          requests - such as deletion before the conference concludes - may be
           fulfilled on a delayed or partial basis, and we will explain the
           reason if so.
         </p>
@@ -240,7 +240,7 @@ export function PrivacyPolicyContent() {
           information described in <Link href="#information-we-collect">
             Section 2
           </Link>{" "}
-          — including, where provided, an emergency contact — is processed
+          - including, where provided, an emergency contact - is processed
           for the same conference-administration purposes described in this
           Policy.
         </p>

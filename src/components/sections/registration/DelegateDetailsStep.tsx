@@ -47,7 +47,7 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
 
   return (
     <div className="flex flex-col gap-10">
-      {/* 01 — Personal Information */}
+      {/* 01 - Personal Information */}
       <Section index="01" title="Personal Information">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div className="sm:col-span-2">
@@ -149,7 +149,7 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
         </div>
       </Section>
 
-      {/* 02 — MUN Experience */}
+      {/* 02 - MUN Experience */}
       <Section index="02" title="MUN Experience">
         <Field label="Previous MUN Experience" htmlFor="munExperience">
           <PremiumSelect
@@ -162,7 +162,7 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
         </Field>
       </Section>
 
-      {/* 03 — Committee Motivation */}
+      {/* 03 - Committee Motivation */}
       <Section index="03" title="Committee Motivation">
         <Field
           label="Why are you interested in this committee?"
@@ -180,7 +180,7 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
         </Field>
       </Section>
 
-      {/* 04 — Emergency Contact */}
+      {/* 04 - Emergency Contact */}
       <Section index="04" title="Emergency Contact">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label="Name" htmlFor="emergencyName" required error={errors.emergencyName}>
@@ -227,7 +227,7 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
         </div>
       </Section>
 
-      {/* 05 — Dietary & Accommodation */}
+      {/* 05 - Dietary & Accommodation */}
       <Section index="05" title="Dietary & Accommodation">
         <Field label="Dietary Preference" htmlFor="dietary" required error={errors.dietary}>
           <PremiumSelect
@@ -266,7 +266,7 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
         <Field
           label="Accommodation Details"
           htmlFor="accommodationDetails"
-          hint="Optional — please mention any accommodation details we should be aware of."
+          hint="Optional - please mention any accommodation details we should be aware of."
         >
           <Textarea
             id="accommodationDetails"
@@ -278,7 +278,7 @@ export function DelegateDetailsStep({ details, errors, onChange }: Props) {
         </Field>
       </Section>
 
-      {/* 06 — Declaration */}
+      {/* 06 - Declaration */}
       <Section index="06" title="Declaration">
         <CheckField
           id="declaration"

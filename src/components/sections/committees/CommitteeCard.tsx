@@ -52,7 +52,7 @@ export function CommitteeCard({
         className,
       )}
     >
-      {/* Identity sidebar — encapsulates all sidebar composition and hover effects */}
+      {/* Identity sidebar - encapsulates all sidebar composition and hover effects */}
       <SidebarIdentity
         abbreviation={tag}
         lines={lines}

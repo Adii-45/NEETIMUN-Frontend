@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   ),
   title: "NEETI MUN 2026 | Policy. Power. Perspective.",
   description:
-    "NEETI MUN 2026 — where future policymakers and global thinkers convene in a simulation that mirrors the intensity of real-world international relations.",
+    "NEETI MUN 2026 - where future policymakers and global thinkers convene in a simulation that mirrors the intensity of real-world international relations.",
   openGraph: {
     title: "NEETI MUN 2026",
     description:
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   // No explicit `icons` entry: Next.js auto-detects app/icon.png and
   // app/apple-icon.png (see file-convention docs) and serves them through
-  // its cached image route instead of the raw 640x640 source file — the
+  // its cached image route instead of the raw 640x640 source file - the
   // browser gets a right-sized, cacheable favicon instead of fetching the
   // full logo.png on every first visit.
 };

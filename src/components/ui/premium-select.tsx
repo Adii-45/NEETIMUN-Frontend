@@ -156,7 +156,7 @@ function SelectSeparator({
 }
 
 /* -------------------------------------------------------------------------- */
-/*  High-level convenience wrapper — the single reusable select.              */
+/*  High-level convenience wrapper - the single reusable select.              */
 /* -------------------------------------------------------------------------- */
 
 export type PremiumSelectOption = { value: string; label: string };

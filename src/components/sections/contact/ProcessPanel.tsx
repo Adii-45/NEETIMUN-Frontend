@@ -74,7 +74,7 @@ export function ProcessPanel() {
         })}
       </div>
 
-      {/* Confidentiality notice — pinned to card bottom via mt-auto */}
+      {/* Confidentiality notice - pinned to card bottom via mt-auto */}
       <div className="mt-auto flex items-start gap-3 rounded-2xl border border-border bg-cream-100 p-4 pt-6">
         <ShieldCheck
           size={14}

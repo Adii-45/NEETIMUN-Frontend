@@ -64,7 +64,7 @@ function paymentPhaseLabel(phase: PaymentPhase, amount: number | null) {
  * everywhere else, applied here as a hard block on the payment step. This is
  * UX only: the backend's own check (event.IsRegistrationOpen, re-run at both
  * create-order and verify-payment) is what actually prevents a late/early
- * registration — this just keeps the button from being clickable in the
+ * registration - this just keeps the button from being clickable in the
  * first place and explains why.
  */
 function registrationClosedMessage(status: RegistrationStatus): string {
@@ -120,7 +120,7 @@ export function RegistrationForm({
   const router = useRouter();
   const pathname = usePathname();
 
-  // Server-authoritative registration status for this event. UX-only — the
+  // Server-authoritative registration status for this event. UX-only - the
   // backend independently re-derives and enforces the same window at both
   // create-order and verify-payment, so a stale read here can never itself
   // let a late registration through (see payments.ts).
@@ -149,7 +149,7 @@ export function RegistrationForm({
   const [registrationId, setRegistrationId] = useState("");
   const [transactionId, setTransactionId] = useState("");
 
-  // Step 1 — committee & portfolio. The URL is the source of truth for the
+  // Step 1 - committee & portfolio. The URL is the source of truth for the
   // selected committee, keyed by slug.
   const [selected, setSelected] = useState(
     () => initialCommitteeSlug || committees[0]?.slug || "",
@@ -157,11 +157,11 @@ export function RegistrationForm({
   const [portfolio, setPortfolio] = useState("");
   const [portfolioError, setPortfolioError] = useState(false);
 
-  // Step 2 — delegate details
+  // Step 2 - delegate details
   const [details, setDetails] = useState<DelegateDetails>(emptyDelegateDetails);
   const [detailErrors, setDetailErrors] = useState<DetailErrors>({});
 
-  // Step 3 — final confirmation & payment
+  // Step 3 - final confirmation & payment
   const [confirmChecked, setConfirmChecked] = useState(false);
   const [confirmError, setConfirmError] = useState(false);
   const [paymentPhase, setPaymentPhase] = useState<PaymentPhase>("idle");
@@ -178,14 +178,14 @@ export function RegistrationForm({
 
   // Always open the Registration page at the top (hero) on a fresh load,
   // overriding the browser's scroll restoration on reload / direct open.
-  // Runs once on mount only — never on step changes, edits, or URL syncs,
+  // Runs once on mount only - never on step changes, edits, or URL syncs,
   // so in-page scrolling is left untouched.
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   // Load the registration fee once up front so it's ready to display the
-  // moment the delegate reaches the Review & Confirm step — this figure
+  // moment the delegate reaches the Review & Confirm step - this figure
   // always comes from the backend (never a frontend constant) so the
   // displayed amount can never drift from what's actually charged.
   useEffect(() => {
@@ -215,7 +215,7 @@ export function RegistrationForm({
     // Never keep a portfolio that belongs to a different committee.
     setPortfolio("");
     setPortfolioError(false);
-    // Keep the URL shareable and in sync — no scroll reset, no reload.
+    // Keep the URL shareable and in sync - no scroll reset, no reload.
     router.replace(`${pathname}?committee=${slug}`, { scroll: false });
   }
 
@@ -258,7 +258,7 @@ export function RegistrationForm({
     if (checked) setConfirmError(false);
   }
 
-  /** True while a payment is in flight — the delegate can't navigate away or retry mid-flight. */
+  /** True while a payment is in flight - the delegate can't navigate away or retry mid-flight. */
   const paymentInFlight =
     paymentPhase === "creating_order" ||
     paymentPhase === "checkout_open" ||
@@ -267,7 +267,7 @@ export function RegistrationForm({
   /**
    * Maps a verify-payment failure onto the UI. The Razorpay charge has
    * already succeeded by the time this runs, so every message here points
-   * the delegate at support with the payment ID rather than "please retry" —
+   * the delegate at support with the payment ID rather than "please retry" -
    * retrying would risk a second charge for the same registration.
    */
   function handleVerifyError(error: unknown, paymentId: string) {
@@ -285,7 +285,7 @@ export function RegistrationForm({
       );
     } else if (error instanceof ApiError && error.code === "duplicate_payment") {
       // A repeat verify-payment call for a payment that already created a
-      // registration (e.g. a double-submitted callback) — no new charge.
+      // registration (e.g. a double-submitted callback) - no new charge.
       setPaymentError(
         "This payment has already been processed. If you don't see a confirmation," +
         supportHint,
@@ -406,7 +406,7 @@ export function RegistrationForm({
         amount: order.amount,
         currency: order.currency,
         name: eventTitle,
-        description: `Delegate Registration — ${selectedCommittee?.tag ?? ""}`,
+        description: `Delegate Registration - ${selectedCommittee?.tag ?? ""}`,
         order_id: order.orderId,
         prefill: {
           name: details.fullName,
@@ -417,7 +417,7 @@ export function RegistrationForm({
         handler: onCheckoutSuccess,
         modal: {
           // Fires when the delegate closes the checkout modal without
-          // completing payment. Never resets an in-progress verification —
+          // completing payment. Never resets an in-progress verification -
           // by the time `handler` above runs, the modal is already closing.
           ondismiss: () => {
             setPaymentPhase((phase) => (phase === "verifying" ? phase : "idle"));

@@ -27,7 +27,7 @@ const SECTION_TO_HREF: Record<string, string> = {
 };
 
 /**
- * Route-aware match, not a bare string compare — every event has its own
+ * Route-aware match, not a bare string compare - every event has its own
  * registration URL (/events/<slug>/register), so the static "Registration"
  * nav link has to recognize the whole family of nested routes, not just the
  * legacy /registration redirect target. Checked before falling back to an

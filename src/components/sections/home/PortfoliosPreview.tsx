@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const VIEWPORT = { once: true, margin: "-40px" } as const;
 
-/** Accent colours per committee — cycles through a curated set */
+/** Accent colours per committee - cycles through a curated set */
 const ACCENT_COLORS = [
   { from: "from-navy-900", via: "via-navy-800", to: "to-navy-700" },
   { from: "from-[#1a3a5c]", via: "via-[#1c4870]", to: "to-[#1c3566]" },
@@ -42,7 +42,7 @@ function CommitteePreviewCard({
         "transition-all duration-300 ease-out",
         "hover:-translate-y-2 hover:border-gold-400/50",
         "hover:shadow-[0_24px_56px_-10px_rgba(10,27,63,0.18)]",
-        // Explicit fixed height — makes all 6 cards identical across both rows
+        // Explicit fixed height - makes all 6 cards identical across both rows
         "h-[380px]",
       )}
     >
@@ -53,7 +53,7 @@ function CommitteePreviewCard({
           `bg-gradient-to-br ${accent.from} ${accent.via} ${accent.to}`,
         )}
       >
-        {/* Ambient radial glow — subtle depth */}
+        {/* Ambient radial glow - subtle depth */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
@@ -69,7 +69,7 @@ function CommitteePreviewCard({
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-500/40 to-transparent"
         />
 
-        {/* Editorial index number — top-right, reveals to gold on hover */}
+        {/* Editorial index number - top-right, reveals to gold on hover */}
         <span
           aria-hidden
           className="pointer-events-none absolute right-5 top-5 font-display text-[11px] leading-none tracking-[0.14em] text-cream-50/25 transition-colors duration-300 group-hover:text-gold-400/60"
@@ -98,7 +98,7 @@ function CommitteePreviewCard({
             aria-hidden
             className="block h-px w-8 bg-gold-500/50 transition-all duration-300 ease-out group-hover:w-16"
           />
-          {/* Lucide icon — ghost, bottom-right */}
+          {/* Lucide icon - ghost, bottom-right */}
           <Icon
             size={18}
             className="text-cream-50/25 transition-all duration-300 group-hover:text-gold-400/60"
@@ -109,7 +109,7 @@ function CommitteePreviewCard({
 
       {/* ── CONTENT BODY ── */}
       <div className="relative flex flex-1 flex-col gap-3.5 px-6 pt-5 pb-6">
-        {/* Topic badges — single row, clipped to prevent overflow */}
+        {/* Topic badges - single row, clipped to prevent overflow */}
         <div className="flex flex-wrap items-center gap-1.5 overflow-hidden" style={{ maxHeight: "28px" }}>
           {committee.badges.slice(0, 3).map((badge) => (
             <span
@@ -121,7 +121,7 @@ function CommitteePreviewCard({
           ))}
         </div>
 
-        {/* Committee title — clamp to 2 lines for uniformity */}
+        {/* Committee title - clamp to 2 lines for uniformity */}
         <h3 className="line-clamp-2 font-display text-[17px] leading-snug text-navy-900 transition-colors duration-200 group-hover:text-navy-700">
           {committee.title}
         </h3>
@@ -129,12 +129,12 @@ function CommitteePreviewCard({
         {/* Thin editorial divider */}
         <div className="h-px bg-border" />
 
-        {/* Short description — clamp to 3 lines */}
+        {/* Short description - clamp to 3 lines */}
         <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-muted">
           {committee.shortDescription}
         </p>
 
-        {/* CTA — always pinned at the bottom via mt-auto */}
+        {/* CTA - always pinned at the bottom via mt-auto */}
         <Link
           href={committee.href}
           className="group/cta mt-auto flex items-center gap-1.5 text-sm font-medium text-gold-600 transition-all duration-200 hover:text-gold-700"
