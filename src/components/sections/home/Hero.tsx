@@ -148,7 +148,7 @@ export function Hero() {
               transition={{ duration: d(0.65), ease: EASE, delay: delay(1.12) }}
             >
               <Magnetic range={4}>
-                <Button href="/registration">Register Now</Button>
+                <Button href="/events">Register Now</Button>
               </Magnetic>
               <Button href="/committees" variant="outline">
                 Explore Committees

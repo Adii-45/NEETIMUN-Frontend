@@ -44,7 +44,7 @@ export function MobileNav({ links }: { links: NavLink[] }) {
                   {link.label}
                 </Link>
               ))}
-              <Button href="/registration" className="mt-3 w-full">
+              <Button href="/events" className="mt-3 w-full">
                 Apply Now
               </Button>
             </nav>

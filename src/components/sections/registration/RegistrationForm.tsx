@@ -441,9 +441,14 @@ export function RegistrationForm({
         </div>
       ) : (
         <div className="mt-10 flex flex-col gap-8">
-          <h2 className="font-display text-2xl text-navy-900">
-            {stepHeadings[step]}
-          </h2>
+          <div className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium uppercase tracking-wide-label text-gold-600">
+              Registering for {eventTitle}
+            </span>
+            <h2 className="font-display text-2xl text-navy-900">
+              {stepHeadings[step]}
+            </h2>
+          </div>
 
           {step === 0 && (
             <>

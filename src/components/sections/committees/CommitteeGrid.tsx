@@ -17,7 +17,6 @@ export function CommitteeGrid() {
                 <Magnetic range={1} className="w-full">
                   <CommitteeCard
                     tag={committee.tag}
-                    slug={committee.slug}
                     title={committee.title}
                     description={committee.description}
                     lines={committee.sidebarLines}

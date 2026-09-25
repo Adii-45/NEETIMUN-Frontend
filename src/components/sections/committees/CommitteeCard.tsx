@@ -11,7 +11,6 @@ const VIEWPORT = { once: true, margin: "-50px" } as const;
 
 export function CommitteeCard({
   tag,
-  slug,
   title,
   description,
   lines,
@@ -22,7 +21,6 @@ export function CommitteeCard({
   className,
 }: {
   tag: string;
-  slug: string;
   title: string;
   description: string[];
   lines: string[];
@@ -128,7 +126,7 @@ export function CommitteeCard({
           <Button href={href} variant="outline">
             Study Guide
           </Button>
-          <Button href={`/registration?committee=${slug}`} variant="primary">
+          <Button href="/events" variant="primary">
             Apply for Portfolio
           </Button>
         </motion.div>

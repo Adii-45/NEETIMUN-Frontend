@@ -31,7 +31,7 @@ export function Hero() {
         </p>
         <div className="animate-fade-up mt-2 flex flex-col gap-4 [animation-delay:300ms] sm:flex-row">
           <Magnetic range={4}>
-            <Button href="/registration">Register Now</Button>
+            <Button href="/events">Register Now</Button>
           </Magnetic>
           <Button href="/about" variant="outline">
             Explore Archive

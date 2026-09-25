@@ -31,7 +31,7 @@ export function Header() {
         <div className="hidden items-center gap-3 lg:flex">
           <EventsOverlayTrigger />
           <Magnetic range={3}>
-            <Button href="/registration">Apply Now</Button>
+            <Button href="/events">Apply Now</Button>
           </Magnetic>
         </div>
 
