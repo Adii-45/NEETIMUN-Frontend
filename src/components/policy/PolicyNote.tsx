@@ -4,7 +4,7 @@ import { Info } from "lucide-react";
  * Callout for a business/legal detail that is not established in the
  * codebase (e.g. refund terms, jurisdiction). Renders visibly rather than as
  * a silent placeholder, so it is obvious to any reader that it is pending
- * organizer/legal confirmation — never delete without replacing the content.
+ * organizer/legal confirmation - never delete without replacing the content.
  */
 export function PolicyNote({ children }: { children: React.ReactNode }) {
   return (

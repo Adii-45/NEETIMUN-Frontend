@@ -55,12 +55,12 @@ export function CodeOfConductContent() {
       <PolicySection id="core-principles" title="2. Core Principles">
         <p>NEETI MUN asks every participant to uphold six core principles:</p>
         <ul>
-          <li><strong>Respect</strong> — for fellow participants, chairs, staff, and the venue.</li>
-          <li><strong>Professionalism</strong> — in conduct, communication, and appearance appropriate to a diplomatic simulation.</li>
-          <li><strong>Diplomacy</strong> — resolving disagreement through argument and negotiation, not hostility.</li>
-          <li><strong>Integrity</strong> — honesty in representation, research, and conduct.</li>
-          <li><strong>Inclusivity</strong> — welcoming participants of every background on equal terms.</li>
-          <li><strong>Safety</strong> — for oneself and for others, at all times.</li>
+          <li><strong>Respect</strong> - for fellow participants, chairs, staff, and the venue.</li>
+          <li><strong>Professionalism</strong> - in conduct, communication, and appearance appropriate to a diplomatic simulation.</li>
+          <li><strong>Diplomacy</strong> - resolving disagreement through argument and negotiation, not hostility.</li>
+          <li><strong>Integrity</strong> - honesty in representation, research, and conduct.</li>
+          <li><strong>Inclusivity</strong> - welcoming participants of every background on equal terms.</li>
+          <li><strong>Safety</strong> - for oneself and for others, at all times.</li>
         </ul>
       </PolicySection>
 
@@ -86,7 +86,7 @@ export function CodeOfConductContent() {
           <li>Respect established speaking and procedural rules</li>
           <li>
             Refrain from targeting or demeaning another delegate under the
-            guise of diplomatic debate — pointed disagreement on policy is
+            guise of diplomatic debate - pointed disagreement on policy is
             welcome; personal attacks are not
           </li>
         </ul>
@@ -245,8 +245,8 @@ export function CodeOfConductContent() {
 
       <PolicySection id="false-reports" title="15. False or Malicious Reports">
         <p>
-          Reports made in good faith — including those that, after review,
-          are not substantiated — will not be treated as violations. However,
+          Reports made in good faith - including those that, after review,
+          are not substantiated - will not be treated as violations. However,
           knowingly making a false or malicious report about another
           participant is itself a serious violation of this Code and will be
           addressed accordingly.

@@ -108,7 +108,7 @@ export function TermsOfServiceContent() {
         </p>
         <p>
           A registration is confirmed only after your payment has been
-          independently verified by our backend with Razorpay — a successful
+          independently verified by our backend with Razorpay - a successful
           on-screen checkout alone does not create a registration. If a
           payment fails or is not completed, no registration is created and
           you may retry payment. If a technical error causes a duplicate
@@ -124,8 +124,8 @@ export function TermsOfServiceContent() {
           <Link href="#contact">Section 19</Link>.
         </p>
         <PolicyNote>
-          A specific refund policy — including whether refunds are offered,
-          any applicable time window, and any processing fee or deduction —
+          A specific refund policy - including whether refunds are offered,
+          any applicable time window, and any processing fee or deduction -
           has not been established in the materials reviewed for this page.
           This is a business decision for NEETI MUN organizers to confirm;
           until it is, cancellation requests will be reviewed by the
@@ -146,8 +146,8 @@ export function TermsOfServiceContent() {
 
       <PolicySection id="website-use" title="9. Website Use">
         <p>
-          You agree to use the Website only for its intended purposes —
-          learning about the conference, registering, and making payment —
+          You agree to use the Website only for its intended purposes -
+          learning about the conference, registering, and making payment -
           and not to attempt to disrupt, probe, or gain unauthorized access
           to the Website, its underlying systems, or other users&rsquo;
           information.
@@ -157,7 +157,7 @@ export function TermsOfServiceContent() {
       <PolicySection id="intellectual-property" title="10. Intellectual Property">
         <p>
           The NEETI MUN name, logo, and the content published on this
-          Website — including text, graphics, and design — are the property
+          Website - including text, graphics, and design - are the property
           of NEETI MUN or its licensors and are protected by applicable
           intellectual property law. You may not copy, reproduce, or
           distribute this content for commercial purposes without our prior

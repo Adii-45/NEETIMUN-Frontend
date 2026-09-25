@@ -28,7 +28,7 @@ export function CommitteeSpotlight({ children }: { children: React.ReactNode }) 
   const rawOpacity = useMotionValue(0);
   const opacity = useSpring(rawOpacity, { stiffness: 60, damping: 16 });
 
-  // Live CSS gradient string built from MotionValues — zero re-renders
+  // Live CSS gradient string built from MotionValues - zero re-renders
   const background = useMotionTemplate`radial-gradient(700px circle at ${x}px ${y}px, rgba(201, 162, 39, 0.10), transparent 60%)`;
 
   const handleMouseMove = useCallback(
@@ -60,7 +60,7 @@ export function CommitteeSpotlight({ children }: { children: React.ReactNode }) 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Spotlight overlay — desktop fine-pointer only, z above cards but below interactive elements */}
+      {/* Spotlight overlay - desktop fine-pointer only, z above cards but below interactive elements */}
       <motion.div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-10 hidden lg:block"

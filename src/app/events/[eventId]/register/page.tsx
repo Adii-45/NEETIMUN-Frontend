@@ -4,7 +4,7 @@ import { committees, getCommitteeBySlug } from "@/lib/data/committees";
 
 export const metadata: Metadata = {
   title: "Registration | NEETI MUN",
-  description: "Register as a delegate — choose your committee preference and secure your seat.",
+  description: "Register as a delegate - choose your committee preference and secure your seat.",
 };
 
 export default async function EventRegisterPage({

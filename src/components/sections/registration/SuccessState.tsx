@@ -19,7 +19,7 @@ export function SuccessState({
           Registration Successful
         </h2>
         <p className="mx-auto max-w-md text-sm leading-relaxed text-muted">
-          Payment successful — thank you for registering for NEETI MUN. Our
+          Payment successful - thank you for registering for NEETI MUN. Our
           team will review your application and reach out with allocation
           details and next steps.
         </p>

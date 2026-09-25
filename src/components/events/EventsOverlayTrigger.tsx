@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { CalendarDays } from "lucide-react";
 import { EventsOverlay } from "./EventsOverlay";
 
-/** The Header's quick-access "Events" button — opens the polished overlay in place, without leaving the current page. The full /events page remains separately linkable/navigable from the main nav. */
+/** The Header's quick-access "Events" button - opens the polished overlay in place, without leaving the current page. The full /events page remains separately linkable/navigable from the main nav. */
 export function EventsOverlayTrigger({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();

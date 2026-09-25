@@ -1,6 +1,6 @@
 import { apiRequest } from "./client";
 
-// Exhaustively partitions time with no gaps/overlap — see the backend's
+// Exhaustively partitions time with no gaps/overlap - see the backend's
 // event.DeriveStatus for why there's no separate "upcoming" value: any event
 // that hasn't started is always in exactly one of the four
 // registration_* states below. registration_paused is a server-authoritative,
@@ -34,7 +34,7 @@ export type RegistrationStatus = {
   registrationEndAt: string;
 };
 
-/** Every visible, non-hidden event. No hardcoded list — always live from the database. */
+/** Every visible, non-hidden event. No hardcoded list - always live from the database. */
 export async function listEvents(): Promise<Event[]> {
   const { data } = await apiRequest<Event[]>("/api/events");
   return data;

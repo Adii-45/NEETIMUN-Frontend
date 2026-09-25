@@ -1,5 +1,5 @@
 // All event timestamps are absolute instants (ISO 8601 with an explicit UTC
-// offset, as returned by the Go backend) — formatting here only ever affects
+// offset, as returned by the Go backend) - formatting here only ever affects
 // display, never the underlying value the backend already used to derive
 // isRegistrationOpen/status. NEETI MUN operates out of India, so every
 // public-facing date is rendered in Asia/Kolkata regardless of the visitor's

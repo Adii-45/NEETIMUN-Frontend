@@ -10,12 +10,12 @@ import { FadeUp } from "@/components/ui/motion";
 type Buckets = { current: Event[]; upcoming: Event[]; past: Event[] };
 
 /**
- * Current = the event's registration window is live right now — open,
+ * Current = the event's registration window is live right now - open,
  * temporarily paused by an admin, or the event is actually underway.
  * Upcoming = hasn't happened yet but isn't currently actionable
  * (registration not open yet, or already closed ahead of the event). Past =
  * concluded. This is a purely presentational grouping of the backend's six
- * authoritative statuses — see event.DeriveStatus.
+ * authoritative statuses - see event.DeriveStatus.
  */
 function bucketEvents(events: Event[]): Buckets {
   const buckets: Buckets = { current: [], upcoming: [], past: [] };

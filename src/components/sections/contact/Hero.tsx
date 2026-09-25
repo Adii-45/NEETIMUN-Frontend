@@ -11,19 +11,19 @@ export function Hero() {
           Institutional Liaison
         </span>
 
-        {/* Heading — more vertical air above it than below */}
+        {/* Heading - more vertical air above it than below */}
         <h1 className="animate-fade-up mt-5 font-display text-4xl leading-[1.1] text-navy-900 [animation-delay:80ms] sm:text-5xl">
           Contact the Secretariat
         </h1>
 
-        {/* Description — narrowed for optimal line length */}
+        {/* Description - narrowed for optimal line length */}
         <p className="animate-fade-up mt-4 max-w-md text-base leading-relaxed text-muted [animation-delay:160ms]">
           The NEETI MUN Secretariat maintains rigorous diplomatic protocols for
           all external communications. Our office provides authoritative
           guidance and support for global diplomacy.
         </p>
 
-        {/* Divider — visual pause before the action chips */}
+        {/* Divider - visual pause before the action chips */}
         <div className="animate-fade-up mt-7 h-px max-w-md bg-border [animation-delay:240ms]" />
 
         {/* Quick-contact chips */}

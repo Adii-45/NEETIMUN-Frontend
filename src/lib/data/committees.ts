@@ -13,7 +13,7 @@ export type Committee = {
   /**
    * Full portfolio roster for the registration form's PortfolioSelect.
    * Distinct from `portfolioTypes` (the short category labels shown as
-   * badges on the public Committees page) — this can be much longer and is
+   * badges on the public Committees page) - this can be much longer and is
    * never rendered there. Omitted entirely for committees that don't have a
    * dedicated roster (falls back to an empty list).
    */

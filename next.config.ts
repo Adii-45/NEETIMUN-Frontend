@@ -1,13 +1,13 @@
 import type { NextConfig } from "next";
 
 // Server-only (no NEXT_PUBLIC_ prefix): the real Go backend origin. Never sent
-// to the browser — the browser only ever talks to this frontend's own origin.
+// to the browser - the browser only ever talks to this frontend's own origin.
 const BACKEND_API_URL = process.env.BACKEND_API_URL;
 
 // Razorpay Standard Checkout requires these exact origins: checkout.js itself,
 // its own risk-detection bundle (loaded from Razorpay's CDN), the checkout
 // modal/iframe, and its telemetry beacons. Verified against the actual
-// network requests the live checkout flow makes — do not widen this to a
+// network requests the live checkout flow makes - do not widen this to a
 // wildcard "https://*.razorpay.com" without re-checking, and do not remove
 // any entry without confirming checkout still opens and completes.
 const RAZORPAY_SCRIPT_SRC = "https://checkout.razorpay.com https://cdn.razorpay.com";
@@ -16,7 +16,7 @@ const RAZORPAY_CONNECT_SRC =
 const RAZORPAY_FRAME_SRC = "https://checkout.razorpay.com https://api.razorpay.com";
 
 // Next.js's App Router (RSC streaming) injects its own inline bootstrap
-// scripts and framer-motion sets inline `style` attributes for animations —
+// scripts and framer-motion sets inline `style` attributes for animations -
 // both require 'unsafe-inline' since this app doesn't use a per-request CSP
 // nonce. This still blocks the thing that actually matters most: loading any
 // *externally hosted* script the app didn't already allow-list, which is the
@@ -59,7 +59,7 @@ const nextConfig: NextConfig = {
   },
   // Backend-for-Frontend proxy: every /api/* request the browser makes stays
   // same-origin (this app's own domain). Next.js forwards it server-side to
-  // the Go backend and streams the response — including Set-Cookie — back
+  // the Go backend and streams the response - including Set-Cookie - back
   // through this origin. This is what makes the admin session cookie
   // first-party to this frontend, regardless of which domain actually hosts
   // the backend (they are unrelated registrable domains in production:
@@ -75,7 +75,7 @@ const nextConfig: NextConfig = {
     ];
   },
   // Applied to every page/asset response from this app. Deliberately
-  // excludes /api/* — those responses are proxied from the Go backend
+  // excludes /api/* - those responses are proxied from the Go backend
   // (see rewrites() above), which already sets its own appropriate
   // (stricter, JSON-only) security headers on its JSON responses.
   async headers() {

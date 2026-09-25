@@ -48,14 +48,14 @@ export function Hero() {
 
   return (
     <section id="hero" className="relative overflow-hidden bg-cream-100">
-      {/* Background layer — slowest drift */}
+      {/* Background layer - slowest drift */}
       <Parallax range={8} className="pointer-events-none absolute inset-0">
         <div
           aria-hidden
           className="pointer-events-none absolute top-1/2 left-1/2 h-[58rem] w-[58rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold-300/[0.12] blur-3xl"
         />
       </Parallax>
-      {/* Mid layer — appears after text sequence completes */}
+      {/* Mid layer - appears after text sequence completes */}
       <Parallax
         range={20}
         className="pointer-events-none absolute inset-0"
@@ -66,7 +66,7 @@ export function Hero() {
           className="animate-float pointer-events-none absolute top-1/2 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-gold-400/30"
         />
       </Parallax>
-      {/* Foreground layer — fastest drift */}
+      {/* Foreground layer - fastest drift */}
       <Parallax
         range={30}
         className="pointer-events-none absolute inset-0"
@@ -93,7 +93,7 @@ export function Hero() {
               </Badge>
             </motion.div>
 
-            {/* 2. Title — line-by-line mask reveal */}
+            {/* 2. Title - line-by-line mask reveal */}
             {/* Each line slides up from behind an overflow-hidden clip boundary */}
             <h1 className="font-display max-w-3xl text-5xl leading-[1.05] text-navy-900 sm:text-6xl lg:text-7xl">
               <span className="block overflow-hidden pb-1">
