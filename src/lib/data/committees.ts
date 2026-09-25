@@ -209,7 +209,7 @@ export const committees: Committee[] = [
     agenda:
       "Combating the Convergence of Organized Crime, Cybercrime and Terror Financing",
     description: [
-      "In an increasingly interconnected world, criminal networks operate beyond borders. UNODC will focus on addressing cybercrime, illicit finance, trafficking networks, and transnational organized crime through international cooperation and policy innovation.",
+      "The evolving nature of global crime has created increasingly complex links between organized criminal networks, cybercriminals and terrorist organisations. Digital platforms, cryptocurrencies, encrypted communication and transnational financial networks have created new avenues for crime and illicit financing. This agenda focuses on strengthening international cooperation, disrupting criminal financial networks, improving cybercrime investigation mechanisms and addressing the challenges posed by emerging technologies while safeguarding national sovereignty and fundamental rights.",
     ],
     portfolioTypes: [
       "Member States",
@@ -315,9 +315,9 @@ export const committees: Committee[] = [
     shortDescription:
       "AIPPM offers delegates the opportunity to step into the shoes of India's most influential political leaders.",
     agenda:
-      "Deliberation on Balancing Economic Growth (The Right to Work: Addressing Youth Unemployment, Job Creation and the Future of Employment in India), Social Justice and National Security in India",
+      "Deliberation on Balancing Economic Growth, Social Justice and National Security in India",
     description: [
-      "AIPPM offers delegates the opportunity to step into the shoes of India's most influential political leaders. Through debate, negotiation, and political strategy, participants will address some of the country's most pressing policy challenges.",
+      "India's rapidly growing economy faces the challenge of creating meaningful employment opportunities for its expanding young workforce. Automation, artificial intelligence, the gig economy and changing industry requirements are simultaneously transforming the nature of work. This agenda examines how India can promote job creation and economic growth while ensuring social justice, labour protections and national security. The discussion will focus on youth unemployment, skill development, future employment, entrepreneurship and the changing relationship between economic development and social stability.",
     ],
     portfolioTypes: [
       "National Political Leaders",
@@ -564,7 +564,9 @@ export const committees: Committee[] = [
     shortDescription: "",
     agenda:
       "The Weaponisation of Human Rights in International Relations: Balancing Human Rights Protection, State Sovereignty and Geopolitical Interests",
-    description: [],
+    description: [
+      "Human rights remain a fundamental pillar of the international order, yet their implementation often intersects with geopolitical interests and questions of state sovereignty. This agenda examines concerns surrounding the selective application of human-rights principles, international intervention and the use of human-rights mechanisms in geopolitical disputes. Delegates will explore how the international community can ensure meaningful human-rights protection while respecting sovereignty, preventing double standards and maintaining the credibility of international institutions.",
+    ],
     portfolioTypes: [],
     badges: [],
     icon: Scale,
@@ -580,7 +582,9 @@ export const committees: Committee[] = [
     shortDescription: "",
     agenda:
       "Reforming Global Development Finance: Addressing Debt, Inequality and the Sustainable Development Financing Gap",
-    description: [],
+    description: [
+      "Developing economies continue to face significant challenges in accessing affordable financing for sustainable development. Rising debt burdens, unequal access to capital and increasing development needs have widened the global financing gap. This agenda focuses on reforming international financial institutions, improving access to development finance, addressing sovereign debt and mobilising resources for sustainable development. Delegates will examine how the global financial system can become more equitable, resilient and capable of supporting long-term economic and social development.",
+    ],
     portfolioTypes: [],
     badges: [],
     icon: Banknote,
@@ -596,7 +600,9 @@ export const committees: Committee[] = [
     shortDescription: "",
     agenda:
       "Football on Trial: Power, Money, Controversy and the Battle for Control of the Global Game",
-    description: [],
+    description: [
+      "Football has evolved into a multi-billion-dollar global industry where sporting interests intersect with enormous financial and political influence. From club ownership and player transfers to broadcasting rights, governance, corruption and sporting integrity, the modern game faces increasingly complex disputes over power and accountability. The Football Tribunal places these issues under scrutiny, challenging delegates to examine who should control the global game, how football institutions should be held accountable and whether existing mechanisms are capable of resolving its biggest controversies.",
+    ],
     portfolioTypes: [],
     badges: [],
     icon: Gavel,
