@@ -126,9 +126,6 @@ export function CommitteeCard({
           <Button href={href} variant="outline">
             Study Guide
           </Button>
-          <Button href="/events" variant="primary">
-            Apply for Portfolio
-          </Button>
         </motion.div>
       </div>
     </div>
