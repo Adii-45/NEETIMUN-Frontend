@@ -23,6 +23,21 @@ export type VerifyPaymentPayload = {
   registration: RegistrationPayload;
 };
 
+/**
+ * Receipt download info, present only on a fresh/replayed verify-payment
+ * response - never on any other endpoint that returns a Registration. The
+ * downloadUrl embeds a one-time, high-entropy opaque token (not the
+ * registration id) that is itself the only credential needed to fetch the
+ * PDF, since delegates have no accounts to authenticate a request with.
+ */
+export type ReceiptInfo = {
+  reference: string;
+  downloadUrl: string;
+  emailSent: boolean;
+};
+
+export type VerifyPaymentResult = Registration & { receipt?: ReceiptInfo };
+
 /** The registration fee the backend will actually charge - for display only. */
 export async function getPaymentConfig(): Promise<PaymentConfig> {
   const { data } = await apiRequest<PaymentConfig>("/api/payments/config");
@@ -61,8 +76,8 @@ export async function createOrder(
 export async function verifyPayment(
   eventId: string,
   payload: VerifyPaymentPayload,
-): Promise<Registration> {
-  const { data } = await apiRequest<Registration>(
+): Promise<VerifyPaymentResult> {
+  const { data } = await apiRequest<VerifyPaymentResult>(
     `/api/events/${encodeURIComponent(eventId)}/verify-payment`,
     {
       method: "POST",
@@ -70,4 +85,34 @@ export async function verifyPayment(
     },
   );
   return data;
+}
+
+/**
+ * Downloads the payment receipt PDF via its secure token URL and triggers a
+ * browser save. Deliberately a plain fetch, not apiRequest: this endpoint
+ * returns a raw application/pdf body, not the {data,error} JSON envelope
+ * every other API call uses, and it needs no credentials - the token in the
+ * URL is itself the only access control.
+ */
+export async function downloadReceipt(downloadUrl: string, filename = "NEETIMUN-Receipt.pdf") {
+  const res = await fetch(downloadUrl);
+  if (!res.ok) {
+    throw new Error(
+      res.status === 404
+        ? "Receipt not found. Please check the confirmation email or contact support."
+        : "Could not download the receipt. Please try again.",
+    );
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  try {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }

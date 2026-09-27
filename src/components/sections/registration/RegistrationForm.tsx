@@ -16,6 +16,7 @@ import {
   verifyPayment,
   type CreateOrderResult,
   type PaymentConfig,
+  type VerifyPaymentResult,
 } from "@/lib/api/payments";
 import { getRegistrationStatus, type RegistrationStatus } from "@/lib/api/events";
 import { amountForAccommodation, formatPaise } from "./PaymentSummaryCard";
@@ -146,8 +147,7 @@ export function RegistrationForm({
 
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
-  const [registrationId, setRegistrationId] = useState("");
-  const [transactionId, setTransactionId] = useState("");
+  const [confirmation, setConfirmation] = useState<VerifyPaymentResult | null>(null);
 
   // Step 1 - committee & portfolio. The URL is the source of truth for the
   // selected committee, keyed by slug.
@@ -382,10 +382,7 @@ export function RegistrationForm({
           razorpaySignature: response.razorpay_signature,
           registration: registrationPayload,
         });
-        setRegistrationId(
-          `NM26-${registration.id.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
-        );
-        setTransactionId(response.razorpay_payment_id);
+        setConfirmation(registration);
         setPaymentPhase("idle");
         setSubmitted(true);
       } catch (error) {
@@ -432,11 +429,12 @@ export function RegistrationForm({
     <div className="mx-auto w-full max-w-3xl rounded-3xl border border-border bg-cream-50/60 p-6 sm:p-10">
       <Stepper steps={steps} activeStep={submitted ? steps.length : step} />
 
-      {submitted ? (
+      {submitted && confirmation ? (
         <div className="mt-10">
           <SuccessState
-            registrationId={registrationId}
-            transactionId={transactionId}
+            registration={confirmation}
+            eventTitle={eventTitle}
+            committeeTitle={selectedCommittee?.title ?? selectedCommittee?.tag ?? ""}
           />
         </div>
       ) : (

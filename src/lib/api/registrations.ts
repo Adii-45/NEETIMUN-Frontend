@@ -65,5 +65,8 @@ export type Registration = {
   paymentAmount: number | null;
   paymentCurrency: string | null;
   paymentStatus: string | null;
+  paymentMethod: string | null;
   paidAt: string | null;
+  /** Whether a payment receipt PDF has been generated and stored (admin/backend-computed). */
+  hasReceipt: boolean;
 };
