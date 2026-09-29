@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { ApiError } from "@/lib/api/client";
 import { getEvent, type Event } from "@/lib/api/events";
+import { EventDescription } from "./EventDescription";
 import { EventStatusBadge } from "./EventStatusBadge";
 import { EventCTA } from "./EventCard";
 import { formatEventDateRange, formatEventDateTime } from "./formatEventDate";
@@ -78,7 +79,7 @@ export function EventDetailClient({ eventId }: { eventId: string }) {
         </div>
 
         {event.description ? (
-          <p className="max-w-2xl text-base leading-relaxed text-muted">{event.description}</p>
+          <EventDescription>{event.description}</EventDescription>
         ) : null}
 
         <dl className="grid grid-cols-1 gap-6 rounded-3xl border border-border bg-cream-50/60 p-6 sm:grid-cols-2">

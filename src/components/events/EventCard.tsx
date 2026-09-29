@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { markdownToPlainText } from "./EventDescription";
 import { EventStatusBadge } from "./EventStatusBadge";
 import { formatEventDate, formatEventDateRange } from "./formatEventDate";
 import type { Event } from "@/lib/api/events";
@@ -86,7 +87,7 @@ export function EventCard({ event, className }: { event: Event; className?: stri
         </Link>
         <p className="text-sm text-muted">{formatEventDateRange(event.startAt, event.endAt)}</p>
         {event.description ? (
-          <p className="line-clamp-2 text-sm leading-relaxed text-muted">{event.description}</p>
+          <p className="line-clamp-2 text-sm leading-relaxed text-muted">{markdownToPlainText(event.description)}</p>
         ) : null}
         <div className="mt-auto pt-2">
           <EventCTA event={event} />
