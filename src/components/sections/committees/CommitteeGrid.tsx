@@ -8,7 +8,7 @@ import { committees } from "@/lib/data/committees";
 
 export function CommitteeGrid() {
   return (
-    <section className="pb-28">
+    <section className="pb-12">
       <CommitteeSpotlight>
         <Container as={CardGrid} className="flex flex-col gap-20">
           {committees.map((committee) => (

@@ -1,6 +1,10 @@
+import { committees } from "./committees";
+
+// Homepage stats-bar values. Committees is derived from the canonical
+// committee dataset. Delegates and EB Members are temporary fixed values.
+// Conference Days is derived from the live event list in StatsBar.
 export const stats = [
-  { value: "3", label: "Committees" },
-  { value: "145", label: "Delegates" },
-  { value: "11", label: "EB Members" },
-  { value: "2", label: "Conference Days" },
+  { value: String(committees.length), label: "Committees" },
+  { value: "45", label: "Delegates" },
+  { value: "10", label: "EB Members" },
 ];
