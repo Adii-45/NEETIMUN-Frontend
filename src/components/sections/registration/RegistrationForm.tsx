@@ -15,7 +15,7 @@ import {
   type CreateOrderResult,
   type VerifyPaymentResult,
 } from "@/lib/api/payments";
-import { getRegistrationStatus, type RegistrationStatus } from "@/lib/api/events";
+import { getOccupiedPortfolios, getRegistrationStatus, type RegistrationStatus } from "@/lib/api/events";
 import {
   quoteRegistration,
   type RegistrationFormSchema,
@@ -168,6 +168,64 @@ export function RegistrationForm({
   const portfolioOptions = selectedCommittee?.registrationPortfolioTypes ?? [];
   const hasPortfolios = portfolioOptions.length > 0;
 
+  // Portfolios already held in this event + committee, from the backend. A
+  // result is only trusted for the exact event/committee/attempt it was
+  // fetched for (`key`), so switching committee never shows the previous
+  // committee's list, and a failed or pending lookup is never treated as
+  // "everything is available".
+  type Availability = { key: string; occupied: string[] } | { key: string; failed: true };
+  const [availability, setAvailability] = useState<Availability | null>(null);
+  const [availabilityNonce, setAvailabilityNonce] = useState(0);
+  const [portfolioNotice, setPortfolioNotice] = useState("");
+  const committeeTag = selectedCommittee?.tag;
+  const availabilityKey =
+    hasPortfolios && committeeTag ? `${eventId}|${committeeTag}|${availabilityNonce}` : null;
+  const sameName = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
+
+  useEffect(() => {
+    if (!availabilityKey || !committeeTag) return;
+    let cancelled = false;
+    getOccupiedPortfolios(eventId, committeeTag)
+      .then((occupied) => {
+        if (cancelled) return;
+        setAvailability({ key: availabilityKey, occupied });
+        // A portfolio that has just been taken can no longer stay selected.
+        setPortfolio((current) => (occupied.some((name) => sameName(name, current)) ? "" : current));
+      })
+      .catch(() => {
+        if (!cancelled) setAvailability({ key: availabilityKey, failed: true });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [availabilityKey, eventId, committeeTag]);
+
+  const currentAvailability = availability && availability.key === availabilityKey ? availability : null;
+  const availabilityLoading = hasPortfolios && !currentAvailability;
+  const availabilityFailed = !!currentAvailability && "failed" in currentAvailability;
+  const availablePortfolios =
+    currentAvailability && "occupied" in currentAvailability
+      ? portfolioOptions.filter((name) => !currentAvailability.occupied.some((held) => sameName(held, name)))
+      : [];
+  const allPortfoliosTaken =
+    !!currentAvailability && "occupied" in currentAvailability && availablePortfolios.length === 0;
+
+  /** The backend found this email already registered for the event - caught before any payment. */
+  function handleEmailAlreadyRegistered(message: string) {
+    setAnswerErrors((prev) => ({ ...prev, email: message }));
+    setDetailsError("");
+    setStep(1);
+  }
+
+  /** The backend refused the portfolio as already taken: refresh availability, keep every other answer. */
+  function handlePortfolioConflict(message: string) {
+    setPortfolio("");
+    setPortfolioError(false);
+    setPortfolioNotice(message);
+    setAvailabilityNonce((n) => n + 1);
+    setStep(0);
+  }
+
   // Always open the Registration page at the top (hero) on a fresh load,
   // overriding the browser's scroll restoration on reload / direct open.
   // Runs once on mount only - never on step changes, edits, or URL syncs,
@@ -181,16 +239,20 @@ export function RegistrationForm({
     // Never keep a portfolio that belongs to a different committee.
     setPortfolio("");
     setPortfolioError(false);
+    setPortfolioNotice("");
     // Keep the URL shareable and in sync - no scroll reset, no reload.
     router.replace(`${pathname}?committee=${slug}`, { scroll: false });
   }
 
   function handlePortfolioChange(value: string) {
     setPortfolio(value);
+    setPortfolioNotice("");
     if (value) setPortfolioError(false);
   }
 
   function handleCommitteeContinue() {
+    // Never proceed on an unknown availability state.
+    if (hasPortfolios && (availabilityLoading || availabilityFailed)) return;
     if (hasPortfolios && !portfolio) {
       setPortfolioError(true);
       return;
@@ -221,10 +283,19 @@ export function RegistrationForm({
     setDetailsError("");
     setCheckingDetails(true);
     try {
-      setQuote(await quoteRegistration(eventId, toAnswerPayload(fields, answers)));
+      setQuote(
+        await quoteRegistration(eventId, toAnswerPayload(fields, answers), {
+          committeePreference1: selectedCommittee?.tag ?? "",
+          portfolio,
+        }),
+      );
       setStep(2);
     } catch (error) {
-      if (error instanceof ApiError && error.code === "validation_failed" && error.fields) {
+      if (error instanceof ApiError && error.code === "portfolio_taken") {
+        handlePortfolioConflict(error.message);
+      } else if (error instanceof ApiError && error.code === "duplicate_email") {
+        handleEmailAlreadyRegistered(error.message);
+      } else if (error instanceof ApiError && error.code === "validation_failed" && error.fields) {
         const { answers: general, ...perField } = error.fields;
         setAnswerErrors(perField);
         setDetailsError(general ?? "Please correct the highlighted fields.");
@@ -278,6 +349,13 @@ export function RegistrationForm({
         "This payment has already been processed. If you don't see a confirmation," +
         supportHint,
       );
+    } else if (error instanceof ApiError && error.code === "portfolio_taken") {
+      // Payment was captured but another delegate's registration for this
+      // portfolio committed first: no registration exists for this payment, so
+      // point at support (never a silent success) and refresh availability.
+      // Retrying is safe: order creation re-checks and will refuse the portfolio.
+      setPaymentError(`${error.message} Payment ID: ${paymentId}`);
+      setAvailabilityNonce((n) => n + 1);
     } else if (
       error instanceof ApiError &&
       error.code === "validation_failed" &&
@@ -332,9 +410,21 @@ export function RegistrationForm({
     try {
       [, order] = await Promise.all([
         loadRazorpayCheckout(),
-        createOrder(eventId, answerPayload),
+        createOrder(eventId, answerPayload, committeeSelection),
       ]);
     } catch (error) {
+      if (error instanceof ApiError && error.code === "portfolio_taken") {
+        // Caught before any payment: nothing was charged.
+        setPaymentPhase("idle");
+        handlePortfolioConflict(error.message);
+        return;
+      }
+      if (error instanceof ApiError && error.code === "duplicate_email") {
+        // Caught before any payment: nothing was charged.
+        setPaymentPhase("idle");
+        handleEmailAlreadyRegistered(error.message);
+        return;
+      }
       setPaymentPhase("failed");
       setPaymentError(
         error instanceof Error
@@ -349,7 +439,7 @@ export function RegistrationForm({
     // the displayed price and let them confirm again.
     if (quote && order.amount !== quote.amount) {
       try {
-        setQuote(await quoteRegistration(eventId, answerPayload));
+        setQuote(await quoteRegistration(eventId, answerPayload, committeeSelection));
       } catch {
         // The stale figure is cleared below either way.
         setQuote(null);
@@ -482,14 +572,26 @@ export function RegistrationForm({
                 </Label>
                 <PortfolioSelect
                   id="portfolio-preference"
-                  options={portfolioOptions}
+                  options={availablePortfolios}
                   value={portfolio}
                   onChange={handlePortfolioChange}
-                  disabled={!selectedCommittee || !hasPortfolios}
+                  disabled={
+                    !selectedCommittee ||
+                    !hasPortfolios ||
+                    availabilityLoading ||
+                    availabilityFailed ||
+                    allPortfoliosTaken
+                  }
                   disabledPlaceholder={
                     selectedCommittee && !hasPortfolios
                       ? "No portfolios for this committee"
-                      : "Select a committee first"
+                      : availabilityLoading
+                        ? "Checking availability…"
+                        : availabilityFailed
+                          ? "Availability unavailable"
+                          : allPortfoliosTaken
+                            ? "No portfolios available"
+                            : "Select a committee first"
                   }
                   invalid={portfolioError}
                   aria-describedby={
@@ -503,6 +605,25 @@ export function RegistrationForm({
                     className="text-xs text-red-500"
                   >
                     Please select your preferred portfolio.
+                  </p>
+                ) : availabilityFailed ? (
+                  <p role="alert" className="text-xs text-red-500">
+                    Could not check portfolio availability.{" "}
+                    <button
+                      type="button"
+                      onClick={() => setAvailabilityNonce((n) => n + 1)}
+                      className="underline underline-offset-2"
+                    >
+                      Retry
+                    </button>
+                  </p>
+                ) : portfolioNotice ? (
+                  <p role="alert" className="text-xs text-red-500">
+                    {portfolioNotice}
+                  </p>
+                ) : allPortfoliosTaken ? (
+                  <p role="status" className="text-xs text-muted">
+                    Every portfolio in this committee has been assigned. Please choose another committee.
                   </p>
                 ) : (
                   <p id="portfolio-help" className="text-xs text-muted">

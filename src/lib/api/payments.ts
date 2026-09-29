@@ -58,12 +58,13 @@ export async function getPaymentConfig(): Promise<PaymentConfig> {
 export async function createOrder(
   eventId: string,
   answers: AnswerPayload,
+  registration?: CommitteeSelectionPayload,
 ): Promise<CreateOrderResult> {
   const { data } = await apiRequest<CreateOrderResult>(
     `/api/events/${encodeURIComponent(eventId)}/create-order`,
     {
       method: "POST",
-      body: JSON.stringify({ answers }),
+      body: JSON.stringify({ answers, registration }),
     },
   );
   return data;

@@ -58,3 +58,16 @@ export async function getRegistrationStatus(idOrSlug: string): Promise<Registrat
   );
   return data;
 }
+
+/**
+ * Portfolio names already held by a registration in one committee of one
+ * event (names only - no registrant data). Scoped strictly to event +
+ * committee. UX-only: the backend independently refuses a duplicate at
+ * order creation and again when the registration is saved.
+ */
+export async function getOccupiedPortfolios(idOrSlug: string, committeeTag: string): Promise<string[]> {
+  const { data } = await apiRequest<{ occupiedPortfolios: string[] }>(
+    `/api/events/${encodeURIComponent(idOrSlug)}/occupied-portfolios?committee=${encodeURIComponent(committeeTag)}`,
+  );
+  return data.occupiedPortfolios;
+}

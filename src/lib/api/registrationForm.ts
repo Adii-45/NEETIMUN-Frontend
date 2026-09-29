@@ -1,4 +1,5 @@
 import { apiRequest } from "./client";
+import type { CommitteeSelectionPayload } from "./registrations";
 
 // The event's registration form as served by the backend
 // (GET /api/events/{id}/registration-form). The backend is the source of
@@ -69,10 +70,14 @@ export async function getRegistrationForm(idOrSlug: string): Promise<Registratio
  * the review step - it creates nothing and charges nothing, and the amount is
  * computed again server-side when the payment order is created and verified.
  */
-export async function quoteRegistration(eventId: string, answers: AnswerPayload): Promise<RegistrationQuote> {
+export async function quoteRegistration(
+  eventId: string,
+  answers: AnswerPayload,
+  registration?: CommitteeSelectionPayload,
+): Promise<RegistrationQuote> {
   const { data } = await apiRequest<RegistrationQuote>(
     `/api/events/${encodeURIComponent(eventId)}/registration-quote`,
-    { method: "POST", body: JSON.stringify({ answers }) },
+    { method: "POST", body: JSON.stringify({ answers, registration }) },
   );
   return data;
 }
