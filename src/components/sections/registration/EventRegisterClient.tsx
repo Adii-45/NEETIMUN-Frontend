@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { ApiError } from "@/lib/api/client";
 import { getEvent, type Event } from "@/lib/api/events";
+import { getRegistrationForm, type RegistrationFormSchema } from "@/lib/api/registrationForm";
 import { Hero } from "./Hero";
 import { RegistrationForm } from "./RegistrationForm";
 import { TrustBadges } from "./TrustBadges";
@@ -17,13 +18,18 @@ export function EventRegisterClient({
   initialCommitteeSlug: string;
 }) {
   const [event, setEvent] = useState<Event | null>(null);
+  const [formSchema, setFormSchema] = useState<RegistrationFormSchema | null>(null);
   const [error, setError] = useState<{ notFound: boolean; message: string } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    getEvent(eventId)
-      .then((data) => {
-        if (!cancelled) setEvent(data);
+    // The event and its registration form are fetched together; the form
+    // is what the page renders, so neither is shown without the other.
+    Promise.all([getEvent(eventId), getRegistrationForm(eventId)])
+      .then(([data, schema]) => {
+        if (cancelled) return;
+        setEvent(data);
+        setFormSchema(schema);
       })
       .catch((err: unknown) => {
         if (cancelled) return;
@@ -55,7 +61,7 @@ export function EventRegisterClient({
     );
   }
 
-  if (!event) {
+  if (!event || !formSchema) {
     return (
       <Container className="py-24">
         <div className="mx-auto h-96 max-w-3xl animate-pulse rounded-3xl border border-border bg-cream-200/50" />
@@ -72,6 +78,7 @@ export function EventRegisterClient({
             eventId={event.id}
             eventTitle={event.title}
             initialCommitteeSlug={initialCommitteeSlug}
+            formSchema={formSchema}
           />
         </Container>
       </section>

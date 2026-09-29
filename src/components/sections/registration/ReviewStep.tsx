@@ -1,36 +1,36 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
-  Award,
   BadgeCheck,
   CheckCircle2,
   Circle,
   Mail,
   Pencil,
-  Phone,
-  Quote,
   ShieldCheck,
   User,
 } from "lucide-react";
 import type { Committee } from "@/lib/data/committees";
-import type { PaymentConfig } from "@/lib/api/payments";
+import type { FormField, RegistrationQuote } from "@/lib/api/registrationForm";
 import { cn } from "@/lib/utils";
 import { CheckField } from "./FormControls";
-import { amountForAccommodation, PaymentSummaryCard } from "./PaymentSummaryCard";
-import { experienceLabel, type DelegateDetails } from "./types";
+import { PaymentSummaryCard } from "./PaymentSummaryCard";
+import { answerDisplay, type AnswerState } from "./types";
 
 type Props = {
   committee: Committee | undefined;
   portfolio: string;
-  details: DelegateDetails;
+  /** The event's enabled form fields, in configured order. */
+  fields: FormField[];
+  answers: AnswerState;
   confirmChecked: boolean;
   confirmError?: string;
   onConfirmChange: (checked: boolean) => void;
   /** Jump back to a specific step to edit (0 = committee, 1 = details). */
   onEdit: (step: number) => void;
-  paymentConfig: PaymentConfig | null;
-  paymentConfigLoading: boolean;
-  paymentConfigError?: string;
+  /** The backend's price for these answers - display only. */
+  quote: RegistrationQuote | null;
+  quoteLoading: boolean;
+  quoteError?: string;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -75,13 +75,13 @@ function OptionalValue({ value }: { value: string }) {
   return <span className="text-sm text-navy-900">{value}</span>;
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+function Row({ label, value, wide = false }: { label: string; value: string; wide?: boolean }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className={cn("flex flex-col gap-1.5", wide && "sm:col-span-2")}>
       <dt className="text-xs uppercase tracking-wide-label text-muted">
         {label}
       </dt>
-      <dd className="leading-snug">
+      <dd className="whitespace-pre-wrap leading-snug">
         <OptionalValue value={value} />
       </dd>
     </div>
@@ -191,30 +191,29 @@ function StatusPill({ children }: { children: React.ReactNode }) {
 export function ReviewStep({
   committee,
   portfolio,
-  details,
+  fields,
+  answers,
   confirmChecked,
   confirmError,
   onConfirmChange,
   onEdit,
-  paymentConfig,
-  paymentConfigLoading,
-  paymentConfigError,
+  quote,
+  quoteLoading,
+  quoteError,
 }: Props) {
   const CommitteeIcon = committee?.icon;
   const requiresPortfolio = (committee?.portfolioTypes.length ?? 0) > 0;
 
+  const detailFields = fields.filter((field) => field.type !== "consent");
+  const consentFields = fields.filter((field) => field.type === "consent");
+  const requiredComplete = fields
+    .filter((field) => field.required && field.type !== "consent")
+    .every((field) => answerDisplay(field, answers[field.id]) !== "");
   const checklist = {
     committee: Boolean(committee),
     portfolio: Boolean(portfolio) || !requiresPortfolio,
-    personal: Boolean(
-      details.fullName.trim() &&
-        details.email.trim() &&
-        details.phone.trim() &&
-        details.institution.trim() &&
-        details.city.trim() &&
-        details.country.trim(),
-    ),
-    declaration: details.declaration,
+    details: requiredComplete,
+    consents: consentFields.map((field) => ({ id: field.id, label: field.label, done: answers[field.id] === true })),
   };
 
   return (
@@ -279,20 +278,6 @@ export function ReviewStep({
             value={portfolio || "Not required"}
             accent={Boolean(portfolio)}
           />
-          <SummaryStat
-            label="Conference Experience"
-            value={
-              experienceLabel(details.munExperience) ? (
-                experienceLabel(details.munExperience)
-              ) : (
-                <OptionalValue value="" />
-              )
-            }
-          />
-          <SummaryStat
-            label="Country"
-            value={details.country || <OptionalValue value="" />}
-          />
           <div className="flex flex-col gap-1.5">
             <span className="text-xs uppercase tracking-wide-label text-muted">
               Application Status
@@ -302,74 +287,24 @@ export function ReviewStep({
         </dl>
       </section>
 
-      {/* Detail summary cards */}
-      <SummaryCard
-        icon={User}
-        title="Personal Information"
-        section="personal information"
-        onEdit={() => onEdit(1)}
-      >
-        <Row label="Full Name" value={details.fullName} />
-        <Row label="Email" value={details.email} />
-        <Row label="Phone Number" value={details.phone} />
-        <Row label="Institution" value={details.institution} />
-        <Row label="City" value={details.city} />
-        <Row label="Country" value={details.country} />
-      </SummaryCard>
-
-      <SummaryCard
-        icon={Award}
-        title="Experience & Preferences"
-        section="experience and preferences"
-        onEdit={() => onEdit(1)}
-      >
-        <Row
-          label="Previous MUN Experience"
-          value={experienceLabel(details.munExperience)}
-        />
-        <Row label="Dietary Preference" value={details.dietary} />
-        <Row
-          label="Accommodation Required"
-          value={
-            details.accommodationRequired === "yes"
-              ? "Yes"
-              : details.accommodationRequired === "no"
-                ? "No"
-                : ""
-          }
-        />
-        <Row label="Accommodation Details" value={details.accommodationDetails} />
-      </SummaryCard>
-
-      <SummaryCard
-        icon={Phone}
-        title="Emergency Contact"
-        section="emergency contact"
-        onEdit={() => onEdit(1)}
-      >
-        <Row label="Name" value={details.emergencyName} />
-        <Row label="Relationship" value={details.emergencyRelationship} />
-        <Row label="Phone Number" value={details.emergencyPhone} />
-      </SummaryCard>
-
-      {/* Committee motivation - highlighted */}
-      <section className="rounded-2xl border border-gold-400/40 bg-gold-300/10 p-6 sm:p-7">
-        <header className="flex items-center gap-2 text-gold-600">
-          <Quote aria-hidden="true" className="size-4" />
-          <h4 className="text-xs font-medium uppercase tracking-wide-label">
-            Committee Motivation
-          </h4>
-        </header>
-        {details.motivation.trim() ? (
-          <p className="mt-4 font-display text-lg leading-relaxed text-navy-900">
-            {details.motivation}
-          </p>
-        ) : (
-          <p className="mt-3 text-sm italic text-muted">
-            No motivation shared - this field was optional.
-          </p>
-        )}
-      </section>
+      {/* Delegate details - every enabled question, in the event's configured order */}
+      {detailFields.length > 0 ? (
+        <SummaryCard
+          icon={User}
+          title="Registration Details"
+          section="registration details"
+          onEdit={() => onEdit(1)}
+        >
+          {detailFields.map((field) => (
+            <Row
+              key={field.id}
+              label={field.label}
+              value={answerDisplay(field, answers[field.id])}
+              wide={field.type === "long_text" || field.type === "checkbox"}
+            />
+          ))}
+        </SummaryCard>
+      ) : null}
 
       {/* Completion checklist */}
       <section className="rounded-2xl border border-border bg-cream-50 p-6">
@@ -386,12 +321,14 @@ export function ReviewStep({
           <ChecklistItem done={checklist.portfolio}>
             Portfolio selected
           </ChecklistItem>
-          <ChecklistItem done={checklist.personal}>
-            Personal information complete
+          <ChecklistItem done={checklist.details}>
+            Required details complete
           </ChecklistItem>
-          <ChecklistItem done={checklist.declaration}>
-            Declaration accepted
-          </ChecklistItem>
+          {checklist.consents.map((consent) => (
+            <ChecklistItem key={consent.id} done={consent.done}>
+              {consent.label}
+            </ChecklistItem>
+          ))}
         </ul>
       </section>
 
@@ -412,11 +349,7 @@ export function ReviewStep({
       </div>
 
       {/* Payment summary */}
-      <PaymentSummaryCard
-        amount={amountForAccommodation(paymentConfig, details.accommodationRequired)}
-        loading={paymentConfigLoading}
-        error={paymentConfigError}
-      />
+      <PaymentSummaryCard quote={quote} loading={quoteLoading} error={quoteError} />
 
       {/* Required confirmation */}
       <div className="rounded-2xl border border-border bg-cream-50 p-5">

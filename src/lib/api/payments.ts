@@ -1,5 +1,6 @@
 import { apiRequest } from "./client";
-import type { Registration, RegistrationPayload } from "./registrations";
+import type { AnswerPayload } from "./registrationForm";
+import type { CommitteeSelectionPayload, Registration } from "./registrations";
 
 export type PaymentConfig = {
   /** Registration fee in paise when accommodation is not required - set by the backend. */
@@ -20,8 +21,24 @@ export type VerifyPaymentPayload = {
   razorpayOrderId: string;
   razorpayPaymentId: string;
   razorpaySignature: string;
-  registration: RegistrationPayload;
+  registration: CommitteeSelectionPayload;
+  answers: AnswerPayload;
 };
+
+/**
+ * Receipt download info, present only on a fresh/replayed verify-payment
+ * response - never on any other endpoint that returns a Registration. The
+ * downloadUrl embeds a one-time, high-entropy opaque token (not the
+ * registration id) that is itself the only credential needed to fetch the
+ * PDF, since delegates have no accounts to authenticate a request with.
+ */
+export type ReceiptInfo = {
+  reference: string;
+  downloadUrl: string;
+  emailSent: boolean;
+};
+
+export type VerifyPaymentResult = Registration & { receipt?: ReceiptInfo };
 
 /** The registration fee the backend will actually charge - for display only. */
 export async function getPaymentConfig(): Promise<PaymentConfig> {
@@ -31,21 +48,22 @@ export async function getPaymentConfig(): Promise<PaymentConfig> {
 
 /**
  * Creates a Razorpay order for the registration fee, scoped to one event.
- * The backend derives the authoritative amount from accommodationRequired
- * alone - this call never sends an amount, so there is nothing here for a
+ * The backend validates the answers against the event's form and derives the
+ * authoritative amount from the event's pricing configuration plus those
+ * answers - this call never sends an amount, so there is nothing here for a
  * client to tamper with - and independently re-checks that event's
  * registration window before creating the order. No registration exists
  * yet.
  */
 export async function createOrder(
   eventId: string,
-  accommodationRequired: boolean,
+  answers: AnswerPayload,
 ): Promise<CreateOrderResult> {
   const { data } = await apiRequest<CreateOrderResult>(
     `/api/events/${encodeURIComponent(eventId)}/create-order`,
     {
       method: "POST",
-      body: JSON.stringify({ accommodationRequired }),
+      body: JSON.stringify({ answers }),
     },
   );
   return data;
@@ -61,8 +79,8 @@ export async function createOrder(
 export async function verifyPayment(
   eventId: string,
   payload: VerifyPaymentPayload,
-): Promise<Registration> {
-  const { data } = await apiRequest<Registration>(
+): Promise<VerifyPaymentResult> {
+  const { data } = await apiRequest<VerifyPaymentResult>(
     `/api/events/${encodeURIComponent(eventId)}/verify-payment`,
     {
       method: "POST",
@@ -70,4 +88,34 @@ export async function verifyPayment(
     },
   );
   return data;
+}
+
+/**
+ * Downloads the payment receipt PDF via its secure token URL and triggers a
+ * browser save. Deliberately a plain fetch, not apiRequest: this endpoint
+ * returns a raw application/pdf body, not the {data,error} JSON envelope
+ * every other API call uses, and it needs no credentials - the token in the
+ * URL is itself the only access control.
+ */
+export async function downloadReceipt(downloadUrl: string, filename = "NEETIMUN-Receipt.pdf") {
+  const res = await fetch(downloadUrl);
+  if (!res.ok) {
+    throw new Error(
+      res.status === 404
+        ? "Receipt not found. Please check the confirmation email or contact support."
+        : "Could not download the receipt. Please try again.",
+    );
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  try {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }

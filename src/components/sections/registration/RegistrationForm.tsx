@@ -9,31 +9,34 @@ import { PortfolioSelect } from "@/components/ui/PortfolioSelect";
 import { cn } from "@/lib/utils";
 import { committees } from "@/lib/data/committees";
 import { ApiError } from "@/lib/api/client";
-import type { RegistrationPayload } from "@/lib/api/registrations";
 import {
   createOrder,
-  getPaymentConfig,
   verifyPayment,
   type CreateOrderResult,
-  type PaymentConfig,
+  type VerifyPaymentResult,
 } from "@/lib/api/payments";
 import { getRegistrationStatus, type RegistrationStatus } from "@/lib/api/events";
-import { amountForAccommodation, formatPaise } from "./PaymentSummaryCard";
+import {
+  quoteRegistration,
+  type RegistrationFormSchema,
+  type RegistrationQuote,
+} from "@/lib/api/registrationForm";
+import { formatPaise } from "./PaymentSummaryCard";
 import {
   loadRazorpayCheckout,
   openRazorpayCheckout,
   type RazorpayFailureResponse,
   type RazorpaySuccessResponse,
 } from "@/lib/razorpay";
-import { DelegateDetailsStep } from "./DelegateDetailsStep";
+import { DynamicFormStep } from "./DynamicFormStep";
 import { ReviewStep } from "./ReviewStep";
 import { SuccessState } from "./SuccessState";
 import {
-  emptyDelegateDetails,
-  experienceLabel,
-  validateDelegateDetails,
-  type DelegateDetails,
-  type DetailErrors,
+  initialAnswers,
+  toAnswerPayload,
+  validateAnswers,
+  type AnswerErrors,
+  type AnswerState,
 } from "./types";
 
 /** Phases of the payment flow driving Step 3's "Proceed to Payment" button. */
@@ -84,22 +87,6 @@ function registrationClosedMessage(status: RegistrationStatus): string {
   }
 }
 
-/** Backend validation-error field names that map onto a DelegateDetails key. */
-const backendFieldToDetailField: Partial<Record<string, keyof DelegateDetails>> = {
-  fullName: "fullName",
-  email: "email",
-  phone: "phone",
-  institution: "institution",
-  city: "city",
-  country: "country",
-  motivation: "motivation",
-  emergencyContactName: "emergencyName",
-  emergencyContactPhone: "emergencyPhone",
-  dietaryRestrictions: "dietary",
-  accommodationRequired: "accommodationRequired",
-  declarationAccepted: "declaration",
-};
-
 const steps = ["Committees", "Details", "Confirm"];
 
 const stepHeadings = [
@@ -112,10 +99,13 @@ export function RegistrationForm({
   eventId,
   eventTitle,
   initialCommitteeSlug,
+  formSchema,
 }: {
   eventId: string;
   eventTitle: string;
   initialCommitteeSlug: string;
+  /** The event's registration form, fetched from the backend; rendered as-is. */
+  formSchema: RegistrationFormSchema;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -146,8 +136,7 @@ export function RegistrationForm({
 
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
-  const [registrationId, setRegistrationId] = useState("");
-  const [transactionId, setTransactionId] = useState("");
+  const [confirmation, setConfirmation] = useState<VerifyPaymentResult | null>(null);
 
   // Step 1 - committee & portfolio. The URL is the source of truth for the
   // selected committee, keyed by slug.
@@ -157,18 +146,21 @@ export function RegistrationForm({
   const [portfolio, setPortfolio] = useState("");
   const [portfolioError, setPortfolioError] = useState(false);
 
-  // Step 2 - delegate details
-  const [details, setDetails] = useState<DelegateDetails>(emptyDelegateDetails);
-  const [detailErrors, setDetailErrors] = useState<DetailErrors>({});
+  // Step 2 - the event's configured questions, keyed by stable field id.
+  const fields = formSchema.fields;
+  const [answers, setAnswers] = useState<AnswerState>(() => initialAnswers(fields));
+  const [answerErrors, setAnswerErrors] = useState<AnswerErrors>({});
+  const [checkingDetails, setCheckingDetails] = useState(false);
+  const [detailsError, setDetailsError] = useState("");
 
   // Step 3 - final confirmation & payment
   const [confirmChecked, setConfirmChecked] = useState(false);
   const [confirmError, setConfirmError] = useState(false);
   const [paymentPhase, setPaymentPhase] = useState<PaymentPhase>("idle");
   const [paymentError, setPaymentError] = useState("");
-  const [paymentConfig, setPaymentConfig] = useState<PaymentConfig | null>(null);
-  const [paymentConfigLoading, setPaymentConfigLoading] = useState(true);
-  const [paymentConfigError, setPaymentConfigError] = useState("");
+  // The backend's price for the current answers (display only - the amount
+  // is recomputed server-side when the order is created and verified).
+  const [quote, setQuote] = useState<RegistrationQuote | null>(null);
 
   const selectedCommittee = committees.find(
     (committee) => committee.slug === selected,
@@ -182,32 +174,6 @@ export function RegistrationForm({
   // so in-page scrolling is left untouched.
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
-
-  // Load the registration fee once up front so it's ready to display the
-  // moment the delegate reaches the Review & Confirm step - this figure
-  // always comes from the backend (never a frontend constant) so the
-  // displayed amount can never drift from what's actually charged.
-  useEffect(() => {
-    let cancelled = false;
-    getPaymentConfig()
-      .then((config) => {
-        if (!cancelled) setPaymentConfig(config);
-      })
-      .catch((error: unknown) => {
-        if (cancelled) return;
-        setPaymentConfigError(
-          error instanceof ApiError
-            ? error.message
-            : "Could not load payment details.",
-        );
-      })
-      .finally(() => {
-        if (!cancelled) setPaymentConfigLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   function handleCommitteeChange(slug: string) {
@@ -233,24 +199,43 @@ export function RegistrationForm({
     setStep(1);
   }
 
-  function updateDetail<K extends keyof DelegateDetails>(
-    field: K,
-    value: DelegateDetails[K],
-  ) {
-    setDetails((prev) => ({ ...prev, [field]: value }));
-    setDetailErrors((prev) =>
-      prev[field] ? { ...prev, [field]: undefined } : prev,
-    );
+  function updateAnswer(fieldId: string, value: AnswerState[string]) {
+    setAnswers((prev) => ({ ...prev, [fieldId]: value }));
+    setAnswerErrors((prev) => (prev[fieldId] ? { ...prev, [fieldId]: "" } : prev));
+    setDetailsError("");
   }
 
-  function handleDetailsContinue() {
-    const errors = validateDelegateDetails(details);
+  /**
+   * Validates locally for instant feedback, then asks the backend to validate
+   * the same answers against the event's form and price them - so the review
+   * step shows the amount that will really be charged, and any rule the
+   * frontend missed surfaces here rather than after payment.
+   */
+  async function handleDetailsContinue() {
+    const errors = validateAnswers(fields, answers);
     if (Object.keys(errors).length > 0) {
-      setDetailErrors(errors);
+      setAnswerErrors(errors);
       return;
     }
-    setDetailErrors({});
-    setStep(2);
+    setAnswerErrors({});
+    setDetailsError("");
+    setCheckingDetails(true);
+    try {
+      setQuote(await quoteRegistration(eventId, toAnswerPayload(fields, answers)));
+      setStep(2);
+    } catch (error) {
+      if (error instanceof ApiError && error.code === "validation_failed" && error.fields) {
+        const { answers: general, ...perField } = error.fields;
+        setAnswerErrors(perField);
+        setDetailsError(general ?? "Please correct the highlighted fields.");
+      } else {
+        setDetailsError(
+          error instanceof ApiError ? error.message : "Could not verify your details. Please try again.",
+        );
+      }
+    } finally {
+      setCheckingDetails(false);
+    }
   }
 
   function handleConfirmChange(checked: boolean) {
@@ -274,10 +259,13 @@ export function RegistrationForm({
     const supportHint = ` Please contact support with your payment ID: ${paymentId}`;
 
     if (error instanceof ApiError && error.code === "duplicate_email") {
-      setDetailErrors((prev) => ({
-        ...prev,
-        email: "This email address is already registered.",
-      }));
+      const emailField = fields.find((field) => field.id === "email");
+      if (emailField) {
+        setAnswerErrors((prev) => ({
+          ...prev,
+          [emailField.id]: "This email address is already registered.",
+        }));
+      }
       setStep(1);
       setPaymentError(
         "Your payment succeeded, but this email address is already registered." +
@@ -295,13 +283,12 @@ export function RegistrationForm({
       error.code === "validation_failed" &&
       error.fields
     ) {
-      const mapped: DetailErrors = {};
+      const mapped: AnswerErrors = {};
       for (const [field, message] of Object.entries(error.fields)) {
-        const detailField = backendFieldToDetailField[field];
-        if (detailField) mapped[detailField] = message;
+        if (fields.some((f) => f.id === field)) mapped[field] = message;
       }
       if (Object.keys(mapped).length > 0) {
-        setDetailErrors((prev) => ({ ...prev, ...mapped }));
+        setAnswerErrors((prev) => ({ ...prev, ...mapped }));
         setStep(1);
       }
       setPaymentError(
@@ -332,34 +319,20 @@ export function RegistrationForm({
     setPaymentError("");
     setPaymentPhase("creating_order");
 
-    const munExperience = details.munExperience;
-    const accommodationRequired = details.accommodationRequired === "yes";
-    const registrationPayload: RegistrationPayload = {
-      fullName: details.fullName,
-      email: details.email,
-      phone: details.phone,
-      institution: details.institution,
+    const answerPayload = toAnswerPayload(fields, answers);
+    const committeeSelection = {
       committeePreference1: selectedCommittee?.tag ?? "",
       portfolio,
-      city: details.city,
-      country: details.country,
-      motivation: details.motivation,
-      priorMunExperience: munExperience !== "" && munExperience !== "first",
-      experienceDetails: experienceLabel(munExperience),
-      accommodationRequired,
-      accommodationDetails: details.accommodationDetails,
-      dietaryRestrictions: details.dietary,
-      emergencyContactName: details.emergencyName,
-      emergencyContactPhone: details.emergencyPhone,
-      emergencyContactRelationship: details.emergencyRelationship,
-      declarationAccepted: details.declaration && confirmChecked,
     };
+    const nameAnswer = answers["fullName"];
+    const emailAnswer = answers["email"];
+    const phoneAnswer = answers["phone"];
 
     let order: CreateOrderResult;
     try {
       [, order] = await Promise.all([
         loadRazorpayCheckout(),
-        createOrder(eventId, accommodationRequired),
+        createOrder(eventId, answerPayload),
       ]);
     } catch (error) {
       setPaymentPhase("failed");
@@ -367,6 +340,23 @@ export function RegistrationForm({
         error instanceof Error
           ? error.message
           : "Could not start payment. Please try again.",
+      );
+      return;
+    }
+
+    // If the fee changed since the review step was priced, don't open a
+    // checkout for a different amount than the delegate agreed to - refresh
+    // the displayed price and let them confirm again.
+    if (quote && order.amount !== quote.amount) {
+      try {
+        setQuote(await quoteRegistration(eventId, answerPayload));
+      } catch {
+        // The stale figure is cleared below either way.
+        setQuote(null);
+      }
+      setPaymentPhase("failed");
+      setPaymentError(
+        "The registration fee for this event has changed. Please review the updated amount and try again.",
       );
       return;
     }
@@ -380,12 +370,10 @@ export function RegistrationForm({
           razorpayOrderId: response.razorpay_order_id,
           razorpayPaymentId: response.razorpay_payment_id,
           razorpaySignature: response.razorpay_signature,
-          registration: registrationPayload,
+          registration: committeeSelection,
+          answers: answerPayload,
         });
-        setRegistrationId(
-          `NM26-${registration.id.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
-        );
-        setTransactionId(response.razorpay_payment_id);
+        setConfirmation(registration);
         setPaymentPhase("idle");
         setSubmitted(true);
       } catch (error) {
@@ -409,9 +397,9 @@ export function RegistrationForm({
         description: `Delegate Registration - ${selectedCommittee?.tag ?? ""}`,
         order_id: order.orderId,
         prefill: {
-          name: details.fullName,
-          email: details.email,
-          contact: details.phone,
+          name: typeof nameAnswer === "string" ? nameAnswer : "",
+          email: typeof emailAnswer === "string" ? emailAnswer : "",
+          contact: typeof phoneAnswer === "string" ? phoneAnswer : "",
         },
         theme: { color: "#0f1f3d" },
         handler: onCheckoutSuccess,
@@ -432,11 +420,12 @@ export function RegistrationForm({
     <div className="mx-auto w-full max-w-3xl rounded-3xl border border-border bg-cream-50/60 p-6 sm:p-10">
       <Stepper steps={steps} activeStep={submitted ? steps.length : step} />
 
-      {submitted ? (
+      {submitted && confirmation ? (
         <div className="mt-10">
           <SuccessState
-            registrationId={registrationId}
-            transactionId={transactionId}
+            registration={confirmation}
+            eventTitle={eventTitle}
+            committeeTitle={selectedCommittee?.title ?? selectedCommittee?.tag ?? ""}
           />
         </div>
       ) : (
@@ -532,11 +521,17 @@ export function RegistrationForm({
 
           {step === 1 && (
             <>
-              <DelegateDetailsStep
-                details={details}
-                errors={detailErrors}
-                onChange={updateDetail}
+              <DynamicFormStep
+                fields={fields}
+                answers={answers}
+                errors={answerErrors}
+                onChange={updateAnswer}
               />
+              {detailsError ? (
+                <p role="alert" className="text-sm text-red-500">
+                  {detailsError}
+                </p>
+              ) : null}
 
               <div className="flex flex-col-reverse gap-3 border-t border-border pt-6 sm:flex-row sm:justify-between">
                 <Button
@@ -546,8 +541,13 @@ export function RegistrationForm({
                 >
                   &larr; Back
                 </Button>
-                <Button type="button" onClick={handleDetailsContinue}>
-                  Continue &rarr;
+                <Button
+                  type="button"
+                  onClick={handleDetailsContinue}
+                  disabled={checkingDetails}
+                  className="disabled:pointer-events-none disabled:opacity-70"
+                >
+                  {checkingDetails ? "Checking…" : "Continue →"}
                 </Button>
               </div>
             </>
@@ -558,7 +558,8 @@ export function RegistrationForm({
               <ReviewStep
                 committee={selectedCommittee}
                 portfolio={portfolio}
-                details={details}
+                fields={fields}
+                answers={answers}
                 confirmChecked={confirmChecked}
                 confirmError={
                   confirmError
@@ -567,9 +568,8 @@ export function RegistrationForm({
                 }
                 onConfirmChange={handleConfirmChange}
                 onEdit={setStep}
-                paymentConfig={paymentConfig}
-                paymentConfigLoading={paymentConfigLoading}
-                paymentConfigError={paymentConfigError || undefined}
+                quote={quote}
+                quoteLoading={false}
               />
 
               <div className="flex flex-col gap-4 border-t border-border pt-6">
@@ -607,15 +607,12 @@ export function RegistrationForm({
                     onClick={handleProceedToPayment}
                     disabled={
                       paymentInFlight ||
-                      paymentConfigLoading ||
+                      !quote ||
                       !!(registrationStatus && !registrationStatus.isRegistrationOpen)
                     }
                     className="disabled:pointer-events-none disabled:opacity-70"
                   >
-                    {paymentPhaseLabel(
-                      paymentPhase,
-                      amountForAccommodation(paymentConfig, details.accommodationRequired),
-                    )}
+                    {paymentPhaseLabel(paymentPhase, quote?.amount ?? null)}
                   </Button>
                 </div>
               </div>

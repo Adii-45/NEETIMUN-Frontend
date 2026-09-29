@@ -5,6 +5,17 @@
 // payment (see src/lib/api/payments.ts's verifyPayment), never posted on its
 // own.
 
+/**
+ * The fixed committee step of the registration. Everything else the delegate
+ * fills in travels as `answers` (see lib/api/registrationForm.ts), keyed by
+ * the event form's stable field ids.
+ */
+export type CommitteeSelectionPayload = {
+  committeePreference1: string;
+  portfolio?: string;
+};
+
+/** Legacy full-form payload, still accepted by the backend for events on the default form. */
 export type RegistrationPayload = {
   fullName: string;
   email: string;
@@ -65,5 +76,12 @@ export type Registration = {
   paymentAmount: number | null;
   paymentCurrency: string | null;
   paymentStatus: string | null;
+  paymentMethod: string | null;
   paidAt: string | null;
+  /** Whether a payment receipt PDF has been generated and stored (admin/backend-computed). */
+  hasReceipt: boolean;
+  /** Event form version this registration was submitted under; null for registrations made before dynamic forms. */
+  formVersion?: number | null;
+  /** Answers keyed by stable field id (present only when formVersion is set). */
+  answers?: Record<string, unknown>;
 };
