@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { ComingSoonLink } from "@/components/ui/ComingSoon";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
@@ -39,16 +40,26 @@ export function QuickAnswers() {
                 <p className="text-sm leading-relaxed text-muted">
                   {item.description}
                 </p>
-                <Link
-                  href={item.href}
-                  className="mt-auto flex items-center gap-2 text-sm font-medium text-gold-600"
-                >
-                  {item.linkLabel}
-                  <ArrowRight
-                    size={14}
-                    className="transition-transform duration-200 group-hover:translate-x-1"
-                  />
-                </Link>
+                {"comingSoon" in item && item.comingSoon ? (
+                  <ComingSoonLink className="mt-auto flex items-center gap-2 text-sm font-medium text-gold-600">
+                    {item.linkLabel}
+                    <ArrowRight
+                      size={14}
+                      className="transition-transform duration-200 group-hover:translate-x-1"
+                    />
+                  </ComingSoonLink>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="mt-auto flex items-center gap-2 text-sm font-medium text-gold-600"
+                  >
+                    {item.linkLabel}
+                    <ArrowRight
+                      size={14}
+                      className="transition-transform duration-200 group-hover:translate-x-1"
+                    />
+                  </Link>
+                )}
               </Card>
             </CardReveal>
           ))}

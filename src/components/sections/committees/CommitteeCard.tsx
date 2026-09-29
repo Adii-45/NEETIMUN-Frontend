@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
+import { ComingSoonButton } from "@/components/ui/ComingSoon";
 import { SidebarIdentity } from "@/components/sections/committees/SidebarIdentity";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,6 @@ export function CommitteeCard({
   badges,
   agenda,
   portfolioTypes,
-  href,
   className,
 }: {
   tag: string;
@@ -123,9 +122,7 @@ export function CommitteeCard({
           {...sec(5)}
           className="mt-auto flex flex-col gap-3 pt-4 sm:flex-row"
         >
-          <Button href={href} variant="outline">
-            Study Guide
-          </Button>
+          <ComingSoonButton variant="outline">Study Guide</ComingSoonButton>
         </motion.div>
       </div>
     </div>

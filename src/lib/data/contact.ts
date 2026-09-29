@@ -57,6 +57,7 @@ export const quickAnswers = [
       "Official resolutions and position paper guidelines for the upcoming session.",
     linkLabel: "Download Archive",
     href: "/committees",
+    comingSoon: true,
   },
   {
     icon: Calendar,

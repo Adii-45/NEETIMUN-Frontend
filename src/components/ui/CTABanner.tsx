@@ -1,11 +1,14 @@
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { ComingSoonButton } from "@/components/ui/ComingSoon";
 import { RevealSection, StaggerContainer, FadeUp, Magnetic, ScaleIn } from "@/components/ui/motion";
 import { SectionBackdrop } from "@/components/ui/SectionBackdrop";
 
 type CTALink = {
   label: string;
   href: string;
+  /** Resource not released yet: open the "To Be Released" dialog instead of linking. */
+  comingSoon?: boolean;
 };
 
 export function CTABanner({
@@ -65,9 +68,13 @@ export function CTABanner({
           </FadeUp>
           {secondaryCta ? (
             <FadeUp viewportTrigger={false} scale={0.92}>
-              <Button href={secondaryCta.href} variant="outline-light">
-                {secondaryCta.label}
-              </Button>
+              {secondaryCta.comingSoon ? (
+                <ComingSoonButton variant="outline-light">{secondaryCta.label}</ComingSoonButton>
+              ) : (
+                <Button href={secondaryCta.href} variant="outline-light">
+                  {secondaryCta.label}
+                </Button>
+              )}
             </FadeUp>
           ) : null}
         </StaggerContainer>

@@ -23,6 +23,7 @@ export default function CommitteesPage() {
         secondaryCta={{
           label: "Download Delegate Handbook",
           href: "/committees",
+          comingSoon: true,
         }}
       />
     </>
