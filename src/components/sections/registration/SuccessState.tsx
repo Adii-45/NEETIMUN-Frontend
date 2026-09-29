@@ -101,15 +101,20 @@ export function SuccessState({
         <div className="divide-y divide-border border-t border-border pt-2">
           <DetailRow label="Delegate" value={registration.fullName} />
           <DetailRow label="Email" value={registration.email} />
-          <DetailRow label="Institution" value={registration.institution} />
+          {registration.institution && (
+            <DetailRow label="Institution" value={registration.institution} />
+          )}
           <DetailRow label="Committee" value={committeeTitle} />
           {registration.portfolio && (
             <DetailRow label="Portfolio" value={registration.portfolio} />
           )}
-          <DetailRow
-            label="Accommodation"
-            value={registration.accommodationRequired ? "Required" : "Not Required"}
-          />
+          {/* Events can switch accommodation off; then the question was never asked. */}
+          {(!registration.answers || "accommodationRequired" in registration.answers) && (
+            <DetailRow
+              label="Accommodation"
+              value={registration.accommodationRequired ? "Required" : "Not Required"}
+            />
+          )}
         </div>
 
         <div className="divide-y divide-border border-t border-border pt-2 mt-2">

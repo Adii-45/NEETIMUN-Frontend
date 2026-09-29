@@ -1,5 +1,6 @@
 import { apiRequest } from "./client";
-import type { Registration, RegistrationPayload } from "./registrations";
+import type { AnswerPayload } from "./registrationForm";
+import type { CommitteeSelectionPayload, Registration } from "./registrations";
 
 export type PaymentConfig = {
   /** Registration fee in paise when accommodation is not required - set by the backend. */
@@ -20,7 +21,8 @@ export type VerifyPaymentPayload = {
   razorpayOrderId: string;
   razorpayPaymentId: string;
   razorpaySignature: string;
-  registration: RegistrationPayload;
+  registration: CommitteeSelectionPayload;
+  answers: AnswerPayload;
 };
 
 /**
@@ -46,21 +48,22 @@ export async function getPaymentConfig(): Promise<PaymentConfig> {
 
 /**
  * Creates a Razorpay order for the registration fee, scoped to one event.
- * The backend derives the authoritative amount from accommodationRequired
- * alone - this call never sends an amount, so there is nothing here for a
+ * The backend validates the answers against the event's form and derives the
+ * authoritative amount from the event's pricing configuration plus those
+ * answers - this call never sends an amount, so there is nothing here for a
  * client to tamper with - and independently re-checks that event's
  * registration window before creating the order. No registration exists
  * yet.
  */
 export async function createOrder(
   eventId: string,
-  accommodationRequired: boolean,
+  answers: AnswerPayload,
 ): Promise<CreateOrderResult> {
   const { data } = await apiRequest<CreateOrderResult>(
     `/api/events/${encodeURIComponent(eventId)}/create-order`,
     {
       method: "POST",
-      body: JSON.stringify({ accommodationRequired }),
+      body: JSON.stringify({ answers }),
     },
   );
   return data;

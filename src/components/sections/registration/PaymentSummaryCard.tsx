@@ -1,6 +1,6 @@
 import { CreditCard, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { PaymentConfig } from "@/lib/api/payments";
+import type { RegistrationQuote } from "@/lib/api/registrationForm";
 
 /** Formats a paise amount as an Indian Rupee currency string, e.g. 210000 -> "₹2,100.00". */
 export function formatPaise(paise: number) {
@@ -9,21 +9,6 @@ export function formatPaise(paise: number) {
     currency: "INR",
     maximumFractionDigits: 2,
   }).format(paise / 100);
-}
-
-/**
- * Resolves the registration fee to display for the delegate's accommodation
- * choice ("yes" | "no" | not yet chosen). This is display-only - the backend
- * independently computes and enforces the authoritative amount.
- */
-export function amountForAccommodation(
-  config: PaymentConfig | null,
-  accommodationRequired: string,
-): number | null {
-  if (!config) return null;
-  if (accommodationRequired === "yes") return config.accommodationAmount;
-  if (accommodationRequired === "no") return config.noAccommodationAmount;
-  return null;
 }
 
 function Row({
@@ -58,12 +43,16 @@ function Row({
 }
 
 export function PaymentSummaryCard({
-  amount,
+  quote,
   loading,
   error,
 }: {
-  /** Registration fee in paise for the delegate's chosen accommodation option - null while that choice hasn't been made yet. */
-  amount: number | null;
+  /**
+   * The backend's price for the delegate's answers (see quoteRegistration) -
+   * display only; the amount is computed again server-side when the payment
+   * order is created and verified.
+   */
+  quote: RegistrationQuote | null;
   loading: boolean;
   error?: string;
 }) {
@@ -86,16 +75,18 @@ export function PaymentSummaryCard({
         <p role="alert" className="mt-4 text-sm text-red-500">
           {error}
         </p>
-      ) : amount == null ? (
+      ) : quote == null ? (
         <p className="mt-4 text-sm text-muted">
-          Select accommodation requirement to see the registration fee.
+          The registration fee will appear here once your details are confirmed.
         </p>
       ) : (
         <div className="mt-5 flex flex-col gap-3">
-          <Row label="Registration Fee" value={formatPaise(amount)} />
+          {quote.items.map((item, index) => (
+            <Row key={`${item.label}-${index}`} label={item.label} value={formatPaise(item.amount)} />
+          ))}
           <Row label="Platform Fee" value="₹0.00" />
           <div className="border-t border-border pt-3">
-            <Row label="Total" value={formatPaise(amount)} accent />
+            <Row label="Total" value={formatPaise(quote.amount)} accent />
           </div>
           <div className="mt-1 flex items-start gap-2 border-t border-border pt-3">
             <ShieldCheck
