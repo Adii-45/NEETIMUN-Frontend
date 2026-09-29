@@ -61,13 +61,15 @@ export function CommitteeCard({
       <div className="relative z-10 flex flex-1 flex-col gap-6 p-8 lg:p-10">
 
         {/* ① Category badges */}
-        <motion.div {...sec(0)} className="flex flex-wrap gap-2.5">
-          {badges.map((badge) => (
-            <Badge key={badge} variant="gold" className="tracking-wider">
-              {badge}
-            </Badge>
-          ))}
-        </motion.div>
+        {badges.length > 0 && (
+          <motion.div {...sec(0)} className="flex flex-wrap gap-2.5">
+            {badges.map((badge) => (
+              <Badge key={badge} variant="gold" className="tracking-wider">
+                {badge}
+              </Badge>
+            ))}
+          </motion.div>
+        )}
 
         {/* ② Committee title */}
         <motion.h2
