@@ -4,7 +4,6 @@ import { Pillars } from "@/components/sections/home/Pillars";
 import { PortfoliosPreview } from "@/components/sections/home/PortfoliosPreview";
 import { Roadmap } from "@/components/sections/home/Roadmap";
 import { Testimonials } from "@/components/sections/home/Testimonials";
-import { FAQSection } from "@/components/sections/home/FAQSection";
 import { CTABanner } from "@/components/ui/CTABanner";
 
 export default function Home() {
@@ -16,7 +15,6 @@ export default function Home() {
       <PortfoliosPreview />
       <Roadmap />
       <Testimonials />
-      <FAQSection />
       <CTABanner
         eyebrow="Registration"
         title="Ready to Represent Your Nation?"

@@ -175,7 +175,7 @@ export function PortfoliosPreview() {
               The Committees
             </h2>
             <p className="max-w-xl text-base leading-relaxed text-muted">
-              Six carefully curated councils designed to challenge negotiation,
+              Five carefully curated councils designed to challenge negotiation,
               diplomacy, policy making, journalism, and international
               cooperation.
             </p>
