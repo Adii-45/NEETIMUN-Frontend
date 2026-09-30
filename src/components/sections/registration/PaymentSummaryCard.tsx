@@ -11,14 +11,13 @@ export function formatPaise(paise: number) {
   }).format(paise / 100);
 }
 
-// TEMPORARY, presentation-only priority-registration promo. Never used in any
-// calculation: it only decides whether to draw a struck-through "was" price
-// next to a Registration Fee line whose real amount is exactly the priority
-// fee. The amount actually charged always comes from the backend quote.
-const PRIORITY_FEE_PAISE = 180000;
-const ORIGINAL_DISPLAY_FEE = "₹2,000.00";
-const isPriorityFeeItem = (item: { label: string; amount: number }) =>
-  item.label === "Registration Fee" && item.amount === PRIORITY_FEE_PAISE;
+// TEMPORARY, presentation-only reference price. A fixed frontend string, never
+// derived from the quote or any pricing/event data and never used in a
+// calculation: the amount charged always comes from the backend quote. It is
+// drawn on the "Registration Fee" line only (not add-ons such as accommodation),
+// regardless of the fee's value.
+const ORIGINAL_DISPLAY_FEE = "₹1,800.00";
+const isPriorityFeeItem = (item: { label: string }) => item.label === "Registration Fee";
 
 function Row({
   label,
