@@ -11,14 +11,26 @@ export function formatPaise(paise: number) {
   }).format(paise / 100);
 }
 
+// TEMPORARY, presentation-only priority-registration promo. Never used in any
+// calculation: it only decides whether to draw a struck-through "was" price
+// next to a Registration Fee line whose real amount is exactly the priority
+// fee. The amount actually charged always comes from the backend quote.
+const PRIORITY_FEE_PAISE = 180000;
+const ORIGINAL_DISPLAY_FEE = "₹2,000.00";
+const isPriorityFeeItem = (item: { label: string; amount: number }) =>
+  item.label === "Registration Fee" && item.amount === PRIORITY_FEE_PAISE;
+
 function Row({
   label,
   value,
   accent = false,
+  originalValue,
 }: {
   label: string;
   value: string;
   accent?: boolean;
+  /** Display-only crossed-out price shown before `value`; also marks `value` with a "*" footnote. */
+  originalValue?: string;
 }) {
   return (
     <div className="flex items-center justify-between gap-4">
@@ -36,7 +48,11 @@ function Row({
           accent ? "font-display text-base text-navy-900" : "font-medium text-navy-900/80",
         )}
       >
+        {originalValue ? (
+          <span className="mr-2 font-normal text-muted line-through">{originalValue}</span>
+        ) : null}
         {value}
+        {originalValue ? <span className="text-gold-600">*</span> : null}
       </span>
     </div>
   );
@@ -82,7 +98,12 @@ export function PaymentSummaryCard({
       ) : (
         <div className="mt-5 flex flex-col gap-3">
           {quote.items.map((item, index) => (
-            <Row key={`${item.label}-${index}`} label={item.label} value={formatPaise(item.amount)} />
+            <Row
+              key={`${item.label}-${index}`}
+              label={item.label}
+              value={formatPaise(item.amount)}
+              originalValue={isPriorityFeeItem(item) ? ORIGINAL_DISPLAY_FEE : undefined}
+            />
           ))}
           <Row label="Platform Fee" value="₹0.00" />
           <div className="border-t border-border pt-3">
@@ -98,6 +119,12 @@ export function PaymentSummaryCard({
               Razorpay Secure Checkout - UPI, Cards, Netbanking &amp; Wallets.
             </p>
           </div>
+          {quote.items.some(isPriorityFeeItem) ? (
+            <p className="text-[11px] leading-relaxed text-muted">
+              <span className="font-semibold text-gold-600">*NOTE:</span> Priority registrations are open until 4
+              October. Regular registrations will open thereafter at the updated registration fee.
+            </p>
+          ) : null}
         </div>
       )}
     </section>
