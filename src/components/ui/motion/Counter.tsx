@@ -10,12 +10,15 @@ function easeOutCubic(t: number) {
 export function Counter({
   value,
   duration = 1.8,
+  suffix,
   className,
 }: {
   /** Target integer value to count up to. */
   value: number;
   /** Animation duration in seconds. */
   duration?: number;
+  /** Display-only text shown after the number, e.g. "K+". */
+  suffix?: string;
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -45,6 +48,7 @@ export function Counter({
   return (
     <span ref={ref} className={className}>
       {reduced ? value : display}
+      {suffix}
     </span>
   );
 }

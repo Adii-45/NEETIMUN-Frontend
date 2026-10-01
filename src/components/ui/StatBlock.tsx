@@ -13,6 +13,7 @@ export function StatBlock({
   size = "default",
   className,
   animate = false,
+  suffix,
 }: {
   value: string;
   label: string;
@@ -21,6 +22,8 @@ export function StatBlock({
   className?: string;
   /** Animate the value counting up from 0 when it scrolls into view. Only applies when `value` is a plain integer. */
   animate?: boolean;
+  /** Display-only suffix after the number (e.g. "K+"); `value` stays the plain integer. */
+  suffix?: string;
 }) {
   const numericValue = Number(value);
   const canAnimate = animate && Number.isFinite(numericValue);
@@ -34,7 +37,7 @@ export function StatBlock({
           tone === "dark" ? "text-cream-50" : "text-navy-900",
         )}
       >
-        {canAnimate ? <Counter value={numericValue} /> : value}
+        {canAnimate ? <Counter value={numericValue} suffix={suffix} /> : `${value}${suffix ?? ""}`}
       </span>
       <span
         className={cn(
