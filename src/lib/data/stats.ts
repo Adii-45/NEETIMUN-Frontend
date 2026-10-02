@@ -5,6 +5,6 @@ import { committees } from "./committees";
 // Conference Days is a fixed value set in StatsBar.
 export const stats = [
   { value: String(committees.length), label: "Committees" },
-  { value: "75", suffix: "K+", label: "Prize Pool" },
+  { value: "90", suffix: "K+", label: "Prize Pool" },
   { value: "10", label: "EB Members" },
 ];
