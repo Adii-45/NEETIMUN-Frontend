@@ -54,11 +54,19 @@ function EventSection({ title, events }: { title: string; events: Event[] }) {
   );
 }
 
-export function EventsBrowser({ className }: { className?: string }) {
-  const [events, setEvents] = useState<Event[] | null>(null);
+export function EventsBrowser({
+  className,
+  initialEvents,
+}: {
+  className?: string;
+  /** Events already fetched on the server; when present, no client request is made. */
+  initialEvents?: Event[] | null;
+}) {
+  const [events, setEvents] = useState<Event[] | null>(initialEvents ?? null);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (initialEvents) return;
     let cancelled = false;
     listEvents()
       .then((data) => {
@@ -71,7 +79,7 @@ export function EventsBrowser({ className }: { className?: string }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialEvents]);
 
   if (error) {
     return (

@@ -40,6 +40,30 @@ export async function listEvents(): Promise<Event[]> {
   return data;
 }
 
+/**
+ * Server-side counterpart of listEvents(), for the /events page's server
+ * render: talks to the backend directly (no browser -> Vercel -> backend hop)
+ * and lets Next cache the response briefly so most visitors never wait on a
+ * backend cold start. Returns null on any failure (or if the backend URL isn't
+ * configured) so the client component falls back to its own single fetch.
+ */
+export async function listEventsServer(revalidateSeconds: number): Promise<Event[] | null> {
+  const base = process.env.BACKEND_API_URL;
+  if (!base) return null;
+  try {
+    const res = await fetch(`${base}/api/events`, {
+      next: { revalidate: revalidateSeconds },
+      // Bounded so a cold/unreachable backend can't stall the render or the build.
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return null;
+    const body = (await res.json()) as { data?: Event[] };
+    return Array.isArray(body.data) ? body.data : null;
+  } catch {
+    return null;
+  }
+}
+
 /** A single event by id or slug. Hidden/nonexistent events both 404 identically. */
 export async function getEvent(idOrSlug: string): Promise<Event> {
   const { data } = await apiRequest<Event>(`/api/events/${encodeURIComponent(idOrSlug)}`);

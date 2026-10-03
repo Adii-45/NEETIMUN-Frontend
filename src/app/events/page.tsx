@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { EventsBrowser } from "@/components/events/EventsBrowser";
+import { listEventsServer } from "@/lib/api/events";
+
+// Event list is regenerated at most this often (must be a literal for Next's
+// segment config; keep in sync with the fetch below); the page shows the last
+// good copy instantly meanwhile. Event details/registration always fetch live.
+export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: "Events | NEETI MUN",
   description: "Browse current, upcoming, and past NEETI MUN events and check registration availability.",
 };
 
-export default function EventsPage() {
+export default async function EventsPage() {
+  const initialEvents = await listEventsServer(30);
   return (
     <>
       <section className="bg-cream-100">
@@ -21,7 +28,7 @@ export default function EventsPage() {
       </section>
       <section className="pb-24">
         <Container>
-          <EventsBrowser />
+          <EventsBrowser initialEvents={initialEvents} />
         </Container>
       </section>
     </>
