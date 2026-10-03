@@ -89,7 +89,13 @@ export function EventCard({ event, className }: { event: Event; className?: stri
         {event.description ? (
           <p className="line-clamp-2 text-sm leading-relaxed text-muted">{markdownToPlainText(event.description)}</p>
         ) : null}
-        <div className="mt-auto pt-2">
+        <div className="mt-auto flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap">
+          {/* "ongoing" events already get a View Details CTA from EventCTA. */}
+          {event.status !== "ongoing" ? (
+            <Button href={`/events/${event.slug}`} variant="outline" className="w-full sm:w-auto">
+              View Details
+            </Button>
+          ) : null}
           <EventCTA event={event} />
         </div>
       </div>

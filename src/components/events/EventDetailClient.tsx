@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { ApiError } from "@/lib/api/client";
 import { getEvent, type Event } from "@/lib/api/events";
@@ -61,7 +62,9 @@ export function EventDetailClient({ eventId }: { eventId: string }) {
 
   return (
     <>
-      <div className="relative aspect-[21/9] w-full overflow-hidden bg-navy-900">
+      {/* Full-bleed on mobile; from tablet up, centered and aligned to the page content width. */}
+      <div className="mx-auto w-full max-w-7xl md:px-6 lg:px-8">
+      <div className="relative aspect-[21/9] w-full overflow-hidden bg-navy-900 md:aspect-[16/6]">
         {event.bannerUrl ? (
           <Image src={event.bannerUrl} alt={event.title} fill priority className="object-cover" />
         ) : (
@@ -69,9 +72,25 @@ export function EventDetailClient({ eventId }: { eventId: string }) {
             <span className="font-display text-2xl text-cream-50/70">{event.title}</span>
           </div>
         )}
+        {/* Overlaid on the hero (not its own row), aligned to the content container. */}
+        <div className="absolute inset-x-0 top-3 z-10 sm:top-4">
+          <Container>
+            <Link
+              href="/events"
+              aria-label="Back to Events"
+              className="group/back inline-flex size-9 items-center justify-center rounded-full border border-cream-50/70 bg-cream-50/90 text-navy-900 shadow-sm backdrop-blur-sm transition-colors duration-200 hover:border-gold-400 hover:bg-cream-50 hover:text-gold-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-600 sm:size-10"
+            >
+              <ChevronLeft
+                aria-hidden="true"
+                className="size-4 transition-transform duration-200 group-hover/back:-translate-x-0.5 sm:size-5"
+              />
+            </Link>
+          </Container>
+        </div>
+      </div>
       </div>
 
-      <Container className="flex flex-col gap-8 py-16">
+      <Container className="flex flex-col gap-8 pb-16 pt-8">
         <div className="flex flex-col gap-4">
           <EventStatusBadge status={event.status} className="w-fit" />
           <h1 className="font-display text-3xl text-navy-900 sm:text-4xl">{event.title}</h1>
